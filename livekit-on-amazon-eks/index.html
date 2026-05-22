@@ -204,7 +204,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="agenda-row"><div class="agenda-no">08</div><div class="agenda-title">Recommended architecture</div></div>
       </div>
     </div>
-    <div class="slide-no">02 / 24</div>
+    <div class="slide-no">02 / 25</div>
   </section>
 
   <!-- 03: What is LiveKit (feature cards) -->
@@ -237,7 +237,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">03 / 24</div>
+    <div class="slide-no">03 / 25</div>
   </section>
 
   <!-- AWS Voice AI Ecosystem -->
@@ -365,7 +365,7 @@ document.addEventListener('fullscreenchange', () => {
       </div>
 
     </div>
-    <div class="slide-no">04 / 24</div>
+    <div class="slide-no">04 / 25</div>
   </section>
 
   <!-- 05: Voice agent reference architecture -->
@@ -376,7 +376,7 @@ document.addEventListener('fullscreenchange', () => {
       <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 44px;">Guidance for building voice agents on AWS</h1>
     </div>
     <div style="position: absolute; left: 0; top: 260px; right: 0; bottom: 0; display:flex; align-items:center; justify-content:center;">
-      <img src="assets/voice-agents-reference-architecture.png" alt="Guidance for building voice agents on AWS — reference architecture" style="width: 100%; height: 100%; object-fit: contain;">
+      <img src="voice-agents-reference-architecture.png" alt="Guidance for building voice agents on AWS — reference architecture" style="width: 100%; height: 100%; object-fit: contain;">
     </div>
   </section>
 
@@ -421,7 +421,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">05 / 24</div>
+    <div class="slide-no">05 / 25</div>
   </section>
 
   <!-- 05: Analytics gap -->
@@ -457,7 +457,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">06 / 24</div>
+    <div class="slide-no">06 / 25</div>
   </section>
 
   <!-- 06: SIP telephony integration -->
@@ -495,7 +495,7 @@ document.addEventListener('fullscreenchange', () => {
         <span class="body-sm" style="color: var(--aws-gray-850);">Twilio &bull; Telnyx &bull; Exotel &bull; Plivo &bull; Wavix &bull; Amazon Connect* (External Voice Transfer, select customers only)</span>
       </div>
     </div>
-    <div class="slide-no">07 / 24</div>
+    <div class="slide-no">07 / 25</div>
   </section>
 
   <!-- 07: SIP + AI agents -->
@@ -532,7 +532,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">08 / 24</div>
+    <div class="slide-no">08 / 25</div>
   </section>
 
   <!-- 08: Section divider - Networking -->
@@ -560,7 +560,7 @@ document.addEventListener('fullscreenchange', () => {
         <li><strong>Compute-optimized</strong> - c6i/c7i instances with 10Gbps+ enhanced networking.</li>
       </ul>
     </div>
-    <div class="slide-no">09 / 24</div>
+    <div class="slide-no">09 / 25</div>
   </section>
 
   <!-- 08: Port table -->
@@ -581,7 +581,7 @@ document.addEventListener('fullscreenchange', () => {
         <tr><td>Prometheus</td><td class="mono">6789</td><td>TCP</td><td>Internal only</td><td>Metrics scraping</td></tr>
       </table>
     </div>
-    <div class="slide-no">10 / 24</div>
+    <div class="slide-no">10 / 25</div>
   </section>
 
   <!-- 09: NLB vs ALB -->
@@ -618,7 +618,7 @@ document.addEventListener('fullscreenchange', () => {
       </div>
       <p style="font-size:15px;color:var(--aws-gray-550);margin-top:24px;">*ALB is referenced in LiveKit documentation for signaling, but we recommend NLB for all traffic to simplify the architecture and avoid split load balancer management.</p>
     </div>
-    <div class="slide-no">11 / 24</div>
+    <div class="slide-no">11 / 25</div>
   </section>
 
   <!-- 12b: Scalability considerations -->
@@ -653,7 +653,7 @@ document.addEventListener('fullscreenchange', () => {
         <p style="font-size:17px;color:var(--aws-gray-650);margin:0;"><strong style="color:var(--aws-gray-850);">Planning formula:</strong> For N concurrent calls, provision N nodes minimum (1 room = 1 node). A 10-node cluster with c6i.4xlarge handles ~500-1000 concurrent participants across ~10 simultaneous rooms. Use Karpenter with a pre-warm pool to absorb traffic spikes within 90 seconds.</p>
       </div>
     </div>
-    <div class="slide-no">12 / 24</div>
+    <div class="slide-no">12 / 25</div>
   </section>
 
   <!-- 11: Voice agent pipeline section divider -->
@@ -734,7 +734,7 @@ document.addEventListener('fullscreenchange', () => {
         </ul>
       </div>
     </div>
-    <div class="slide-no">13 / 24</div>
+    <div class="slide-no">13 / 25</div>
   </section>
 
   <!-- 13: Advanced patterns — interruptions, multi-turn, session segmentation -->
@@ -786,7 +786,7 @@ document.addEventListener('fullscreenchange', () => {
         </ul>
       </div>
     </div>
-    <div class="slide-no">14 / 24</div>
+    <div class="slide-no">14 / 25</div>
   </section>
 
   <!-- 14b: VAD and turn detection pipeline -->
@@ -801,7 +801,7 @@ document.addEventListener('fullscreenchange', () => {
       <img src="https://livekit.com/blog/content/images/2024/12/-.png" alt="LiveKit VAD and turn detection pipeline" style="max-width: 100%; max-height: 380px; border-radius: 12px; border: 1px solid var(--aws-gray-200);">
       <p style="font-size:14px;color:var(--aws-gray-550);margin-top:16px;">Source: <a href="https://livekit.com/blog/using-a-transformer-to-improve-end-of-turn-detection" style="color:var(--aws-teal-600);">LiveKit — Using a transformer to improve end-of-turn detection</a></p>
     </div>
-    <div class="slide-no">15 / 24</div>
+    <div class="slide-no">15 / 25</div>
   </section>
 
   <!-- 15: Guardrails and safety -->
@@ -835,7 +835,7 @@ document.addEventListener('fullscreenchange', () => {
         </ul>
       </div>
     </div>
-    <div class="slide-no">16 / 24</div>
+    <div class="slide-no">16 / 25</div>
   </section>
 
   <!-- 15: Evaluation framework -->
@@ -877,7 +877,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">17 / 24</div>
+    <div class="slide-no">17 / 25</div>
   </section>
 
   <!-- Section divider - Architecture -->
@@ -893,232 +893,17 @@ document.addEventListener('fullscreenchange', () => {
   <!-- Architecture diagram -->
   <section class="slide" data-label="Architecture diagram">
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
-    <div style="position: absolute; left: 80px; top: 140px; right: 80px;">
+    <div style="position: absolute; left: 80px; top: 80px; right: 80px;">
       <div class="eyebrow" style="color: var(--aws-gray-550);">ARCHITECTURE</div>
       <h2 class="h-content" style="color: var(--aws-gray-850); font-size: 38px;">LiveKit on Amazon EKS — public subnet deployment</h2>
-      <p style="font-size:17px;color:var(--aws-gray-550);margin-top:8px;">WebRTC requires direct UDP connectivity between clients and media servers. Public subnet placement avoids NAT traversal overhead and enables sub-100ms media delivery without TURN relay. For telephony, the SIP service receives inbound calls and converts RTP media streams into the LiveKit SFU room, bridging PSTN callers into the same session as WebRTC clients.</p>
+      <p class="body-sm" style="color: var(--aws-gray-550); margin-top: 8px; max-width: 1600px;">WebRTC requires direct UDP connectivity between clients and media servers. Public subnet placement avoids NAT traversal overhead and enables sub-100ms media delivery without TURN relay. For telephony, the SIP service receives inbound calls and converts RTP media streams into the LiveKit SFU room, bridging PSTN callers into the same session as WebRTC clients.</p>
     </div>
-    <div style="position: absolute; left: 60px; top: 310px; right: 60px; bottom: 40px; overflow: hidden;">
-      <div class="arch-canvas" style="width:1600px;height:620px;">
-
-        <!-- AWS Cloud boundary -->
-        <div class="arch-group" style="left:150px;top:0;width:1430px;height:610px;border:2px solid var(--aws-gray-400);border-radius:16px;padding:0;">
-          <div style="position:absolute;top:12px;left:16px;display:flex;align-items:center;gap:6px;">
-            <img src="assets/icons/group/AWS-Cloud_32.svg" alt="" style="width:20px;height:20px;">
-            <span style="font-family:var(--aws-font-mono);font-size:13px;font-weight:500;color:var(--aws-gray-550);text-transform:uppercase;letter-spacing:0.06em;">AWS Cloud</span>
-            <span style="font-family:var(--aws-font-mono);font-size:12px;color:var(--aws-gray-500);">ap-southeast-2</span>
-          </div>
-        </div>
-
-        <!-- VPC -->
-        <div class="arch-group" style="left:180px;top:40px;width:1380px;height:556px;border:2px solid var(--aws-purple-600);border-radius:12px;padding:0;">
-          <div style="position:absolute;top:8px;left:14px;display:flex;align-items:center;gap:6px;">
-            <img src="assets/icons/group/Virtual-private-cloud-VPC_32.svg" alt="" style="width:20px;height:20px;">
-            <span style="font-family:var(--aws-font-mono);font-size:13px;font-weight:500;color:var(--aws-purple-600);text-transform:uppercase;letter-spacing:0.06em;">Amazon VPC</span>
-          </div>
-        </div>
-
-        <!-- Public subnet -->
-        <div class="arch-group" style="left:210px;top:78px;width:620px;height:480px;border:2px solid var(--aws-green-600);border-radius:10px;background:rgba(63,194,141,0.03);padding:0;">
-          <div style="position:absolute;top:8px;left:12px;display:flex;align-items:center;gap:6px;">
-            <img src="assets/icons/group/Public-subnet_32.svg" alt="" style="width:18px;height:18px;">
-            <span style="font-family:var(--aws-font-mono);font-size:12px;font-weight:500;color:var(--aws-green-600);text-transform:uppercase;letter-spacing:0.06em;">Public subnet</span>
-          </div>
-        </div>
-
-        <!-- Private subnet -->
-        <div class="arch-group" style="left:870px;top:78px;width:660px;height:480px;border:2px solid var(--aws-teal-600);border-radius:10px;background:rgba(0,150,143,0.03);padding:0;">
-          <div style="position:absolute;top:8px;left:12px;display:flex;align-items:center;gap:6px;">
-            <img src="assets/icons/group/Private-subnet_32.svg" alt="" style="width:18px;height:18px;">
-            <span style="font-family:var(--aws-font-mono);font-size:12px;font-weight:500;color:var(--aws-teal-600);text-transform:uppercase;letter-spacing:0.06em;">Private subnet</span>
-          </div>
-        </div>
-
-        <!-- External: Clients (WebRTC) -->
-        <div class="arch-node" style="left: 40px; top: 200px;">
-          <img src="assets/icons/res/Res_Internet_48_Light.svg" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;">Clients</span>
-          <span style="font-size:10px;color:var(--aws-gray-500);">WebRTC</span>
-        </div>
-
-        <!-- External: PSTN -->
-        <div class="arch-node" style="left: 40px; top: 400px;">
-          <img src="assets/icons/res/Res_Client_48_Light.svg" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;color:var(--aws-purple-600);">PSTN</span>
-          <span style="font-size:10px;color:var(--aws-gray-500);">SIP trunk</span>
-        </div>
-
-        <!-- NLB -->
-        <div class="arch-node" style="left: 440px; top: 108px;">
-          <img src="assets/icons/arch/Arch_Elastic-Load-Balancing_48.png" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;">Network Load Balancer</span>
-          <span style="font-size:9px;color:var(--aws-gray-500);font-family:var(--aws-font-mono);">TCP 7880 / 5349</span>
-        </div>
-
-        <!-- LiveKit SFU box -->
-        <div style="position:absolute;left:290px;top:220px;width:460px;height:130px;background:var(--aws-gray-100);border:1px solid var(--aws-gray-300);border-radius:10px;padding:12px 14px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <img src="assets/icons/arch/Arch_Amazon-Elastic-Kubernetes-Service_48.png" alt="" style="width:48px;height:48px;">
-            <span style="font-size:12px;color:var(--aws-gray-850);">LiveKit SFU</span>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-            <div style="background:var(--aws-white);border:1px solid var(--aws-orange-400);border-radius:4px;padding:3px 10px;">
-              <span style="font-size:10px;color:var(--aws-orange-600);font-family:var(--aws-font-mono);">Node 1 (c6i.4xl)</span>
-            </div>
-            <div style="background:var(--aws-white);border:1px solid var(--aws-orange-400);border-radius:4px;padding:3px 10px;">
-              <span style="font-size:10px;color:var(--aws-orange-600);font-family:var(--aws-font-mono);">Node 2 (c6i.4xl)</span>
-            </div>
-            <div style="background:var(--aws-white);border:1px solid var(--aws-orange-400);border-radius:4px;padding:3px 10px;">
-              <span style="font-size:10px;color:var(--aws-orange-600);font-family:var(--aws-font-mono);">Node N (c6i.4xl)</span>
-            </div>
-          </div>
-          <div style="margin-top:8px;display:flex;gap:8px;">
-            <div style="background:var(--aws-white);border:1px solid var(--aws-gray-300);border-radius:3px;padding:2px 8px;">
-              <span style="font-size:9px;color:var(--aws-gray-650);font-family:var(--aws-font-mono);">UDP 50000-60000 (media)</span>
-            </div>
-            <div style="background:var(--aws-white);border:1px solid var(--aws-gray-300);border-radius:3px;padding:2px 8px;">
-              <span style="font-size:9px;color:var(--aws-gray-650);font-family:var(--aws-font-mono);">TCP 7881 (fallback)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- SIP service box -->
-        <div style="position:absolute;left:290px;top:410px;width:460px;height:72px;background:var(--aws-gray-100);border:1px solid var(--aws-purple-600);border-radius:10px;padding:10px 14px;">
-          <div style="display:flex;align-items:center;gap:8px;">
-            <img src="assets/icons/arch/Arch_Amazon-Elastic-Kubernetes-Service_48.png" alt="" style="width:48px;height:48px;">
-            <span style="font-size:12px;color:var(--aws-purple-600);">LiveKit SIP</span>
-          </div>
-          <div style="display:flex;gap:8px;margin-top:8px;">
-            <div style="background:var(--aws-white);border:1px solid var(--aws-purple-400);border-radius:3px;padding:2px 8px;">
-              <span style="font-size:9px;color:var(--aws-purple-600);font-family:var(--aws-font-mono);">UDP 5060 (SIP signaling)</span>
-            </div>
-            <div style="background:var(--aws-white);border:1px solid var(--aws-purple-400);border-radius:3px;padding:2px 8px;">
-              <span style="font-size:9px;color:var(--aws-purple-600);font-family:var(--aws-font-mono);">UDP 10000-20000 (RTP media)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Security Group callout -->
-        <div style="position:absolute;left:260px;top:510px;">
-          <span style="font-size:10px;color:var(--aws-gray-500);font-family:var(--aws-font-mono);">Security Group: allow inbound UDP 50000-60000, 10000-20000, 5060 from 0.0.0.0/0</span>
-        </div>
-
-        <!-- Private subnet: State management -->
-        <div style="position:absolute;left:910px;top:130px;display:flex;align-items:center;gap:6px;">
-          <span style="font-size:10px;font-weight:500;color:var(--aws-teal-600);font-family:var(--aws-font-mono);text-transform:uppercase;letter-spacing:0.04em;">State</span>
-        </div>
-        <div class="arch-node" style="left: 1050px; top: 140px;">
-          <img src="assets/icons/arch/Arch_Amazon-ElastiCache_48.png" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;">ElastiCache (Redis)</span>
-          <span style="font-size:9px;color:var(--aws-gray-500);">Room→node routing</span>
-        </div>
-
-        <!-- Private subnet: Observability -->
-        <div style="position:absolute;left:910px;top:260px;display:flex;align-items:center;gap:6px;">
-          <span style="font-size:10px;font-weight:500;color:var(--aws-teal-600);font-family:var(--aws-font-mono);text-transform:uppercase;letter-spacing:0.04em;">Observability</span>
-        </div>
-        <div class="arch-node" style="left: 1000px; top: 280px;">
-          <img src="assets/icons/arch/Arch_Amazon-Managed-Service-for-Prometheus_48.png" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;">Prometheus</span>
-          <span style="font-size:9px;color:var(--aws-gray-500);">Metrics :6789</span>
-        </div>
-
-        <div class="arch-node" style="left: 1250px; top: 280px;">
-          <img src="assets/icons/arch/Arch_Amazon-Managed-Grafana_48.png" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;">Grafana</span>
-          <span style="font-size:9px;color:var(--aws-gray-500);">Dashboards</span>
-        </div>
-
-        <!-- Private subnet: Events and storage -->
-        <div style="position:absolute;left:910px;top:390px;display:flex;align-items:center;gap:6px;">
-          <span style="font-size:10px;font-weight:500;color:var(--aws-teal-600);font-family:var(--aws-font-mono);text-transform:uppercase;letter-spacing:0.04em;">Events</span>
-        </div>
-        <div class="arch-node" style="left: 1000px; top: 410px;">
-          <img src="assets/icons/arch/Arch_Amazon-EventBridge_48.png" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;">EventBridge</span>
-          <span style="font-size:9px;color:var(--aws-gray-500);">Webhooks</span>
-        </div>
-
-        <div class="arch-node" style="left: 1250px; top: 410px;">
-          <img src="assets/icons/arch/Arch_Amazon-Simple-Storage-Service_48.png" alt="" style="width:48px;height:48px;">
-          <span style="font-size:12px;">Amazon S3</span>
-          <span style="font-size:9px;color:var(--aws-gray-500);">Recordings</span>
-        </div>
-
-        <!-- Arrows SVG overlay -->
-        <svg class="arch-arrows" viewBox="0 0 1600 620" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <path d="M0,0 L8,3 L0,6" fill="#9BA7B6"/>
-            </marker>
-            <marker id="arrowhead-orange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <path d="M0,0 L8,3 L0,6" fill="#FF9900"/>
-            </marker>
-            <marker id="arrowhead-cyan" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <path d="M0,0 L8,3 L0,6" fill="#0097A7"/>
-            </marker>
-            <marker id="arrowhead-purple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
-              <path d="M0,0 L8,3 L0,6" fill="#AD5CFF"/>
-            </marker>
-          </defs>
-
-          <!-- Client → NLB (signaling) -->
-          <path d="M100,225 L240,225 L240,150 L438,150" fill="none" stroke="#FF9900" stroke-width="2" marker-end="url(#arrowhead-orange)"/>
-          <text x="280" y="143" font-size="10" fill="#FF9900" font-family="monospace">WSS 7880</text>
-
-          <!-- Client → SFU (UDP media, direct) -->
-          <line x1="100" y1="250" x2="288" y2="290" stroke="#0097A7" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead-cyan)"/>
-          <text x="120" y="300" font-size="10" fill="#0097A7" font-family="monospace">UDP media</text>
-
-          <!-- PSTN → SIP service -->
-          <line x1="100" y1="440" x2="288" y2="440" stroke="#AD5CFF" stroke-width="2" marker-end="url(#arrowhead-purple)"/>
-          <text x="140" y="432" font-size="10" fill="#AD5CFF" font-family="monospace">SIP (UDP 5060)</text>
-
-          <!-- NLB → SFU -->
-          <line x1="466" y1="195" x2="466" y2="218" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-          <!-- SIP → SFU (internal) -->
-          <line x1="520" y1="408" x2="520" y2="354" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-          <!-- SFU → Redis -->
-          <path d="M752,270 L850,270 L850,180 L1048,180" fill="none" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-          <!-- SFU → Prometheus -->
-          <line x1="752" y1="300" x2="998" y2="300" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-          <!-- SFU → EventBridge -->
-          <path d="M752,330 L850,330 L850,440 L998,440" fill="none" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-          <!-- Prometheus → Grafana -->
-          <line x1="1100" y1="300" x2="1248" y2="300" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-
-          <!-- EventBridge → S3 -->
-          <line x1="1100" y1="440" x2="1248" y2="440" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        </svg>
-
-        <!-- Legend -->
-        <div style="position:absolute;right:30px;top:12px;display:flex;gap:18px;align-items:center;">
-          <div style="display:flex;align-items:center;gap:5px;">
-            <div style="width:20px;height:3px;background:#FF9900;"></div>
-            <span style="font-size:10px;color:var(--aws-gray-550);">Signaling (TCP)</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:5px;">
-            <div style="width:20px;height:0;border-top:2px dashed #0097A7;"></div>
-            <span style="font-size:10px;color:var(--aws-gray-550);">Media (UDP direct)</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:5px;">
-            <div style="width:20px;height:3px;background:#AD5CFF;"></div>
-            <span style="font-size:10px;color:var(--aws-gray-550);">Telephony (SIP)</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:5px;">
-            <div style="width:20px;height:2px;background:#9BA7B6;"></div>
-            <span style="font-size:10px;color:var(--aws-gray-550);">Internal</span>
-          </div>
-        </div>
-      </div>
+    <div style="position: absolute; left: 80px; top: 260px; right: 80px; bottom: 60px; display: flex; align-items: center; justify-content: center;">
+      <img src="assets/livekit-on-amazon-eks-architecture.png" alt="LiveKit on Amazon EKS — public subnet deployment architecture" style="max-width: 100%; max-height: 100%; object-fit: contain;">
     </div>
-    <div class="slide-no">18 / 24</div>
+    <div class="slide-no">18 / 25</div>
   </section>
+
 
   <!-- TURN-assisted alternative architecture -->
   <section class="slide" data-label="TURN architecture">
@@ -1188,7 +973,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">19 / 24</div>
+    <div class="slide-no">19 / 25</div>
   </section>
 
   <!-- 16: Key takeaways -->
@@ -1235,7 +1020,58 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">20 / 24</div>
+    <div class="slide-no">20 / 25</div>
+  </section>
+
+  <!-- Appendix: Capacity Planning -->
+  <section class="slide" data-label="Capacity planning">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 80px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">APPENDIX</div>
+      <h2 class="h-content" style="color: var(--aws-gray-850); font-size: 38px;">Capacity planning — per-node sizing</h2>
+    </div>
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px; bottom: 80px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 18px; color: var(--aws-gray-850);">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--aws-gray-300);">
+            <th style="text-align: left; padding: 12px 16px; font-weight: 600;">Metric</th>
+            <th style="text-align: left; padding: 12px 16px; font-weight: 600;">Guidance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 12px 16px;">Bottleneck</td>
+            <td style="padding: 12px 16px;">Down-track fan-out (publishers x subscribers x tracks)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 12px 16px;">Per-core capacity</td>
+            <td style="padding: 12px 16px;">~400 down-tracks per CPU core</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 12px 16px;">Single node (c6i.2xlarge, 8 vCPU)</td>
+            <td style="padding: 12px 16px;">~1,600+ concurrent down-tracks, no quality degradation</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 12px 16px;">4-node cluster (c6i.2xlarge)</td>
+            <td style="padding: 12px 16px;">15,000–20,000 concurrent users per region (~60% CPU)</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 12px 16px;">Room pinning</td>
+            <td style="padding: 12px 16px;">1 room = 1 node. Scaling adds rooms, not participants per room.</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 12px 16px;">Cost estimate (Spot)</td>
+            <td style="padding: 12px 16px;">~$800–1,200/month per region for 15K–20K concurrent users</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px 16px;">Critical requirement</td>
+            <td style="padding: 12px 16px;"><code style="background: var(--aws-gray-100); padding: 2px 6px; border-radius: 4px;">hostNetwork: true</code> — kube-proxy NAT adds 5–15ms latency</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="body-sm" style="color: var(--aws-gray-550); margin-top: 32px;">Sources: LiveKit Engineering Blog (multi-core SFU benchmarks), LiveKit Docs (deployment guidance), KubeAce (Kubernetes production benchmarks on AWS)</p>
+    </div>
+    <div class="slide-no">21 / 25</div>
   </section>
 
   <!-- 17: Thank you -->
