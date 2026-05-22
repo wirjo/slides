@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LiveKit on Amazon EKS</title>
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<script src="assets/deck-stage.js"></script>
+<style>
+  html, body { margin: 0; background: #000; }
+  deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
+
+  .slide {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    font-family: var(--aws-font-display);
+    background: var(--aws-white); color: var(--aws-gray-850);
+  }
+  .slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+  .slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+  .logo-tl { position: absolute; top: 40px; left: 80px; height: 48px; width: auto; }
+  .logo-br { position: absolute; bottom: 40px; right: 80px; height: 48px; width: auto; }
+  .logo-tr { position: absolute; top: 40px; right: 80px; height: 48px; width: auto; }
+
+  .eyebrow {
+    font-family: var(--aws-font-mono); font-size: 22px; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .h-cover  { font-size: 120px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; }
+  .h-title  { font-size: 72px;  line-height: 1.1;  font-weight: 400; }
+  .h-content{ font-size: 56px;  line-height: 1.15; font-weight: 400; }
+  .body-lg  { font-size: 28px;  line-height: 1.35; font-weight: 400; }
+  .body-md  { font-size: 22px;  line-height: 1.4;  font-weight: 400; }
+  .body-sm  { font-size: 18px;  line-height: 1.5;  font-weight: 400; }
+
+  .slide-no { position: absolute; right: 80px; bottom: 73px; font-family: var(--aws-font-mono); font-size: 16px; letter-spacing: 0.08em; color: var(--aws-gray-500); }
+  .dark .slide-no { color: var(--aws-gray-400); }
+
+  /* Cover */
+  .cover-bg {
+    position: absolute; inset: 0;
+    background: url(assets/aws-gradient-light-1d.png) center / cover no-repeat;
+  }
+  .cover-body { position: absolute; left: 80px; top: 73px; right: 80px; bottom: 73px; display: flex; flex-direction: column; justify-content: center; }
+
+  /* Safe area */
+  .safe { position: absolute; left: 80px; right: 80px; top: 240px; bottom: 140px; }
+
+  /* Agenda */
+  .agenda-list { display: grid; grid-template-columns: 1fr 1fr; row-gap: 32px; column-gap: 96px; margin-top: 48px; }
+  .agenda-row { display: grid; grid-template-columns: 72px 1fr; align-items: baseline; }
+  .agenda-no { font-family: var(--aws-font-mono); font-size: 24px; color: var(--aws-orange-400); }
+  .agenda-title { font-size: 32px; line-height: 1.2; }
+
+  /* Two column */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 48px; }
+  .col h3 { font-size: 28px; font-weight: 500; margin-bottom: 24px; color: var(--aws-teal-600); }
+  .dark .col h3 { color: var(--aws-teal-400); }
+  .col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 16px; }
+  .col li { font-size: 22px; line-height: 1.4; padding-left: 24px; position: relative; }
+  .col li::before { content: ""; position: absolute; left: 0; top: 12px; width: 8px; height: 8px; border-radius: 50%; background: var(--aws-orange-400); }
+
+  /* Bullet list */
+  .bullet-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 24px; margin-top: 48px; }
+  .bullet-list li { font-size: 26px; line-height: 1.35; padding-left: 32px; position: relative; }
+  .bullet-list li::before { content: ""; position: absolute; left: 0; top: 14px; width: 10px; height: 10px; border-radius: 50%; background: var(--aws-orange-400); }
+  .dark .bullet-list li::before { background: var(--aws-orange-300); }
+
+  /* Feature cards */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 48px; }
+  .card {
+    background: var(--aws-gray-100); border-radius: 12px; padding: 48px 28px;
+    display: flex; flex-direction: column; align-items: center; text-align: center; gap: 20px;
+    border-top: 4px solid var(--aws-orange-400);
+    min-height: 280px; justify-content: flex-start;
+  }
+  .card svg { flex-shrink: 0; }
+  .card h4 { font-size: 24px; font-weight: 500; color: var(--aws-gray-850); margin: 0; }
+  .card p { font-size: 18px; line-height: 1.5; color: var(--aws-gray-650); margin: 0; }
+
+  /* Port table */
+  .port-table { width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 22px; }
+  .port-table th {
+    background: var(--aws-gray-850); color: var(--aws-white); padding: 16px 20px;
+    text-align: left; font-weight: 500; font-size: 20px;
+  }
+  .port-table td { padding: 14px 20px; border-bottom: 1px solid var(--aws-gray-200); color: var(--aws-gray-850); }
+  .port-table tr:last-child td { border-bottom: none; }
+  .port-table .mono { font-family: var(--aws-font-mono); font-size: 20px; }
+
+  /* Architecture diagram */
+  .arch-diagram {
+    position: relative; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .arch-canvas {
+    position: relative; width: 1600px; height: 680px;
+  }
+  .arch-group {
+    position: absolute; border-radius: 12px; padding: 16px;
+    display: flex; flex-direction: column;
+  }
+  .arch-group-label {
+    font-family: var(--aws-font-mono); font-size: 16px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 8px;
+  }
+  .arch-node {
+    position: absolute; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .arch-node img { width: 56px; height: 56px; }
+  .arch-node span { font-size: 15px; font-weight: 400; text-align: center; white-space: nowrap; color: var(--aws-gray-850); }
+
+  /* Arrow lines via SVG overlay */
+  .arch-arrows {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .arch-arrows line { stroke: var(--aws-gray-400); stroke-width: 2; }
+  .arch-arrows line.highlight { stroke: var(--aws-orange-400); stroke-width: 2.5; }
+  .arch-arrows marker path { fill: var(--aws-gray-400); }
+
+  /* Comparison boxes */
+  .compare-box {
+    border-radius: 12px; padding: 40px;
+  }
+  .compare-box.left { background: var(--aws-gray-100); border-left: 4px solid var(--aws-teal-600); }
+  .compare-box.right { background: var(--aws-gray-100); border-left: 4px solid var(--aws-orange-400); }
+  .compare-box h3 { font-size: 26px; font-weight: 500; margin: 0 0 20px 0; }
+  .compare-box ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .compare-box li { font-size: 20px; line-height: 1.4; color: var(--aws-gray-650); padding-left: 20px; position: relative; }
+  .compare-box li::before { content: ""; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; border-radius: 50%; background: var(--aws-gray-500); }
+
+  /* Key takeaways */
+  .takeaway { display: flex; gap: 24px; align-items: flex-start; }
+  .takeaway-num {
+    font-family: var(--aws-font-mono); font-size: 36px; font-weight: 500;
+    color: var(--aws-orange-400); min-width: 56px;
+  }
+  .takeaway h4 { font-size: 28px; font-weight: 500; margin: 0 0 8px 0; color: var(--aws-gray-850); }
+  .takeaway p { font-size: 20px; color: var(--aws-gray-650); margin: 0; line-height: 1.4; }
+
+  /* Section divider */
+  .section-body {
+    position: absolute; left: 80px; right: 80px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 24px;
+  }
+  .pattern-strip {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 400px;
+    background: url(assets/aws-pattern-modular-1a.png) center / cover;
+    opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+
+<deck-stage>
+
+  <!-- 01: Cover -->
+  <section class="slide" data-label="Cover">
+    <div class="cover-bg"></div>
+    <div class="cover-body">
+      <div class="eyebrow" style="color: var(--aws-gray-600); margin-bottom: 40px;">ARCHITECTURE DEEP DIVE</div>
+      <h1 class="h-cover" style="max-width: 1400px;">Building voice agents with LiveKit on Amazon EKS</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 40px; max-width: 1000px;">
+        LiveKit self-hosted deployment, networking, SIP telephony, and voice AI pipeline patterns
+      </p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- 02: Agenda -->
+  <section class="slide" data-label="Agenda">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">SESSION OVERVIEW</div>
+      <h1 class="h-title" style="margin-top: 16px;">In this session</h1>
+      <div class="agenda-list">
+        <div class="agenda-row"><div class="agenda-no">01</div><div class="agenda-title">LiveKit architecture overview</div></div>
+        <div class="agenda-row"><div class="agenda-no">02</div><div class="agenda-title">Self-hosted vs LiveKit Cloud</div></div>
+        <div class="agenda-row"><div class="agenda-no">03</div><div class="agenda-title">The analytics and telemetry gap</div></div>
+        <div class="agenda-row"><div class="agenda-no">04</div><div class="agenda-title">SIP telephony and AI voice agents</div></div>
+        <div class="agenda-row"><div class="agenda-no">05</div><div class="agenda-title">WebRTC networking on EKS</div></div>
+        <div class="agenda-row"><div class="agenda-no">06</div><div class="agenda-title">NLB vs ALB for LiveKit</div></div>
+        <div class="agenda-row"><div class="agenda-no">07</div><div class="agenda-title">Voice agent pipeline challenges</div></div>
+        <div class="agenda-row"><div class="agenda-no">08</div><div class="agenda-title">Recommended architecture</div></div>
+      </div>
+    </div>
+    <div class="slide-no">02 / 24</div>
+  </section>
+
+  <!-- 03: What is LiveKit (feature cards) -->
+  <section class="slide" data-label="What is LiveKit">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">OVERVIEW</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">LiveKit on AWS provides streaming infrastructure for voice, video, and physical AI agents</h1>
+      <p style="font-size: 22px; color: var(--aws-gray-650); margin-top: 16px; max-width: 1400px; line-height: 1.4;">Three core components: <strong>LiveKit Server</strong> (WebRTC SFU for low-latency media routing), <strong>SIP</strong> (bridge PSTN telephony into WebRTC rooms), and <strong>Agents</strong> (framework for building voice AI pipelines with STT, LLM, and TTS orchestration).</p>
+      <div class="cards">
+        <div class="card">
+          <img src="assets/icons/res/Res_Server_48_Light.svg" width="48" height="48" alt="">
+          <h4>SFU architecture</h4>
+          <p>Selective forwarding without transcoding. Low latency at scale. Each room fits a single node.</p>
+        </div>
+        <div class="card">
+          <img src="assets/icons/res/Res_Shield_48_Light.svg" width="48" height="48" alt="">
+          <h4>Embedded TURN</h4>
+          <p>Built-in TURN server with integrated auth for firewall traversal. TCP/TLS fallback when UDP blocked.</p>
+        </div>
+        <div class="card">
+          <img src="assets/icons/res/Res_Data-Stream_48_Light.svg" width="48" height="48" alt="">
+          <h4>Egress and ingress</h4>
+          <p>Record to S3, stream via RTMP/WHIP, ingest SIP calls. Compositing and transcoding built in.</p>
+        </div>
+        <div class="card">
+          <img src="assets/icons/res/Res_Gear_48_Light.svg" width="48" height="48" alt="">
+          <h4>AI agent framework</h4>
+          <p>Native integration for voice AI agents and real-time processing. STT/LLM/TTS pipeline orchestration.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">03 / 24</div>
+  </section>
+
+  <!-- AWS Voice AI Ecosystem -->
+  <section class="slide" data-label="Voice AI ecosystem">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 160px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">ECOSYSTEM</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 40px;">AWS voice AI ecosystem — breadth and depth across the stack</h1>
+      <p style="font-size:18px;color:var(--aws-gray-550);margin-top:8px;">AWS has partnerships across the voice AI ecosystem to help customers build voice agents. Third-party providers are available on AWS Marketplace or through the specialist GTM team.</p>
+    </div>
+    <div style="position: absolute; left: 80px; top: 310px; right: 80px; bottom: 40px; display: flex; flex-direction: column; gap: 8px;">
+
+      <!-- Streaming infrastructure -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-teal-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">Streaming</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">WebRTC infrastructure</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-teal-600);">
+          <div style="text-align:center;min-width:80px;"><img src="assets/icons/arch/Arch_Amazon-Kinesis-Video-Streams_48.png" alt="KVS" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Amazon KVS</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/69438833?s=200" alt="LiveKit" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">LiveKit</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/49293360?s=200" alt="Daily" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Daily</div></div>
+        </div>
+      </div>
+
+      <!-- Telephony -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-orange-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">Telephony</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">SIP trunk providers</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-orange-400);">
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/109142?s=200" alt="Twilio" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Twilio</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/10522416?s=200" alt="Telnyx" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Telnyx</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/2683897?s=200" alt="Vonage" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Vonage</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/40630007?s=200" alt="Genesys" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Genesys</div></div>
+        </div>
+      </div>
+
+      <!-- Orchestration: DIY -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-teal-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">Orchestration</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">DIY frameworks</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-teal-600);">
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/69438833?s=200" alt="LiveKit" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">LiveKit Agents</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/169612734?s=200" alt="Pipecat" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Pipecat</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/209155962?s=200" alt="Strands" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Strands Agents</div></div>
+        </div>
+      </div>
+
+      <!-- Orchestration: No-code -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-orange-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">Orchestration</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">No-code platforms</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-orange-400);">
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/144965430?s=200" alt="Vapi" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Vapi</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/94471909?s=200" alt="ElevenLabs" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">ElevenAgents</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/134814352?s=200" alt="Cartesia" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Cartesia Line</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/17422641?s=200" alt="Deepgram" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Deepgram Voice Agent</div></div>
+        </div>
+      </div>
+
+      <!-- STT row -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-teal-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">Speech-to-Text</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">Real-time transcription</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-teal-600);">
+          <div style="text-align:center;min-width:80px;"><img src="assets/icons/arch/Arch_Amazon-Transcribe_48.png" alt="Transcribe" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Amazon Transcribe</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/14957082?s=200" alt="OpenAI" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Whisper (OpenAI)</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/17422641?s=200" alt="Deepgram" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Deepgram</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/24515738?s=200" alt="AssemblyAI" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">AssemblyAI</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/92447723?s=200" alt="Gladia" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Gladia</div></div>
+        </div>
+      </div>
+
+      <!-- LLM row -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-orange-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">LLM / Reasoning</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">Foundation models</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-orange-400);">
+          <div style="text-align:center;min-width:80px;"><img src="assets/icons/arch/Arch_Amazon-Bedrock_48.png" alt="Bedrock" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Amazon Bedrock</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="assets/icons/arch/Arch_Amazon-Bedrock_48.png" alt="Nova Sonic" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Nova Sonic (S2S)</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/76263028?s=200" alt="Anthropic" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Claude</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/14957082?s=200" alt="OpenAI" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">GPT</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/153379578?s=200" alt="Meta" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Llama</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://upload.wikimedia.org/wikipedia/sco/2/21/Nvidia_logo.svg" alt="NVIDIA" style="height:24px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Nemotron Super</div></div>
+        </div>
+      </div>
+
+      <!-- TTS row -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-teal-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">Text-to-Speech</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">Voice synthesis</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-teal-600);">
+          <div style="text-align:center;min-width:80px;"><img src="assets/icons/arch/Arch_Amazon-Polly_48.png" alt="Polly" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Amazon Polly</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="assets/icons/arch/Arch_Amazon-Bedrock_48.png" alt="Nova Sonic" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Nova Sonic (S2S)</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/94471909?s=200" alt="ElevenLabs" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">ElevenLabs</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/134814352?s=200" alt="Cartesia" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Cartesia</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/17422641?s=200" alt="Deepgram" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Deepgram Aura</div></div>
+        </div>
+      </div>
+
+      <!-- Eval row -->
+      <div style="display: flex; align-items: center; gap: 0; flex: 1;">
+        <div style="width: 170px; flex-shrink: 0;">
+          <span style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-orange-600); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 500;">Eval and Platform</span>
+          <p style="font-size: 11px; color: var(--aws-gray-500); margin: 2px 0 0;">Testing, observability</p>
+        </div>
+        <div style="flex: 1; display: flex; align-items: center; gap: 24px; padding: 10px 20px; background: var(--aws-gray-100); border-radius: 8px; border-left: 4px solid var(--aws-orange-400);">
+          <div style="text-align:center;min-width:80px;"><img src="assets/icons/arch/Arch_Amazon-CloudWatch_48.png" alt="CloudWatch" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">CloudWatch</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://www.cekura.ai/favicon.ico" alt="Cekura" style="height:32px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Cekura</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/130830718?s=200" alt="Coval" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Coval</div></div>
+          <div style="text-align:center;min-width:80px;"><img src="https://avatars.githubusercontent.com/u/134601687?s=200" alt="Langfuse" style="height:32px;border-radius:6px;"><div style="font-size:11px;color:var(--aws-gray-650);margin-top:2px;">Langfuse</div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="slide-no">04 / 24</div>
+  </section>
+
+  <!-- 05: Voice agent reference architecture -->
+  <section class="slide" data-label="Reference architecture">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 140px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">REFERENCE ARCHITECTURE</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 44px;">Guidance for building voice agents on AWS</h1>
+    </div>
+    <div style="position: absolute; left: 0; top: 260px; right: 0; bottom: 0; display:flex; align-items:center; justify-content:center;">
+      <img src="assets/voice-agents-reference-architecture.png" alt="Guidance for building voice agents on AWS — reference architecture" style="width: 100%; height: 100%; object-fit: contain;">
+    </div>
+  </section>
+
+  <!-- Section divider - Deploying LiveKit -->
+  <section class="slide" data-label="Deploying LiveKit section">
+    <div class="pattern-strip"></div>
+    <img class="logo-tr" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="section-body" style="left: 500px;">
+      <div class="eyebrow" style="color: var(--aws-orange-400);">DEPLOYMENT</div>
+      <h1 class="h-title" style="color: var(--aws-gray-850); max-width: 1000px;">Deploying LiveKit on AWS</h1>
+    </div>
+  </section>
+
+  <!-- 05: Self-hosted vs Cloud -->
+  <section class="slide" data-label="Self-hosted vs Cloud">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">COMPARISON</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">Self-hosted vs LiveKit Cloud</h1>
+      <div class="two-col" style="margin-top: 40px;">
+        <div class="compare-box left">
+          <h3 style="color: var(--aws-teal-600);">Self-hosted (EKS)</h3>
+          <ul>
+            <li>Full infrastructure control</li>
+            <li>Single region (DIY multi-region)</li>
+            <li>No built-in analytics dashboard</li>
+            <li>Webhooks + Prometheus only</li>
+            <li>Each room fits one node</li>
+            <li>EC2/EKS cost model</li>
+          </ul>
+        </div>
+        <div class="compare-box right">
+          <h3 style="color: var(--aws-orange-600);">LiveKit Cloud</h3>
+          <ul>
+            <li>Fully managed, elastic autoscaling</li>
+            <li>Global mesh of media servers</li>
+            <li>Session inspector + agent insights</li>
+            <li>Turn-by-turn telemetry</li>
+            <li>SOC 2, GDPR, CCPA, HIPAA</li>
+            <li>Per-participant-minute pricing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">05 / 24</div>
+  </section>
+
+  <!-- 05: Analytics gap -->
+  <section class="slide" data-label="Analytics gap">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">OBSERVABILITY</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">Analytics and telemetry: what you need to build</h1>
+      <p style="font-size: 22px; color: var(--aws-gray-650); margin-top: 16px; line-height: 1.4;">Self-hosting gives you full flexibility to design an observability stack tailored to your requirements, integrating with the AWS services you already use.</p>
+      <div class="two-col" style="margin-top: 32px;">
+        <div class="compare-box left">
+          <h3 style="color: var(--aws-teal-600);">Custom observability (self-hosted)</h3>
+          <ul>
+            <li>Room and participant lifecycle webhooks</li>
+            <li>Track published/unpublished events</li>
+            <li>Egress/ingress lifecycle events</li>
+            <li>Prometheus metrics (port 6789)</li>
+            <li>Integrate with your existing stack (CloudWatch, Grafana, Datadog)</li>
+            <li>Full control over retention and alerting</li>
+          </ul>
+        </div>
+        <div class="compare-box right">
+          <h3 style="color: var(--aws-orange-600);">What you can build on top</h3>
+          <ul>
+            <li>Session quality dashboard</li>
+            <li>Per-participant metrics (jitter, loss)</li>
+            <li>Call quality scoring (MOS)</li>
+            <li>Session replay and inspector</li>
+            <li>Usage analytics and billing integration</li>
+            <li>Alerting on degraded sessions</li>
+          </ul>
+          <p style="font-size:16px;color:var(--aws-gray-550);margin-top:16px;">*AWS and LiveKit can co-build solutions for select customers</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">06 / 24</div>
+  </section>
+
+  <!-- 06: SIP telephony integration -->
+  <section class="slide" data-label="SIP telephony">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">TELEPHONY</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">LiveKit SIP: bridging PSTN to WebRTC rooms</h1>
+      <div class="two-col" style="margin-top: 36px;">
+        <div class="compare-box left" style="border-left-color: var(--aws-teal-400);">
+          <h3 style="color: var(--aws-teal-600);">How it works</h3>
+          <ul>
+            <li>Separate service (<span style="font-family:var(--aws-font-mono);font-size:0.9em;">livekit/sip</span> container)</li>
+            <li>Bridges SIP INVITEs into LiveKit rooms</li>
+            <li>SIP callers appear as regular participants</li>
+            <li>Dispatch rules route calls to rooms (PIN optional)</li>
+            <li>Shares Redis with LiveKit server for session state</li>
+            <li>Supports inbound and outbound calls</li>
+          </ul>
+        </div>
+        <div class="compare-box right" style="border-left-color: var(--aws-orange-400);">
+          <h3 style="color: var(--aws-orange-600);">Best practices</h3>
+          <ul>
+            <li>Restrict inbound trunks by provider IP/CIDR</li>
+            <li>Use digest authentication on all trunks</li>
+            <li><span style="font-family:var(--aws-font-mono);font-size:0.9em;">hide_phone_number: true</span> for privacy</li>
+            <li>On-device noise cancellation (e.g., Krisp) for AI agent calls</li>
+            <li>Separate node group (host networking required)</li>
+            <li>SRTP for encrypted media where supported</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 32px; display: flex; gap: 24px; align-items: center;">
+        <span class="body-sm" style="color: var(--aws-gray-550);">Tested providers:</span>
+        <span class="body-sm" style="color: var(--aws-gray-850);">Twilio &bull; Telnyx &bull; Exotel &bull; Plivo &bull; Wavix &bull; Amazon Connect* (External Voice Transfer, select customers only)</span>
+      </div>
+    </div>
+    <div class="slide-no">07 / 24</div>
+  </section>
+
+  <!-- 07: SIP + AI agents -->
+  <section class="slide" data-label="SIP AI agents">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">AI VOICE AGENTS</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">SIP + LiveKit agents: AI-powered phone calls</h1>
+      <p style="font-size: 22px; color: var(--aws-gray-650); margin-top: 16px; line-height: 1.4; max-width: 1400px;">Modern telephony providers offer a SIP trunk to facilitate easy integration to voice agents. We recommend selecting a provider that integrates directly to the orchestration layer.</p>
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 28px;">
+        <div style="display: flex; align-items: flex-start; gap: 24px;">
+          <div style="min-width:56px;height:56px;background:var(--aws-gray-100);border:1px solid var(--aws-gray-300);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-family:var(--aws-font-mono);color:var(--aws-orange-600);font-weight:500;">1</div>
+          <div><h4 style="color:var(--aws-gray-850);font-size:22px;margin:0 0 6px;">Create a SIP trunk on your telephony provider</h4><p class="body-sm" style="color:var(--aws-gray-550);">Configure a SIP trunk in Twilio, Telnyx, or Amazon Connect* (External Voice Transfer, select customers only). Set the trunk endpoint to your LiveKit SIP service IP.</p></div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 24px;">
+          <div style="min-width:56px;height:56px;background:var(--aws-gray-100);border:1px solid var(--aws-gray-300);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-family:var(--aws-font-mono);color:var(--aws-orange-600);font-weight:500;">2</div>
+          <div><h4 style="color:var(--aws-gray-850);font-size:22px;margin:0 0 6px;">Purchase a phone number (DID)</h4><p class="body-sm" style="color:var(--aws-gray-550);">Associate the number with your SIP trunk. Callers dial this number to reach your LiveKit application.</p></div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 24px;">
+          <div style="min-width:56px;height:56px;background:var(--aws-gray-100);border:1px solid var(--aws-gray-300);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-family:var(--aws-font-mono);color:var(--aws-orange-600);font-weight:500;">3</div>
+          <div><h4 style="color:var(--aws-gray-850);font-size:22px;margin:0 0 6px;">Configure LiveKit SIP endpoint</h4><p class="body-sm" style="color:var(--aws-gray-550);">Create an inbound trunk (IP allowlist + auth) and dispatch rule (routes calls to rooms). SIP participant auto-joins as a standard room participant.</p></div>
+        </div>
+        <div style="display: flex; align-items: flex-start; gap: 24px;">
+          <div style="min-width:56px;height:56px;background:var(--aws-gray-100);border:1px solid var(--aws-gray-300);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;font-family:var(--aws-font-mono);color:var(--aws-orange-600);font-weight:500;">4</div>
+          <div><h4 style="color:var(--aws-gray-850);font-size:22px;margin:0 0 6px;">LiveKit agent handles the call</h4><p class="body-sm" style="color:var(--aws-gray-550);">Agent subscribes to room, processes audio via STT/LLM/TTS pipeline. On-device noise cancellation (e.g., Krisp) recommended for telephony audio.</p></div>
+        </div>
+      </div>
+      <div style="margin-top: 24px; display: flex; gap: 24px;">
+        <div style="flex:1; padding: 16px 24px; background: var(--aws-gray-100); border-left: 3px solid var(--aws-teal-600); border-radius: 8px;">
+          <p class="body-sm" style="color: var(--aws-gray-650); margin: 0;">EKS deployment: SIP service runs as a separate DaemonSet with host networking. Ports: UDP 5060 (SIP signaling) + UDP 10000-20000 (RTP media). Dedicated node group recommended.</p>
+        </div>
+        <div style="flex:1; padding: 16px 24px; background: var(--aws-gray-100); border-left: 3px solid var(--aws-orange-400); border-radius: 8px;">
+          <p class="body-sm" style="color: var(--aws-gray-650); margin: 0;"><strong style="color:var(--aws-gray-850);">Existing CCaaS platforms</strong> may not offer direct SIP trunk integration to external voice agents. In this case, it is perfectly valid to run AI voice agents on a separate number alongside your human call centre — a parallel deployment gives you independent scaling, faster iteration, and clear cost attribution.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">08 / 24</div>
+  </section>
+
+  <!-- 08: Section divider - Networking -->
+  <section class="slide" data-label="Networking section">
+    <div class="pattern-strip"></div>
+    <img class="logo-tr" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="section-body" style="left: 500px;">
+      <div class="eyebrow" style="color: var(--aws-orange-400);">NETWORKING</div>
+      <h1 class="h-title" style="color: var(--aws-gray-850); max-width: 1000px;">WebRTC on EKS requires careful network planning</h1>
+    </div>
+  </section>
+
+  <!-- 07: Networking constraints -->
+  <section class="slide" data-label="Networking constraints">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">CONSTRAINTS</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">WebRTC networking on EKS</h1>
+      <ul class="bullet-list" style="max-width: 1400px;">
+        <li><strong>Host networking required</strong> - LiveKit binds directly to node ports. Pod networking adds NAT that breaks ICE.</li>
+        <li><strong>One pod per node</strong> - host port binding means no colocated LiveKit pods. Use DaemonSet.</li>
+        <li><strong>No Fargate, no private clusters</strong> - additional NAT layers are unsuitable for WebRTC traffic.</li>
+        <li><strong>UDP 50000-60000 inbound</strong> - security groups must allow this range. Two ports per participant.</li>
+        <li><strong>use_external_ip: true</strong> - STUN-based public IP discovery required in cloud environments.</li>
+        <li><strong>Compute-optimized</strong> - c6i/c7i instances with 10Gbps+ enhanced networking.</li>
+      </ul>
+    </div>
+    <div class="slide-no">09 / 24</div>
+  </section>
+
+  <!-- 08: Port table -->
+  <section class="slide" data-label="Port architecture">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">PORTS</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">Port architecture and load balancer mapping</h1>
+      <table class="port-table">
+        <tr><th>Service</th><th>Port</th><th>Protocol</th><th>Load balancer</th><th>Notes</th></tr>
+        <tr><td>Signal/API</td><td class="mono">7880</td><td>TCP (WSS)</td><td>ALB or NLB</td><td>SSL termination at LB</td></tr>
+        <tr><td>RTC fallback</td><td class="mono">7881</td><td>TCP</td><td>NLB (TCP)</td><td>When client UDP blocked</td></tr>
+        <tr><td>Media (ICE)</td><td class="mono">50000-60000</td><td>UDP</td><td>Direct to node</td><td>2 ports per participant</td></tr>
+        <tr><td>TURN/TLS</td><td class="mono">5349</td><td>TCP</td><td>NLB (TCP/TLS)</td><td>443 if no LB in front</td></tr>
+        <tr><td>TURN/UDP</td><td class="mono">3478</td><td>UDP</td><td>NLB (UDP)</td><td>Also serves as STUN</td></tr>
+        <tr><td style="color:var(--aws-teal-600);">SIP signaling</td><td class="mono">5060</td><td>UDP</td><td>Direct to node</td><td>SIP service (separate pod)</td></tr>
+        <tr><td style="color:var(--aws-teal-600);">SIP RTP media</td><td class="mono">10000-20000</td><td>UDP</td><td>Direct to node</td><td>SIP audio streams</td></tr>
+        <tr><td>Prometheus</td><td class="mono">6789</td><td>TCP</td><td>Internal only</td><td>Metrics scraping</td></tr>
+      </table>
+    </div>
+    <div class="slide-no">10 / 24</div>
+  </section>
+
+  <!-- 09: NLB vs ALB -->
+  <section class="slide" data-label="NLB vs ALB">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">LOAD BALANCING</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850);">NLB vs ALB for LiveKit</h1>
+      <div class="two-col" style="margin-top: 40px;">
+        <div class="compare-box left" style="border-left-color: var(--aws-teal-400);">
+          <h3 style="color: var(--aws-teal-600);">Network Load Balancer</h3>
+          <ul>
+            <li><strong>Required</strong> for TURN/TLS (TCP passthrough)</li>
+            <li><strong>Required</strong> for TURN/UDP (UDP listener)</li>
+            <li><strong>Required</strong> for RTC TCP fallback</li>
+            <li>Layer 4 - supports TCP and UDP</li>
+            <li>Preserves client IP (no SNAT)</li>
+            <li>Sub-millisecond latency</li>
+            <li>Static IPs for allowlisting</li>
+          </ul>
+        </div>
+        <div class="compare-box right" style="border-left-color: var(--aws-gray-400);">
+          <h3 style="color: var(--aws-gray-650);">Application Load Balancer*</h3>
+          <ul>
+            <li>Only for signaling WebSocket (7880)</li>
+            <li style="color: var(--aws-red-600);"><strong>Cannot</strong> handle UDP traffic</li>
+            <li style="color: var(--aws-red-600);"><strong>Cannot</strong> handle TURN traffic</li>
+            <li style="color: var(--aws-red-600);"><strong>Cannot</strong> handle RTC TCP fallback</li>
+            <li>Adds HTTP parsing latency</li>
+            <li>Value: WAF integration</li>
+            <li>Value: path-based routing</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:15px;color:var(--aws-gray-550);margin-top:24px;">*ALB is referenced in LiveKit documentation for signaling, but we recommend NLB for all traffic to simplify the architecture and avoid split load balancer management.</p>
+    </div>
+    <div class="slide-no">11 / 24</div>
+  </section>
+
+  <!-- 12b: Scalability considerations -->
+  <section class="slide" data-label="Scalability">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">SCALING</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 44px;">Scalability and autoscaling on EKS</h1>
+      <div style="display: flex; gap: 32px; margin-top: 36px;">
+        <!-- Capacity per node -->
+        <div style="flex:1; background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-orange-400); padding: 28px 24px;">
+          <h3 style="font-size: 22px; color: var(--aws-orange-600); margin: 0 0 16px; font-family: var(--aws-font-mono);">Capacity per node</h3>
+          <ul style="margin:0;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.7;">
+            <li><strong>~50-100 concurrent participants</strong> per c6i.4xlarge (16 vCPU, 32 GB)</li>
+            <li><strong>Each room fits one node</strong> — rooms cannot span multiple SFU instances</li>
+            <li><strong>2 UDP ports per participant</strong> — port range limits max participants per node</li>
+            <li><strong>CPU-bound</strong> — packet forwarding, SRTP encryption, not transcoding</li>
+          </ul>
+        </div>
+        <!-- Autoscaling strategy -->
+        <div style="flex:1; background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-teal-600); padding: 28px 24px;">
+          <h3 style="font-size: 22px; color: var(--aws-teal-600); margin: 0 0 16px; font-family: var(--aws-font-mono);">Autoscaling for spikes</h3>
+          <ul style="margin:0;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.7;">
+            <li><strong>Karpenter</strong> — provisions new nodes in ~60-90s (faster than Cluster Autoscaler)</li>
+            <li><strong>Pre-warm buffer</strong> — keep 2-3 idle nodes ready for instant room creation</li>
+            <li><strong>Custom metrics</strong> — scale on active rooms/participants, not CPU alone</li>
+            <li><strong>Redis routing</strong> — new rooms assigned to least-loaded available node</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 28px; padding: 16px 24px; background: var(--aws-gray-100); border-left: 3px solid var(--aws-teal-600); border-radius: 8px;">
+        <p style="font-size:17px;color:var(--aws-gray-650);margin:0;"><strong style="color:var(--aws-gray-850);">Planning formula:</strong> For N concurrent calls, provision N nodes minimum (1 room = 1 node). A 10-node cluster with c6i.4xlarge handles ~500-1000 concurrent participants across ~10 simultaneous rooms. Use Karpenter with a pre-warm pool to absorb traffic spikes within 90 seconds.</p>
+      </div>
+    </div>
+    <div class="slide-no">12 / 24</div>
+  </section>
+
+  <!-- 11: Voice agent pipeline section divider -->
+  <section class="slide" data-label="Voice pipeline section">
+    <div class="pattern-strip"></div>
+    <img class="logo-tr" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="section-body" style="left: 500px;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">VOICE AI</div>
+      <h1 class="h-title" style="color: var(--aws-gray-850); max-width: 1000px;">Cascaded pipeline challenges and scalable patterns</h1>
+    </div>
+  </section>
+
+  <!-- 12: Cascaded pipeline challenges -->
+  <section class="slide" data-label="Pipeline challenges">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">CASCADED ARCHITECTURE</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 44px;">STT → LLM → TTS pipeline</h1>
+      <p style="font-size:18px;color:var(--aws-gray-550);margin-top:8px;">Each stage introduces latency, concurrency limits, and failure modes that compound across the pipeline.</p>
+    </div>
+    <div style="position: absolute; left: 80px; top: 360px; right: 80px; bottom: 50px; display: flex; gap: 56px;">
+      <!-- STT column -->
+      <div style="flex:1; background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-teal-600); padding: 28px 24px;">
+        <div style="margin-bottom:18px;">
+          <h3 style="font-size: 26px; color: var(--aws-teal-600); margin: 0; font-family: var(--aws-font-mono);">Speech-to-Text (STT)</h3>
+          <span style="font-size: 15px; color: var(--aws-gray-550);">Converts audio stream into text for LLM processing</span>
+        </div>
+        <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:var(--aws-gray-850);text-transform:uppercase;letter-spacing:0.03em;">Challenges</p>
+        <ul style="margin:0 0 22px;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.6;">
+          <li><strong>Concurrency limits</strong> — providers cap at 50-150 concurrent streams</li>
+          <li><strong>False turn signals</strong> — silence-based VAD triggers on natural pauses</li>
+          <li><strong>WER degradation</strong> — telephony noise and accents increase errors</li>
+        </ul>
+        <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:var(--aws-teal-600);text-transform:uppercase;letter-spacing:0.03em;">Solutions</p>
+        <ul style="margin:0;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.6;">
+          <li><strong>Smart turn models</strong> — use transformer-based end-of-turn detection that understands semantic context, not just silence duration (<a href="https://livekit.com/blog/using-a-transformer-to-improve-end-of-turn-detection" style="color:var(--aws-teal-600);">LiveKit Agents</a>)</li>
+          <li><strong>STT-integrated turn detection</strong> — VAD bundled into the STT model itself</li>
+          <li><strong>On-device noise cancellation</strong> (e.g., Krisp) for telephony pre-processing</li>
+          <li><strong>Hybrid stream/batch</strong> — stream for conversation flow, batch-verify critical fields (names, amounts) before tool execution</li>
+        </ul>
+      </div>
+      <!-- LLM column -->
+      <div style="flex:1; background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-orange-400); padding: 28px 24px;">
+        <div style="margin-bottom:18px;">
+          <h3 style="font-size: 26px; color: var(--aws-orange-600); margin: 0; font-family: var(--aws-font-mono);">Large Language Model (LLM)</h3>
+          <span style="font-size: 15px; color: var(--aws-gray-550);">The "brain" — reasoning, tool use, and response generation</span>
+        </div>
+        <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:var(--aws-gray-850);text-transform:uppercase;letter-spacing:0.03em;">Challenges</p>
+        <ul style="margin:0 0 22px;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.6;">
+          <li><strong>Context thrashing</strong> — 39% performance drop as history grows</li>
+          <li><strong>Tool overhead</strong> — reasoning latency scales with tool count</li>
+          <li><strong>Throttling at scale</strong> — TPM/RPM limits during concurrent sessions</li>
+        </ul>
+        <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:var(--aws-orange-600);text-transform:uppercase;letter-spacing:0.03em;">Solutions</p>
+        <ul style="margin:0;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.6;">
+          <li><strong>AgentCore building blocks</strong> — tool gateway, sub-agent orchestration, and managed memory</li>
+          <li><strong>Session segmentation</strong> — phase-specific prompts and minimal toolsets</li>
+          <li><strong>Filler phrases</strong> — "Let me check that..." bridges latency</li>
+        </ul>
+      </div>
+      <!-- TTS column -->
+      <div style="flex:1; background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-teal-400); padding: 28px 24px;">
+        <div style="margin-bottom:18px;">
+          <h3 style="font-size: 26px; color: var(--aws-teal-600); margin: 0; font-family: var(--aws-font-mono);">Text-to-Speech (TTS)</h3>
+          <span style="font-size: 15px; color: var(--aws-gray-550);">Synthesizes natural-sounding audio from LLM output</span>
+        </div>
+        <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:var(--aws-gray-850);text-transform:uppercase;letter-spacing:0.03em;">Challenges</p>
+        <ul style="margin:0 0 22px;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.6;">
+          <li><strong>Flat prosody</strong> — wrong emphasis makes agent sound robotic</li>
+          <li><strong>Chunk artifacts</strong> — byte-boundary splits break speech rhythm</li>
+          <li><strong>Interruption waste</strong> — pre-synthesized audio discarded on barge-in</li>
+        </ul>
+        <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:var(--aws-teal-600);text-transform:uppercase;letter-spacing:0.03em;">Solutions</p>
+        <ul style="margin:0;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.6;">
+          <li><strong>Context-aware TTS</strong> — adaptive pacing and tone from content</li>
+          <li><strong>Sentence-aware chunking</strong> — split at clause boundaries</li>
+          <li><strong>Immediate cancellation</strong> — stop synthesis on barge-in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-no">13 / 24</div>
+  </section>
+
+  <!-- 13: Advanced patterns — interruptions, multi-turn, session segmentation -->
+  <section class="slide" data-label="Advanced patterns">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">ADVANCED PATTERNS</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 40px;">Interruptions, multi-turn, and session management</h1>
+    </div>
+    <div style="position: absolute; left: 80px; top: 300px; right: 80px; bottom: 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
+      <!-- Barge-in / Interruption -->
+      <div style="background: var(--aws-gray-100); border-radius: 12px; border-left: 4px solid var(--aws-teal-400); padding: 24px;">
+        <h3 style="font-size: 22px; color: var(--aws-teal-600); margin: 0 0 12px;">Interruptions and barge-in</h3>
+        <ul style="margin:0;padding-left:18px;color:var(--aws-gray-650);font-size:19px;line-height:1.7;">
+          <li><strong style="color:var(--aws-gray-850);">Smart turn detection</strong> — LiveKit's transformer model reduces false interruptions by 39% using semantic understanding, not just silence</li>
+          <li><strong style="color:var(--aws-gray-850);">STT-integrated turn detection</strong> — newer STT models embed turn-taking intelligence directly, emitting StartOfTurn/EndOfTurn events with sub-300ms latency (e.g., VAD bundled with STT)</li>
+          <li><strong style="color:var(--aws-gray-850);">Backchannel filtering</strong> — ML model distinguishes "uh-huh" from genuine interruptions (LiveKit Agents 1.5+)</li>
+          <li><strong style="color:var(--aws-gray-850);">Graceful cancellation</strong> — stop TTS playback, flush LLM generation, re-listen</li>
+        </ul>
+      </div>
+      <!-- Session segmentation -->
+      <div style="background: var(--aws-gray-100); border-radius: 12px; border-left: 4px solid var(--aws-orange-400); padding: 24px;">
+        <h3 style="font-size: 22px; color: var(--aws-orange-600); margin: 0 0 12px;">Session segmentation (advanced)</h3>
+        <ul style="margin:0;padding-left:18px;color:var(--aws-gray-650);font-size:19px;line-height:1.7;">
+          <li><strong style="color:var(--aws-gray-850);">Problem</strong> — monolithic sessions degrade 39% over extended multi-turn interactions (context thrashing)</li>
+          <li><strong style="color:var(--aws-gray-850);">Pattern</strong> — segment conversations into logical phases (auth → account → inquiry), each with its own session, prompt, and toolset</li>
+          <li><strong style="color:var(--aws-gray-850);">Handoff</strong> — transfer conversation summary (not full history) between segments to preserve coherence</li>
+          <li><strong style="color:var(--aws-gray-850);">Benefit</strong> — minimal tool surface per phase reduces reasoning overhead and latency</li>
+        </ul>
+      </div>
+      <!-- Prosody -->
+      <div style="background: var(--aws-gray-100); border-radius: 12px; border-left: 4px solid var(--aws-teal-400); padding: 24px;">
+        <h3 style="font-size: 22px; color: var(--aws-teal-600); margin: 0 0 12px;">Prosody and natural speech</h3>
+        <ul style="margin:0;padding-left:18px;color:var(--aws-gray-650);font-size:19px;line-height:1.7;">
+          <li><strong style="color:var(--aws-gray-850);">Context-aware delivery</strong> — modern TTS engines adjust pacing, tone, and expression based on semantic content</li>
+          <li><strong style="color:var(--aws-gray-850);">SSML control</strong> — use &lt;prosody&gt;, &lt;emphasis&gt;, &lt;break&gt; tags for fine-grained control where supported</li>
+          <li><strong style="color:var(--aws-gray-850);">Sentence-aware chunking</strong> — split at clause boundaries, not arbitrary byte limits, for natural rhythm</li>
+          <li><strong style="color:var(--aws-gray-850);">Filler phrases</strong> — bridge latency gaps with "Let me check that..." to maintain presence</li>
+        </ul>
+      </div>
+      <!-- Multi-turn context -->
+      <div style="background: var(--aws-gray-100); border-radius: 12px; border-left: 4px solid var(--aws-orange-400); padding: 24px;">
+        <h3 style="font-size: 22px; color: var(--aws-orange-600); margin: 0 0 12px;">Multi-turn context management</h3>
+        <ul style="margin:0;padding-left:18px;color:var(--aws-gray-650);font-size:19px;line-height:1.7;">
+          <li><strong style="color:var(--aws-gray-850);">Context window exhaustion</strong> — payloads silently truncated when they cross limits; critical state lost</li>
+          <li><strong style="color:var(--aws-gray-850);">Stateful caching</strong> — persist tool results in memory to prevent redundant fetches across turns</li>
+          <li><strong style="color:var(--aws-gray-850);">Summarization checkpoints</strong> — periodically compress history while preserving key facts</li>
+          <li><strong style="color:var(--aws-gray-850);">Parallel tool calls</strong> — execute independent operations concurrently to reduce cumulative latency</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-no">14 / 24</div>
+  </section>
+
+  <!-- 14b: VAD and turn detection pipeline -->
+  <section class="slide" data-label="VAD and turn detection">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">TURN DETECTION</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 42px;">Solving the hardest problem in voice AI: knowing when someone is done talking</h1>
+      <p style="font-size:18px;color:var(--aws-gray-550);margin-top:8px;">Silence-based VAD plagues the industry with false interruptions and awkward pauses. The LiveKit Turn Detection plugin uses a transformer-based model that understands semantic context — not just silence duration — to determine when a speaker has finished their turn.</p>
+    </div>
+    <div style="position: absolute; left: 80px; top: 300px; right: 80px; bottom: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+      <img src="https://livekit.com/blog/content/images/2024/12/-.png" alt="LiveKit VAD and turn detection pipeline" style="max-width: 100%; max-height: 380px; border-radius: 12px; border: 1px solid var(--aws-gray-200);">
+      <p style="font-size:14px;color:var(--aws-gray-550);margin-top:16px;">Source: <a href="https://livekit.com/blog/using-a-transformer-to-improve-end-of-turn-detection" style="color:var(--aws-teal-600);">LiveKit — Using a transformer to improve end-of-turn detection</a></p>
+    </div>
+    <div class="slide-no">15 / 24</div>
+  </section>
+
+  <!-- 15: Guardrails and safety -->
+  <section class="slide" data-label="Guardrails and safety">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">SAFETY</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 42px;">Guardrails in streaming voice architectures</h1>
+      <p style="font-size:18px;color:var(--aws-gray-550);margin-top:8px;">Traditional text guardrails require buffering full responses — breaking real-time conversational flow. Voice agents need a different approach.</p>
+    </div>
+    <div style="position: absolute; left: 80px; top: 360px; right: 80px; bottom: 60px; display: flex; gap: 56px;">
+      <!-- The problem -->
+      <div style="flex:1; background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-orange-400); padding: 24px;">
+        <h3 style="font-size: 22px; color: var(--aws-orange-600); margin: 0 0 14px; font-family: var(--aws-font-mono);">Why traditional guardrails break</h3>
+        <ul style="margin:0;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.65;">
+          <li><strong>Buffering kills latency</strong> — text must be fully generated before scanning, adding 200-500ms per turn</li>
+          <li><strong>Audio already playing</strong> — TTS begins before the full response exists; you cannot "unsay" what was streamed</li>
+          <li><strong>Pauses &gt;400ms break immersion</strong> — users shift from "conversation" to "query-response" mental model</li>
+          <li><strong>Inline scan + voice pipeline</strong> — total latency can hit 2-3s, firmly in "the bot is broken" territory</li>
+        </ul>
+      </div>
+      <!-- What works instead -->
+      <div style="flex:1.3; background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-teal-600); padding: 24px;">
+        <h3 style="font-size: 22px; color: var(--aws-teal-600); margin: 0 0 14px; font-family: var(--aws-font-mono);">Guardrails at the seams</h3>
+        <ul style="margin:0;padding-left:20px;font-size:19px;color:var(--aws-gray-650);line-height:1.65;">
+          <li><strong>Prompt engineering</strong> — system prompts define persona boundaries, topic scope, and refusal behaviour (zero latency)</li>
+          <li><strong>LLM-native safety</strong> — rely on model's built-in RLHF/Constitutional AI training for conversational turns</li>
+          <li><strong>Tool-call validation</strong> — apply guardrail checks only at tool boundaries before execution (e.g., verify parameters, confirm amounts)</li>
+          <li><strong>Minimal tool surface</strong> — restrict available tools to exactly what the use case requires; a booking bot doesn't get send_email</li>
+          <li><strong>Async transcript monitoring</strong> — post-hoc moderation on completed segments for compliance logging and escalation triggers</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-no">16 / 24</div>
+  </section>
+
+  <!-- 15: Evaluation framework -->
+  <section class="slide" data-label="Voice agent evals">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">EVALUATION</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 40px;">Voice agent evaluation — example metrics</h1>
+      <p style="font-size:17px;color:var(--aws-gray-550);margin-top:8px;">Indicative targets for a production voice agent. Adjust thresholds based on use case complexity and user expectations.</p>
+    </div>
+    <div style="position: absolute; left: 80px; top: 310px; right: 80px; bottom: 80px;">
+      <table class="port-table" style="width: 100%;">
+        <tr><th>Dimension</th><th>Metric</th><th>Example target</th><th>Pipeline stage</th></tr>
+        <tr><td>ASR accuracy</td><td class="mono">WER (Word Error Rate)</td><td>&lt;5% production</td><td style="color:var(--aws-teal-600);">STT</td></tr>
+        <tr><td>Latency</td><td class="mono">End-to-end response time</td><td>&lt;1s (good), &lt;1.5s (acceptable)</td><td style="color:var(--aws-gray-550);">End-to-end</td></tr>
+        <tr><td>Latency (component)</td><td class="mono">STT / LLM / TTS split</td><td>300ms / 500ms / 200ms</td><td style="color:var(--aws-gray-550);">Per stage</td></tr>
+        <tr><td>Task success</td><td class="mono">TSR (Task Success Rate)</td><td>&gt;85%</td><td style="color:var(--aws-orange-600);">LLM</td></tr>
+        <tr><td>Voice quality</td><td class="mono">MOS (Mean Opinion Score)</td><td>&gt;4.0 (scale 1-5)</td><td style="color:var(--aws-teal-600);">TTS</td></tr>
+        <tr><td>Safety</td><td class="mono">Hallucination rate</td><td>&lt;1% production</td><td style="color:var(--aws-orange-600);">LLM</td></tr>
+        <tr><td>Resolution</td><td class="mono">FCR (First Call Resolution)</td><td>75-85%</td><td style="color:var(--aws-gray-550);">System</td></tr>
+        <tr><td>Containment</td><td class="mono">AI-handled / Total calls</td><td>75-85% (mature)</td><td style="color:var(--aws-gray-550);">System</td></tr>
+        <tr><td>Experience</td><td class="mono">EVA-X (composite)</td><td>Naturalness + conciseness + turn-taking</td><td style="color:var(--aws-gray-550);">End-to-end</td></tr>
+      </table>
+      <div style="margin-top: 16px; display: flex; gap: 16px;">
+        <div style="flex:1;background: var(--aws-gray-100); border-radius: 8px; padding: 12px 16px; border-left: 3px solid var(--aws-teal-400);">
+          <p style="font-size: 13px; color: var(--aws-gray-650); margin: 0;"><strong style="color:var(--aws-gray-850);">Example alert thresholds:</strong> WER P50 &gt;8% (10min window) | E2E P95 &gt;1.5s (5min) | TSR &lt;80% (30min) | Hallucination &gt;2% (30min)</p>
+        </div>
+        <div style="flex:1;background: var(--aws-gray-100); border-radius: 8px; padding: 12px 16px; border-left: 3px solid var(--aws-orange-400);">
+          <p style="font-size: 13px; color: var(--aws-gray-650); margin: 0;"><strong style="color:var(--aws-gray-850);">Reference frameworks:</strong> EVA (ServiceNow) — conversation quality scoring | EVA-Bench (HuggingFace) — open benchmark | Hamming 4-layer — latency, accuracy, UX, business</p>
+        </div>
+      </div>
+      <div style="margin-top: 16px; background: linear-gradient(135deg, var(--aws-purple-100), var(--aws-teal-100)); border-radius: 10px; padding: 16px 24px; display: flex; align-items: center; gap: 24px;">
+        <div style="flex-shrink:0;">
+          <img src="assets/icons/arch/Arch_Amazon-Bedrock_48.png" alt="GenAI" style="height:40px;">
+        </div>
+        <div>
+          <p style="font-size: 15px; font-weight: 500; color: var(--aws-gray-850); margin: 0;">AWS Generative AI Innovation Center (GAIIC) — hands-on advisory and prototyping engagements</p>
+          <p style="font-size: 13px; color: var(--aws-gray-650); margin: 4px 0 0;">The Innovation Center provides flexible engagement models designed around your needs. We offer advisory services for technical and strategic guidance, hands-on engagements for custom solution development, and forward deployment engineering where our teams embed with yours for full-cycle AI implementations.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">17 / 24</div>
+  </section>
+
+  <!-- Section divider - Architecture -->
+  <section class="slide" data-label="Architecture section">
+    <div class="pattern-strip"></div>
+    <img class="logo-tr" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="section-body" style="left: 500px;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">ARCHITECTURE</div>
+      <h1 class="h-title" style="color: var(--aws-gray-850); max-width: 1000px;">Recommended deployment architecture</h1>
+    </div>
+  </section>
+
+  <!-- Architecture diagram -->
+  <section class="slide" data-label="Architecture diagram">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 140px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">ARCHITECTURE</div>
+      <h2 class="h-content" style="color: var(--aws-gray-850); font-size: 38px;">LiveKit on Amazon EKS — public subnet deployment</h2>
+      <p style="font-size:17px;color:var(--aws-gray-550);margin-top:8px;">WebRTC requires direct UDP connectivity between clients and media servers. Public subnet placement avoids NAT traversal overhead and enables sub-100ms media delivery without TURN relay. For telephony, the SIP service receives inbound calls and converts RTP media streams into the LiveKit SFU room, bridging PSTN callers into the same session as WebRTC clients.</p>
+    </div>
+    <div style="position: absolute; left: 60px; top: 310px; right: 60px; bottom: 40px; overflow: hidden;">
+      <div class="arch-canvas" style="width:1600px;height:620px;">
+
+        <!-- AWS Cloud boundary -->
+        <div class="arch-group" style="left:150px;top:0;width:1430px;height:610px;border:2px solid var(--aws-gray-400);border-radius:16px;padding:0;">
+          <div style="position:absolute;top:12px;left:16px;display:flex;align-items:center;gap:6px;">
+            <img src="assets/icons/group/AWS-Cloud_32.svg" alt="" style="width:20px;height:20px;">
+            <span style="font-family:var(--aws-font-mono);font-size:13px;font-weight:500;color:var(--aws-gray-550);text-transform:uppercase;letter-spacing:0.06em;">AWS Cloud</span>
+            <span style="font-family:var(--aws-font-mono);font-size:12px;color:var(--aws-gray-500);">ap-southeast-2</span>
+          </div>
+        </div>
+
+        <!-- VPC -->
+        <div class="arch-group" style="left:180px;top:40px;width:1380px;height:556px;border:2px solid var(--aws-purple-600);border-radius:12px;padding:0;">
+          <div style="position:absolute;top:8px;left:14px;display:flex;align-items:center;gap:6px;">
+            <img src="assets/icons/group/Virtual-private-cloud-VPC_32.svg" alt="" style="width:20px;height:20px;">
+            <span style="font-family:var(--aws-font-mono);font-size:13px;font-weight:500;color:var(--aws-purple-600);text-transform:uppercase;letter-spacing:0.06em;">Amazon VPC</span>
+          </div>
+        </div>
+
+        <!-- Public subnet -->
+        <div class="arch-group" style="left:210px;top:78px;width:620px;height:480px;border:2px solid var(--aws-green-600);border-radius:10px;background:rgba(63,194,141,0.03);padding:0;">
+          <div style="position:absolute;top:8px;left:12px;display:flex;align-items:center;gap:6px;">
+            <img src="assets/icons/group/Public-subnet_32.svg" alt="" style="width:18px;height:18px;">
+            <span style="font-family:var(--aws-font-mono);font-size:12px;font-weight:500;color:var(--aws-green-600);text-transform:uppercase;letter-spacing:0.06em;">Public subnet</span>
+          </div>
+        </div>
+
+        <!-- Private subnet -->
+        <div class="arch-group" style="left:870px;top:78px;width:660px;height:480px;border:2px solid var(--aws-teal-600);border-radius:10px;background:rgba(0,150,143,0.03);padding:0;">
+          <div style="position:absolute;top:8px;left:12px;display:flex;align-items:center;gap:6px;">
+            <img src="assets/icons/group/Private-subnet_32.svg" alt="" style="width:18px;height:18px;">
+            <span style="font-family:var(--aws-font-mono);font-size:12px;font-weight:500;color:var(--aws-teal-600);text-transform:uppercase;letter-spacing:0.06em;">Private subnet</span>
+          </div>
+        </div>
+
+        <!-- External: Clients (WebRTC) -->
+        <div class="arch-node" style="left: 40px; top: 200px;">
+          <img src="assets/icons/res/Res_Internet_48_Light.svg" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;">Clients</span>
+          <span style="font-size:10px;color:var(--aws-gray-500);">WebRTC</span>
+        </div>
+
+        <!-- External: PSTN -->
+        <div class="arch-node" style="left: 40px; top: 400px;">
+          <img src="assets/icons/res/Res_Client_48_Light.svg" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;color:var(--aws-purple-600);">PSTN</span>
+          <span style="font-size:10px;color:var(--aws-gray-500);">SIP trunk</span>
+        </div>
+
+        <!-- NLB -->
+        <div class="arch-node" style="left: 440px; top: 108px;">
+          <img src="assets/icons/arch/Arch_Elastic-Load-Balancing_48.png" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;">Network Load Balancer</span>
+          <span style="font-size:9px;color:var(--aws-gray-500);font-family:var(--aws-font-mono);">TCP 7880 / 5349</span>
+        </div>
+
+        <!-- LiveKit SFU box -->
+        <div style="position:absolute;left:290px;top:220px;width:460px;height:130px;background:var(--aws-gray-100);border:1px solid var(--aws-gray-300);border-radius:10px;padding:12px 14px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <img src="assets/icons/arch/Arch_Amazon-Elastic-Kubernetes-Service_48.png" alt="" style="width:48px;height:48px;">
+            <span style="font-size:12px;color:var(--aws-gray-850);">LiveKit SFU</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+            <div style="background:var(--aws-white);border:1px solid var(--aws-orange-400);border-radius:4px;padding:3px 10px;">
+              <span style="font-size:10px;color:var(--aws-orange-600);font-family:var(--aws-font-mono);">Node 1 (c6i.4xl)</span>
+            </div>
+            <div style="background:var(--aws-white);border:1px solid var(--aws-orange-400);border-radius:4px;padding:3px 10px;">
+              <span style="font-size:10px;color:var(--aws-orange-600);font-family:var(--aws-font-mono);">Node 2 (c6i.4xl)</span>
+            </div>
+            <div style="background:var(--aws-white);border:1px solid var(--aws-orange-400);border-radius:4px;padding:3px 10px;">
+              <span style="font-size:10px;color:var(--aws-orange-600);font-family:var(--aws-font-mono);">Node N (c6i.4xl)</span>
+            </div>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px;">
+            <div style="background:var(--aws-white);border:1px solid var(--aws-gray-300);border-radius:3px;padding:2px 8px;">
+              <span style="font-size:9px;color:var(--aws-gray-650);font-family:var(--aws-font-mono);">UDP 50000-60000 (media)</span>
+            </div>
+            <div style="background:var(--aws-white);border:1px solid var(--aws-gray-300);border-radius:3px;padding:2px 8px;">
+              <span style="font-size:9px;color:var(--aws-gray-650);font-family:var(--aws-font-mono);">TCP 7881 (fallback)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIP service box -->
+        <div style="position:absolute;left:290px;top:410px;width:460px;height:72px;background:var(--aws-gray-100);border:1px solid var(--aws-purple-600);border-radius:10px;padding:10px 14px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <img src="assets/icons/arch/Arch_Amazon-Elastic-Kubernetes-Service_48.png" alt="" style="width:48px;height:48px;">
+            <span style="font-size:12px;color:var(--aws-purple-600);">LiveKit SIP</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <div style="background:var(--aws-white);border:1px solid var(--aws-purple-400);border-radius:3px;padding:2px 8px;">
+              <span style="font-size:9px;color:var(--aws-purple-600);font-family:var(--aws-font-mono);">UDP 5060 (SIP signaling)</span>
+            </div>
+            <div style="background:var(--aws-white);border:1px solid var(--aws-purple-400);border-radius:3px;padding:2px 8px;">
+              <span style="font-size:9px;color:var(--aws-purple-600);font-family:var(--aws-font-mono);">UDP 10000-20000 (RTP media)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Security Group callout -->
+        <div style="position:absolute;left:260px;top:510px;">
+          <span style="font-size:10px;color:var(--aws-gray-500);font-family:var(--aws-font-mono);">Security Group: allow inbound UDP 50000-60000, 10000-20000, 5060 from 0.0.0.0/0</span>
+        </div>
+
+        <!-- Private subnet: State management -->
+        <div style="position:absolute;left:910px;top:130px;display:flex;align-items:center;gap:6px;">
+          <span style="font-size:10px;font-weight:500;color:var(--aws-teal-600);font-family:var(--aws-font-mono);text-transform:uppercase;letter-spacing:0.04em;">State</span>
+        </div>
+        <div class="arch-node" style="left: 1050px; top: 140px;">
+          <img src="assets/icons/arch/Arch_Amazon-ElastiCache_48.png" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;">ElastiCache (Redis)</span>
+          <span style="font-size:9px;color:var(--aws-gray-500);">Room→node routing</span>
+        </div>
+
+        <!-- Private subnet: Observability -->
+        <div style="position:absolute;left:910px;top:260px;display:flex;align-items:center;gap:6px;">
+          <span style="font-size:10px;font-weight:500;color:var(--aws-teal-600);font-family:var(--aws-font-mono);text-transform:uppercase;letter-spacing:0.04em;">Observability</span>
+        </div>
+        <div class="arch-node" style="left: 1000px; top: 280px;">
+          <img src="assets/icons/arch/Arch_Amazon-Managed-Service-for-Prometheus_48.png" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;">Prometheus</span>
+          <span style="font-size:9px;color:var(--aws-gray-500);">Metrics :6789</span>
+        </div>
+
+        <div class="arch-node" style="left: 1250px; top: 280px;">
+          <img src="assets/icons/arch/Arch_Amazon-Managed-Grafana_48.png" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;">Grafana</span>
+          <span style="font-size:9px;color:var(--aws-gray-500);">Dashboards</span>
+        </div>
+
+        <!-- Private subnet: Events and storage -->
+        <div style="position:absolute;left:910px;top:390px;display:flex;align-items:center;gap:6px;">
+          <span style="font-size:10px;font-weight:500;color:var(--aws-teal-600);font-family:var(--aws-font-mono);text-transform:uppercase;letter-spacing:0.04em;">Events</span>
+        </div>
+        <div class="arch-node" style="left: 1000px; top: 410px;">
+          <img src="assets/icons/arch/Arch_Amazon-EventBridge_48.png" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;">EventBridge</span>
+          <span style="font-size:9px;color:var(--aws-gray-500);">Webhooks</span>
+        </div>
+
+        <div class="arch-node" style="left: 1250px; top: 410px;">
+          <img src="assets/icons/arch/Arch_Amazon-Simple-Storage-Service_48.png" alt="" style="width:48px;height:48px;">
+          <span style="font-size:12px;">Amazon S3</span>
+          <span style="font-size:9px;color:var(--aws-gray-500);">Recordings</span>
+        </div>
+
+        <!-- Arrows SVG overlay -->
+        <svg class="arch-arrows" viewBox="0 0 1600 620" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#9BA7B6"/>
+            </marker>
+            <marker id="arrowhead-orange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#FF9900"/>
+            </marker>
+            <marker id="arrowhead-cyan" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#0097A7"/>
+            </marker>
+            <marker id="arrowhead-purple" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#AD5CFF"/>
+            </marker>
+          </defs>
+
+          <!-- Client → NLB (signaling) -->
+          <path d="M100,225 L240,225 L240,150 L438,150" fill="none" stroke="#FF9900" stroke-width="2" marker-end="url(#arrowhead-orange)"/>
+          <text x="280" y="143" font-size="10" fill="#FF9900" font-family="monospace">WSS 7880</text>
+
+          <!-- Client → SFU (UDP media, direct) -->
+          <line x1="100" y1="250" x2="288" y2="290" stroke="#0097A7" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowhead-cyan)"/>
+          <text x="120" y="300" font-size="10" fill="#0097A7" font-family="monospace">UDP media</text>
+
+          <!-- PSTN → SIP service -->
+          <line x1="100" y1="440" x2="288" y2="440" stroke="#AD5CFF" stroke-width="2" marker-end="url(#arrowhead-purple)"/>
+          <text x="140" y="432" font-size="10" fill="#AD5CFF" font-family="monospace">SIP (UDP 5060)</text>
+
+          <!-- NLB → SFU -->
+          <line x1="466" y1="195" x2="466" y2="218" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+          <!-- SIP → SFU (internal) -->
+          <line x1="520" y1="408" x2="520" y2="354" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+          <!-- SFU → Redis -->
+          <path d="M752,270 L850,270 L850,180 L1048,180" fill="none" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+          <!-- SFU → Prometheus -->
+          <line x1="752" y1="300" x2="998" y2="300" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+          <!-- SFU → EventBridge -->
+          <path d="M752,330 L850,330 L850,440 L998,440" fill="none" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+          <!-- Prometheus → Grafana -->
+          <line x1="1100" y1="300" x2="1248" y2="300" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+
+          <!-- EventBridge → S3 -->
+          <line x1="1100" y1="440" x2="1248" y2="440" stroke="#9BA7B6" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        </svg>
+
+        <!-- Legend -->
+        <div style="position:absolute;right:30px;top:12px;display:flex;gap:18px;align-items:center;">
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div style="width:20px;height:3px;background:#FF9900;"></div>
+            <span style="font-size:10px;color:var(--aws-gray-550);">Signaling (TCP)</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div style="width:20px;height:0;border-top:2px dashed #0097A7;"></div>
+            <span style="font-size:10px;color:var(--aws-gray-550);">Media (UDP direct)</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div style="width:20px;height:3px;background:#AD5CFF;"></div>
+            <span style="font-size:10px;color:var(--aws-gray-550);">Telephony (SIP)</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div style="width:20px;height:2px;background:#9BA7B6;"></div>
+            <span style="font-size:10px;color:var(--aws-gray-550);">Internal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">18 / 24</div>
+  </section>
+
+  <!-- TURN-assisted alternative architecture -->
+  <section class="slide" data-label="TURN architecture">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550);">ALTERNATIVE</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); font-size: 42px;">TURN-assisted architecture (private subnet)</h1>
+      <p style="font-size:18px;color:var(--aws-gray-550);margin-top:8px;">When security policy prohibits public subnet placement, LiveKit can operate in a private subnet using TURN relay for all media traffic.</p>
+    </div>
+    <div style="position: absolute; left: 80px; top: 400px; right: 80px; bottom: 80px; display: flex; gap: 56px;">
+      <!-- Left: horizontal flow diagram -->
+      <div style="flex:1; display: flex; flex-direction: column; gap: 16px;">
+        <!-- Flow diagram as a clean horizontal pipeline -->
+        <div style="background: var(--aws-gray-100); border-radius: 12px; padding: 32px; position: relative; flex: 1;">
+          <div style="display: flex; align-items: center; gap: 24px; height: 100%; justify-content: center;">
+            <!-- Clients -->
+            <div style="text-align: center; width: 100px;">
+              <img src="assets/icons/res/Res_Internet_48_Light.svg" alt="" style="width:48px;height:48px;">
+              <div style="font-size:14px;color:var(--aws-gray-650);margin-top:6px;font-weight:500;">Clients</div>
+              <div style="font-size:11px;color:var(--aws-gray-500);">WebRTC / PSTN</div>
+            </div>
+            <!-- Arrow 1 -->
+            <div style="text-align:center;">
+              <div style="font-size:11px;color:var(--aws-orange-600);font-family:var(--aws-font-mono);margin-bottom:4px;">TLS :5349</div>
+              <svg width="100" height="20" viewBox="0 0 100 20"><line x1="0" y1="10" x2="88" y2="10" stroke="#EC7211" stroke-width="2.5"/><polygon points="88,4 100,10 88,16" fill="#EC7211"/></svg>
+              <div style="font-size:11px;color:var(--aws-gray-500);margin-top:4px;">All media relayed</div>
+            </div>
+            <!-- NLB (Public subnet) -->
+            <div style="text-align: center; width: 140px; padding: 20px 16px; border: 2px solid var(--aws-green-600); border-radius: 10px; background: rgba(63,194,141,0.05);">
+              <div style="font-size:10px;color:var(--aws-green-600);font-family:var(--aws-font-mono);margin-bottom:8px;">PUBLIC SUBNET</div>
+              <img src="assets/icons/arch/Arch_Elastic-Load-Balancing_48.png" alt="" style="width:44px;height:44px;">
+              <div style="font-size:14px;color:var(--aws-gray-650);margin-top:6px;font-weight:500;">NLB + TURN</div>
+            </div>
+            <!-- Arrow 2 -->
+            <div style="text-align:center;">
+              <div style="font-size:11px;color:var(--aws-teal-600);font-family:var(--aws-font-mono);margin-bottom:4px;">Internal</div>
+              <svg width="100" height="20" viewBox="0 0 100 20"><line x1="0" y1="10" x2="88" y2="10" stroke="#00968F" stroke-width="2.5"/><polygon points="88,4 100,10 88,16" fill="#00968F"/></svg>
+              <div style="font-size:11px;color:var(--aws-gray-500);margin-top:4px;">Relayed traffic</div>
+            </div>
+            <!-- SFU (Private subnet) -->
+            <div style="text-align: center; width: 160px; padding: 20px 16px; border: 2px solid var(--aws-teal-600); border-radius: 10px; background: rgba(0,150,143,0.05);">
+              <div style="font-size:10px;color:var(--aws-teal-600);font-family:var(--aws-font-mono);margin-bottom:8px;">PRIVATE SUBNET</div>
+              <img src="assets/icons/arch/Arch_Amazon-Elastic-Kubernetes-Service_48.png" alt="" style="width:44px;height:44px;">
+              <div style="font-size:14px;color:var(--aws-gray-650);margin-top:6px;font-weight:500;">LiveKit SFU</div>
+              <div style="font-size:11px;color:var(--aws-gray-500);">+ SIP + Agents</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Right: Recommendation (prominent) + Key difference -->
+      <div style="width: 520px; display: flex; flex-direction: column; gap: 20px;">
+        <div style="background: var(--aws-teal-050, #e6f7f6); border-radius: 12px; padding: 28px; flex:0;">
+          <h3 style="font-size: 24px; color: var(--aws-teal-600); margin: 0 0 14px; font-family: var(--aws-font-mono);">Recommendation</h3>
+          <p style="font-size:20px;color:var(--aws-gray-850);margin:0;line-height:1.5;">Use <strong>public subnet</strong> for production voice agents. Reserve TURN-only for compliance-constrained environments where private subnet placement is mandated.</p>
+        </div>
+        <div style="background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-orange-400); padding: 24px; flex:1;">
+          <h3 style="font-size: 20px; color: var(--aws-orange-600); margin: 0 0 12px; font-family: var(--aws-font-mono);">Key difference</h3>
+          <p style="font-size:17px;color:var(--aws-gray-650);margin:0;line-height:1.6;">No direct UDP path from clients to SFU nodes. All media relayed through NLB/TURN on port 5349 (TLS). SFU nodes have no public IPs.</p>
+        </div>
+        <div style="background: var(--aws-gray-100); border-radius: 12px; border-top: 5px solid var(--aws-orange-400); padding: 24px; flex:1;">
+          <h3 style="font-size: 20px; color: var(--aws-orange-600); margin: 0 0 12px; font-family: var(--aws-font-mono);">Trade-offs</h3>
+          <ul style="margin:0;padding-left:18px;font-size:17px;color:var(--aws-gray-650);line-height:1.8;">
+            <li><strong>+50-100ms latency</strong> — all media relayed</li>
+            <li><strong>2x egress bandwidth</strong> — TURN relays every packet</li>
+            <li><strong>NLB is critical path</strong> — single point of failure</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">19 / 24</div>
+  </section>
+
+  <!-- 16: Key takeaways -->
+  <section class="slide" data-label="Key takeaways">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-orange-400);">SUMMARY</div>
+      <h1 class="h-content" style="color: var(--aws-gray-850); margin-bottom: 48px;">Key takeaways</h1>
+      <div style="display: flex; flex-direction: column; gap: 32px;">
+        <div class="takeaway">
+          <div class="takeaway-num">01</div>
+          <div>
+            <h4>Voice agents are a pipeline — scale each component independently</h4>
+            <p>STT, LLM, and TTS each have different concurrency limits, latency profiles, and failure modes. Architect for independent scaling and graceful degradation at each stage.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">02</div>
+          <div>
+            <h4>Map challenges to the right pipeline stage</h4>
+            <p>Barge-in and false turns → STT/VAD. Context thrashing and hallucination → LLM. Flat prosody and chunk artifacts → TTS. Solving in the wrong layer wastes effort.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">03</div>
+          <div>
+            <h4>WebRTC on EKS demands public subnet + host networking</h4>
+            <p>No Fargate, no pod networking, NLB not ALB. Plan for 1 room = 1 node, scale with Karpenter and pre-warm pools for spike absorption.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">04</div>
+          <div>
+            <h4>Self-hosting means building your own observability</h4>
+            <p>LiveKit Cloud gives you session inspector and turn-by-turn telemetry for free. Self-hosted requires a custom webhook + Prometheus + Grafana pipeline from day one.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">05</div>
+          <div>
+            <h4>Target &lt;1s end-to-end — every millisecond compounds</h4>
+            <p>Use transformer-based turn detection (not silence timers), session segmentation, sentence-aware TTS chunking, and filler phrases to stay under budget.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">20 / 24</div>
+  </section>
+
+  <!-- 17: Thank you -->
+  <section class="slide" data-label="Thank you">
+    <div class="cover-bg"></div>
+    <div class="cover-body" style="justify-content: center; align-items: flex-start;">
+      <h1 class="h-title" style="color: var(--aws-gray-850);">Thank you</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 24px;">Questions?</p>
+      <div style="margin-top: 64px; display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-md" style="color: var(--aws-gray-550); margin: 0;">Daniel Wirjo | Solutions Architect, Frontier AI | AWS</p>
+        <p class="body-md" style="color: var(--aws-gray-550); margin: 0;">Sagar Murthy | GTM Specialist, Agentic Frameworks | AWS</p>
+      </div>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+</deck-stage>
+
+</body>
+</html>
