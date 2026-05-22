@@ -5,6 +5,28 @@
 <title>LiveKit on Amazon EKS</title>
 <link rel="stylesheet" href="assets/colors_and_type.css">
 <script src="assets/deck-stage.js"></script>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P') {
+    const deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    if (!document.fullscreenElement) {
+      deck.setAttribute('no-rail', '');
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+      deck.removeAttribute('no-rail');
+    }
+    e.preventDefault();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.removeAttribute('no-rail');
+  }
+});
+</script>
 <style>
   html, body { margin: 0; background: #000; }
   deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
