@@ -1,7 +1,0 @@
-{
-  "tool_name": "mcp__builder-mcp__ReadInternalWebsites",
-  "tool_input_preview": "{\"url\":\"https://docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks.html\",\"prompt\":\"Find any mention of inference, inference operator, InferenceEndpointConfig, llm-d, or inference workloads...",
-  "error": "MCP error -32603: Invalid input: [{\"code\":\"invalid_type\",\"expected\":\"array\",\"received\":\"undefined\",\"path\":[\"inputs\"],\"message\":\"Required\"}]",
-  "timestamp": "2026-05-23T22:56:33.135Z",
-  "retry_count": 1
-}
