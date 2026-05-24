@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Overview of Amazon SageMaker HyperPod EKS</title>
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<script src="assets/deck-stage.js"></script>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P') {
+    const deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    if (!document.fullscreenElement) {
+      deck.setAttribute('no-rail', '');
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+      deck.removeAttribute('no-rail');
+    }
+    e.preventDefault();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.removeAttribute('no-rail');
+  }
+});
+</script>
+<style>
+  html, body { margin: 0; background: #000; }
+  deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
+
+  .slide {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    font-family: var(--aws-font-display);
+    background: var(--aws-white); color: var(--aws-gray-850);
+  }
+  .slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+  .slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+  .logo-tl { position: absolute; top: 56px; left: 80px; height: 48px; width: auto; }
+  .logo-tr { position: absolute; top: 56px; right: 80px; height: 48px; width: auto; }
+
+  .eyebrow {
+    font-family: var(--aws-font-mono); font-size: 22px; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .h-cover  { font-size: 108px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; }
+  .h-title  { font-size: 64px;  line-height: 1.1;  font-weight: 400; }
+  .h-section{ font-size: 88px;  line-height: 1.05; font-weight: 400; }
+  .h-content{ font-size: 48px;  line-height: 1.15; font-weight: 400; }
+  .body-lg  { font-size: 28px;  line-height: 1.35; font-weight: 400; }
+  .body-md  { font-size: 22px;  line-height: 1.4;  font-weight: 400; }
+  .body-sm  { font-size: 18px;  line-height: 1.5;  font-weight: 400; }
+
+  .slide-no { position: absolute; right: 80px; bottom: 40px; font-family: var(--aws-font-mono); font-size: 16px; letter-spacing: 0.08em; color: var(--aws-gray-500); }
+  .dark .slide-no { color: var(--aws-gray-400); }
+
+  .footer-ref { position: absolute; left: 80px; bottom: 40px; font-family: var(--aws-font-mono); font-size: 14px; color: var(--aws-gray-500); max-width: 1400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dark .footer-ref { color: var(--aws-gray-400); }
+
+  /* Cover */
+  .cover-bg { position: absolute; inset: 0; background: url(assets/aws-gradient-light-1d.png) center / cover no-repeat; }
+  .cover-body { position: absolute; left: 80px; top: 73px; right: 80px; bottom: 73px; display: flex; flex-direction: column; justify-content: center; }
+
+  /* Section divider */
+  .section-darkbg { background: var(--aws-gray-850); }
+  .pattern-strip { position: absolute; left: 0; top: 0; bottom: 0; width: 480px; background: url(assets/aws-pattern-modular-1a.png) center / cover; }
+
+  /* Safe area */
+  .safe { position: absolute; left: 80px; right: 80px; top: 200px; bottom: 100px; }
+
+  /* Agenda */
+  .agenda-list { display: grid; grid-template-columns: 1fr 1fr; row-gap: 32px; column-gap: 96px; margin-top: 48px; }
+  .agenda-row { display: grid; grid-template-columns: 72px 1fr; align-items: baseline; }
+  .agenda-no { font-family: var(--aws-font-mono); font-size: 24px; color: var(--aws-orange-400); }
+  .agenda-title { font-size: 32px; line-height: 1.2; }
+
+  /* Two column */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 48px; }
+  .col h3 { font-size: 28px; font-weight: 400; margin-bottom: 20px; color: var(--aws-teal-600); }
+  .dark .col h3 { color: var(--aws-teal-400); }
+  .col ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; }
+  .col li { font-size: 22px; line-height: 1.4; padding-left: 24px; position: relative; }
+  .col li::before { content: "\2022"; position: absolute; left: 0; color: var(--aws-orange-400); }
+
+  /* Three column */
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 56px; margin-top: 48px; }
+  .three-col .card { padding: 32px; border-radius: 8px; background: var(--aws-gray-100); display: flex; flex-direction: column; gap: 16px; }
+  .dark .three-col .card { background: rgba(255,255,255,0.06); }
+  .card-title { font-size: 24px; font-weight: 400; }
+  .card-body { font-size: 20px; line-height: 1.4; color: var(--aws-gray-650); }
+  .dark .card-body { color: var(--aws-gray-300); }
+
+  /* Component row */
+  .comp-row { display: grid; grid-template-columns: 64px 1fr; gap: 24px; align-items: start; margin-bottom: 32px; }
+  .comp-row img { width: 48px; height: 48px; margin-top: 4px; }
+  .comp-name { font-size: 26px; font-weight: 400; margin-bottom: 6px; }
+  .comp-desc { font-size: 20px; line-height: 1.4; color: var(--aws-gray-650); }
+  .dark .comp-desc { color: var(--aws-gray-300); }
+  .comp-repo { font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-teal-600); margin-top: 4px; }
+  .dark .comp-repo { color: var(--aws-teal-400); }
+
+  /* Architecture diagram */
+  .arch-diagram { position: relative; width: 100%; height: 100%; }
+  .arch-group { position: absolute; border: 2px solid var(--aws-purple-400); border-radius: 12px; padding: 20px; }
+  .arch-group-label { position: absolute; top: -12px; left: 16px; background: var(--aws-white); padding: 0 8px; font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-purple-600); }
+  .arch-node { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; font-size: 16px; }
+  .arch-node img { width: 48px; height: 48px; }
+
+  /* Flow diagram */
+  .flow-step { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+  .flow-num { width: 40px; height: 40px; border-radius: 50%; background: var(--aws-orange-400); color: var(--aws-white); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 400; flex-shrink: 0; }
+  .flow-content { flex: 1; }
+  .flow-title { font-size: 24px; font-weight: 400; margin-bottom: 4px; }
+  .flow-desc { font-size: 18px; line-height: 1.4; color: var(--aws-gray-650); }
+  .dark .flow-desc { color: var(--aws-gray-300); }
+
+  /* Table */
+  .cap-table { width: 100%; border-collapse: collapse; margin-top: 32px; }
+  .cap-table th { text-align: left; font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); padding: 12px 16px; border-bottom: 2px solid var(--aws-gray-200); }
+  .cap-table td { font-size: 20px; padding: 14px 16px; border-bottom: 1px solid var(--aws-gray-150); vertical-align: top; }
+  .cap-table tr:last-child td { border-bottom: none; }
+  .dark .cap-table th { color: var(--aws-gray-400); border-bottom-color: var(--aws-gray-700); }
+  .dark .cap-table td { border-bottom-color: var(--aws-gray-700); }
+
+  /* Bullet list for content slides */
+  .bullet-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+  .bullet-list li { font-size: 22px; line-height: 1.5; padding-left: 28px; position: relative; }
+  .bullet-list li::before { content: "\2022"; position: absolute; left: 0; color: var(--aws-orange-400); font-size: 24px; }
+  .bullet-list li strong { font-weight: 400; color: var(--aws-gray-850); }
+</style>
+</head>
+<body>
+
+<deck-stage>
+
+  <!-- ============================================================
+       01. COVER
+       ============================================================ -->
+  <section class="slide" data-label="Cover">
+    <div class="cover-bg"></div>
+    <div class="cover-body">
+      <h1 class="h-cover" style="max-width: 1500px;">Overview of Amazon SageMaker HyperPod EKS</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 32px; max-width: 1000px;">Learn how SageMaker HyperPod is tackling the distributed AI challenge, its components, and how to leverage them for training and inference at scale</p>
+    </div>
+    <img class="logo-tr" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       02. AGENDA
+       ============================================================ -->
+  <section class="slide" data-label="Agenda">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">SESSION OVERVIEW</div>
+      <h1 class="h-title">In this session</h1>
+      <div class="agenda-list">
+        <div class="agenda-row"><div class="agenda-no">01</div><div class="agenda-title">The distributed AI problem</div></div>
+        <div class="agenda-row"><div class="agenda-no">02</div><div class="agenda-title">Introducing SageMaker HyperPod</div></div>
+        <div class="agenda-row"><div class="agenda-no">03</div><div class="agenda-title">Accelerated computing and capacity</div></div>
+        <div class="agenda-row"><div class="agenda-no">04</div><div class="agenda-title">Infrastructure, cluster topology, and resilience</div></div>
+        <div class="agenda-row"><div class="agenda-no">05</div><div class="agenda-title">Training stack and distributed libraries</div></div>
+        <div class="agenda-row"><div class="agenda-no">06</div><div class="agenda-title">Inference stack and disaggregated serving</div></div>
+        <div class="agenda-row"><div class="agenda-no">07</div><div class="agenda-title">Orchestration, governance, and observability</div></div>
+        <div class="agenda-row"><div class="agenda-no">08</div><div class="agenda-title">Opinionated vs DIY: choosing your path</div></div>
+      </div>
+    </div>
+    <div class="slide-no">02 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       03. THE DISTRIBUTED AI PROBLEM
+       ============================================================ -->
+  <section class="slide" data-label="The distributed AI problem">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">THE CHALLENGE</div>
+      <h1 class="h-content" style="max-width: 1200px;">Training and serving large models requires solving multiple hard distributed systems problems simultaneously</h1>
+      <div class="two-col" style="margin-top: 56px;">
+        <div class="col">
+          <h3>Training challenges</h3>
+          <ul>
+            <li>Models exceed single-GPU memory (405B params = ~810 GB in FP16)</li>
+            <li>Data, model, tensor, pipeline, context, and expert parallelism strategies</li>
+            <li>Gradient synchronization across hundreds of GPUs via AllReduce/AllGather</li>
+            <li>Checkpointing and fault-tolerant resumption at scale</li>
+            <li>Network topology-aware job placement for optimal bandwidth</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Inference challenges</h3>
+          <ul>
+            <li>KV-cache memory grows linearly with sequence length and batch size</li>
+            <li>Prefill is compute-bound, decode is memory-bandwidth-bound</li>
+            <li>Disaggregated architectures need low-latency cross-node transfers</li>
+            <li>Expert parallelism for MoE models across multiple nodes</li>
+            <li>Continuous batching and request scheduling at high throughput</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">Model parameter sizes: Meta Llama 3.1 (405B), DeepSeek-V3 (671B MoE)</div>
+    <div class="slide-no">03 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       03b. SECTION: WHAT HYPERPOD SOLVES
+       ============================================================ -->
+  <section class="slide dark section-darkbg" data-label="Introducing SageMaker HyperPod section">
+    <div class="pattern-strip" aria-hidden="true"></div>
+    <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 560px; top: 460px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 32px;">SECTION 02</div>
+      <h1 class="h-section" style="max-width: 1000px;">Introducing SageMaker HyperPod</h1>
+    </div>
+    <div class="slide-no">04 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       04. WHAT HYPERPOD SOLVES
+       ============================================================ -->
+  <section class="slide" data-label="Introducing SageMaker HyperPod">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">THE SOLUTION</div>
+      <h1 class="h-content" style="max-width: 1400px;">HyperPod is a managed, opinionated AI cluster service that layers five key capabilities on top of Amazon EKS</h1>
+      <div class="three-col" style="margin-top: 56px;">
+        <div class="card">
+          <div class="card-title">1. Cluster provisioning</div>
+          <div class="card-body">One-click CFN-based creation with VPC, EFA, topology-aware placement, UltraServers</div>
+        </div>
+        <div class="card">
+          <div class="card-title">2. Base image and runtime</div>
+          <div class="card-body">HyperPod DLAMI with GPU drivers, CUDA/NCCL, health agents, and auto-resume</div>
+        </div>
+        <div class="card">
+          <div class="card-title">3. Training stack</div>
+          <div class="card-body">Recipes + NeMo adapter + SageMaker distributed libraries as the blessed training path</div>
+        </div>
+        <div class="card">
+          <div class="card-title">4. Inference stack</div>
+          <div class="card-body">llm-d + vLLM + NIXL + EFA for disaggregated prefill/decode serving</div>
+        </div>
+        <div class="card">
+          <div class="card-title">5. Governance and observability</div>
+          <div class="card-body">Task governance via Kueue, namespaces, CloudWatch dashboards, Prometheus/Grafana</div>
+        </div>
+      </div>
+      <p class="body-md" style="margin-top: 48px; color: var(--aws-gray-550); max-width: 1200px;">Each layer is independently useful. You can adopt individual components (e.g. llm-d for inference, HyperPod Recipes for training) without the full managed stack. HyperPod also supports Slurm-based orchestration; this deck focuses on the EKS path.</p>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks.html</div>
+    <div class="slide-no">05 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       05. ARCHITECTURE DIAGRAM
+       ============================================================ -->
+  <section class="slide" data-label="Architecture overview">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">ARCHITECTURE</div>
+      <h1 class="h-content" style="margin-bottom: 40px;">HyperPod EKS full-stack view</h1>
+
+      <div style="display: grid; grid-template-columns: 1fr; gap: 16px; font-size: 18px;">
+        <!-- Observability layer -->
+        <div style="display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 16px;">
+          <div style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); text-align: left;">Observability</div>
+          <div style="display: flex; gap: 24px; padding: 16px 24px; background: var(--aws-gray-100); border-radius: 8px; align-items: center;">
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-CloudWatch_48.png" alt=""><span>CloudWatch</span></div>
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-Managed-Service-for-Prometheus_48.png" alt=""><span>Prometheus</span></div>
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-Managed-Grafana_48.png" alt=""><span>Grafana</span></div>
+            <div style="font-size: 16px; color: var(--aws-gray-550); margin-left: auto;">Fluent Bit + CloudWatch Observability EKS add-on</div>
+          </div>
+        </div>
+        <!-- Governance layer -->
+        <div style="display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 16px;">
+          <div style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); text-align: left;">Governance</div>
+          <div style="display: flex; gap: 24px; padding: 16px 24px; background: var(--aws-gray-100); border-radius: 8px; align-items: center;">
+            <span style="font-weight: 400;">Task governance</span>
+            <span style="color: var(--aws-gray-400);">|</span>
+            <span>Kueue</span>
+            <span style="color: var(--aws-gray-400);">|</span>
+            <span>Namespaces + Priority Classes</span>
+            <span style="color: var(--aws-gray-400);">|</span>
+            <span>HyperPod CLI</span>
+            <div style="font-size: 16px; color: var(--aws-gray-550); margin-left: auto;">aws/sagemaker-hyperpod-cli</div>
+          </div>
+        </div>
+        <!-- Training + Inference layer -->
+        <div style="display: grid; grid-template-columns: 140px 1fr 1fr; align-items: stretch; gap: 16px;">
+          <div style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); text-align: left; padding-top: 16px;">Workloads</div>
+          <div style="padding: 16px 24px; background: var(--aws-orange-50); border-radius: 8px; border: 1px solid var(--aws-orange-200);">
+            <div style="font-weight: 400; margin-bottom: 8px; color: var(--aws-orange-600);">Training</div>
+            <div style="font-size: 16px; display: flex; flex-direction: column; gap: 4px;">
+              <span>HyperPod Recipes (launcher)</span>
+              <span>NeMo Adapter (framework)</span>
+              <span>SMDDP (collectives)</span>
+            </div>
+          </div>
+          <div style="padding: 16px 24px; background: var(--aws-blue-50); border-radius: 8px; border: 1px solid var(--aws-blue-200);">
+            <div style="font-weight: 400; margin-bottom: 8px; color: var(--aws-blue-600);">Inference</div>
+            <div style="font-size: 16px; display: flex; flex-direction: column; gap: 4px;">
+              <span>llm-d (orchestrator)</span>
+              <span>vLLM (engine)</span>
+              <span>NIXL + libfabric (transport)</span>
+            </div>
+          </div>
+        </div>
+        <!-- EKS + Infra layer -->
+        <div style="display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 16px;">
+          <div style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); text-align: left;">Platform</div>
+          <div style="display: flex; gap: 24px; padding: 16px 24px; background: var(--aws-gray-100); border-radius: 8px; align-items: center;">
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-Elastic-Kubernetes-Service_48.png" alt=""><span>Amazon EKS</span></div>
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-SageMaker-AI_48.png" alt=""><span>HyperPod</span></div>
+            <div style="font-size: 16px; color: var(--aws-gray-550);">1:1 EKS cluster mapping | Health checks | Auto-recovery | HyperPod DLAMI</div>
+          </div>
+        </div>
+        <!-- Infrastructure layer -->
+        <div style="display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 16px;">
+          <div style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); text-align: left;">Infrastructure</div>
+          <div style="display: flex; gap: 24px; padding: 16px 24px; background: var(--aws-gray-100); border-radius: 8px; align-items: center;">
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-EC2_48.png" alt=""><span>P5/P5e/P4d</span></div>
+            <div class="arch-node"><img src="assets/icons/Arch_Elastic-Fabric-Adapter_48.png" alt=""><span>EFA</span></div>
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-FSx-for-Lustre_48.png" alt=""><span>FSx Lustre</span></div>
+            <div class="arch-node"><img src="assets/icons/Arch_Amazon-Simple-Storage-Service_48.png" alt=""><span>Amazon S3</span></div>
+            <div style="font-size: 16px; color: var(--aws-gray-550); margin-left: auto;">NVLink | NVSwitch | UltraServers (NVL72)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks.html</div>
+    <div class="slide-no">06 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       08. SECTION: ACCELERATED COMPUTING
+       ============================================================ -->
+  <section class="slide dark section-darkbg" data-label="Accelerated computing">
+    <div class="pattern-strip" aria-hidden="true"></div>
+    <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 560px; top: 460px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 32px;">SECTION 03</div>
+      <h1 class="h-section" style="max-width: 1000px;">Accelerated computing</h1>
+    </div>
+    <div class="slide-no">07 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       07. GPU ACCELERATORS
+       ============================================================ -->
+  <section class="slide" data-label="NVIDIA accelerators on AWS">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">ACCELERATED COMPUTING</div>
+      <h1 class="h-content" style="max-width: 1400px;">NVIDIA accelerators available on AWS</h1>
+      <table class="cap-table">
+        <thead>
+          <tr>
+            <th>Accelerator</th>
+            <th>Instance</th>
+            <th>GPU memory</th>
+            <th>Interconnect</th>
+            <th>Typical use</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>NVIDIA B200 (Blackwell)</td>
+            <td>P6 (p6-b200.48xlarge)</td>
+            <td>192 GB HBM3e per GPU, 8 GPUs</td>
+            <td>NVLink 5, NVSwitch, 3200 Gbps EFA</td>
+            <td>Foundation model training and inference at scale</td>
+          </tr>
+          <tr>
+            <td>NVIDIA B300 (Blackwell Ultra)</td>
+            <td>P6 (p6-b300.48xlarge)</td>
+            <td>288 GB HBM3e per GPU, 8 GPUs</td>
+            <td>NVLink 5, NVSwitch, 3200 Gbps EFA</td>
+            <td>Largest models, highest memory per GPU</td>
+          </tr>
+          <tr>
+            <td>NVIDIA H200</td>
+            <td>P5en (p5en.48xlarge)</td>
+            <td>141 GB HBM3e per GPU, 8 GPUs</td>
+            <td>NVLink 4, NVSwitch, 3200 Gbps EFA v2</td>
+            <td>Large-scale training, long-context inference</td>
+          </tr>
+          <tr>
+            <td>NVIDIA H200</td>
+            <td>P5e (p5e.48xlarge)</td>
+            <td>141 GB HBM3e per GPU, 8 GPUs</td>
+            <td>NVLink 4, NVSwitch, 3200 Gbps EFA</td>
+            <td>Large-scale training, long-context inference</td>
+          </tr>
+          <tr>
+            <td>NVIDIA H100</td>
+            <td>P5 (p5.48xlarge)</td>
+            <td>80 GB HBM3 per GPU, 8 GPUs</td>
+            <td>NVLink 4, NVSwitch, 3200 Gbps EFA</td>
+            <td>Foundation model training, high-throughput inference</td>
+          </tr>
+          <tr>
+            <td>NVIDIA A100</td>
+            <td>P4d (p4d.24xlarge)</td>
+            <td>40 GB HBM2e per GPU, 8 GPUs</td>
+            <td>NVLink (intra-node), 400 Gbps EFA</td>
+            <td>Fine-tuning, smaller model training</td>
+          </tr>
+          <tr style="border-top: 2px solid var(--aws-gray-300);">
+            <td>NVIDIA L40S</td>
+            <td>G6e (g6e.48xlarge)</td>
+            <td>48 GB per GPU, up to 8 GPUs</td>
+            <td>PCIe (no NVLink), EFA</td>
+            <td>Cost-effective inference, fine-tuning</td>
+          </tr>
+          <tr>
+            <td>NVIDIA RTX Pro 6000 Blackwell</td>
+            <td>G7e (g7e.48xlarge)</td>
+            <td>96 GB per GPU, up to 8 GPUs</td>
+            <td>PCIe (no NVLink), EFA</td>
+            <td>Next-gen inference, improved price-performance</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="body-sm" style="margin-top: 24px; color: var(--aws-gray-550);">UltraServers (GB200 NVL72) bundle 72 Blackwell GPUs in a single chassis with full NVLink 5/NVSwitch mesh, enabling HyperPod topology-aware scheduling at unprecedented scale.</p>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod.html | P-series instances are high-demand and typically require reservations</div>
+    <div class="slide-no">08 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       08b. AWS + NVIDIA STRATEGIC COLLABORATION
+       ============================================================ -->
+  <section class="slide" data-label="AWS and NVIDIA strategic collaboration">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">GTC 2026 ANNOUNCEMENT</div>
+      <h1 class="h-content" style="max-width: 1400px;">AWS and NVIDIA deepen strategic collaboration</h1>
+      <p class="body-md" style="margin-top: 16px; color: var(--aws-gray-550); max-width: 1200px;">Building on 15+ years of joint innovation, AWS and NVIDIA announced an expanded partnership to accelerate AI from pilot to production.</p>
+      <div style="margin-top: 48px;">
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-purple-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-purple-600);">1</div>
+          <div>
+            <div class="comp-name">1M+ NVIDIA GPUs on AWS</div>
+            <div class="comp-desc">AWS will deploy over one million NVIDIA GPUs (Blackwell and Rubin architectures) across global regions starting 2026, making AWS the largest cloud destination for NVIDIA accelerated computing.</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-purple-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-purple-600);">2</div>
+          <div>
+            <div class="comp-name">NIXL on EFA for disaggregated inference</div>
+            <div class="comp-desc">NVIDIA Inference Xfer Library (NIXL) support on Elastic Fabric Adapter (EFA) enables high-throughput, low-latency KV-cache movement for disaggregated inference. Works across both NVIDIA GPUs and AWS Trainium, integrating natively with vLLM and NVIDIA Dynamo.</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-purple-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-purple-600);">3</div>
+          <div>
+            <div class="comp-name">NVIDIA Spectrum networking on AWS</div>
+            <div class="comp-desc">Collaboration on NVIDIA Spectrum networking to deliver next-generation interconnect performance for large-scale distributed training and inference workloads.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">aws.amazon.com/blogs/machine-learning/aws-and-nvidia-deepen-strategic-collaboration-to-accelerate-ai-from-pilot-to-production/</div>
+    <div class="slide-no">09 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       08. CAPACITY PRODUCTS
+       ============================================================ -->
+  <section class="slide" data-label="Capacity reservation options">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">CAPACITY OPTIONS</div>
+      <h1 class="h-content" style="max-width: 1400px;">Securing GPU capacity for your HyperPod cluster</h1>
+      <p class="body-md" style="margin-top: 16px; max-width: 1100px; color: var(--aws-gray-600);">HyperPod customers have different capacity options to secure GPU resources for their clusters.</p>
+      <table style="margin-top: 32px; width: 100%; border-collapse: collapse; font-family: var(--aws-font-display); font-size: 20px;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--aws-gray-300); text-align: left;">
+            <th style="padding: 12px 16px; font-weight: 500; width: 25%;">Option</th>
+            <th style="padding: 12px 16px; font-weight: 500; width: 35%;">How it works</th>
+            <th style="padding: 12px 16px; font-weight: 500; width: 20%;">Best for</th>
+            <th style="padding: 12px 16px; font-weight: 500; width: 20%;">Trade-off</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 14px 16px; font-weight: 400;">On-Demand</td>
+            <td style="padding: 14px 16px;">Pay per second, no commitment</td>
+            <td style="padding: 14px 16px;">Dev/test, bursty workloads</td>
+            <td style="padding: 14px 16px;">Subject to availability</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 14px 16px; font-weight: 400;">On-Demand Capacity Reservations (ODCRs)</td>
+            <td style="padding: 14px 16px;">Reserve specific instance count in a specific AZ</td>
+            <td style="padding: 14px 16px;">Production clusters</td>
+            <td style="padding: 14px 16px;">Pay whether used or not</td>
+          </tr>
+          <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+            <td style="padding: 14px 16px; font-weight: 400;">Spot Instances</td>
+            <td style="padding: 14px 16px;">Up to 90% discount, interruptible</td>
+            <td style="padding: 14px 16px;">Fault-tolerant training with checkpointing</td>
+            <td style="padding: 14px 16px;">Interruptions (HyperPod auto-resume helps)</td>
+          </tr>
+          <tr>
+            <td style="padding: 14px 16px; font-weight: 400;">Flexible Training Plans<br><span style="font-size: 15px; color: var(--aws-gray-550);">* EC2 equivalent: ML Capacity Blocks</span></td>
+            <td style="padding: 14px 16px;">Short-term reservations in 1-day increments, up to 182 days (26 weeks)</td>
+            <td style="padding: 14px 16px;">Planned training and inference workloads</td>
+            <td style="padding: 14px 16px;">Time-bound commitment</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top: 36px;">
+        <p style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 10px;">How to obtain and reserve GPUs</p>
+        <p style="font-size: 19px; color: var(--aws-gray-600); margin-bottom: 24px;">For large GPU commitments, work with your AWS account team to secure capacity through this process:</p>
+        <div style="display: flex; align-items: flex-start; gap: 0; justify-content: space-between;">
+          <div style="text-align: center; flex: 1;">
+            <div style="width: 44px; height: 44px; background: var(--aws-teal-50); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600); font-size: 20px;">1</div>
+            <p style="font-size: 19px; font-weight: 500; margin-top: 8px;">Demand plan</p>
+            <p style="font-size: 16px; color: var(--aws-gray-550); margin-top: 4px;">Instance type, quantity,<br>region/AZ, start date,<br>duration, target price</p>
+          </div>
+          <div style="flex: 0 0 32px; display: flex; align-items: center; justify-content: center; padding-top: 12px; color: var(--aws-gray-400); font-size: 22px;">→</div>
+          <div style="text-align: center; flex: 1;">
+            <div style="width: 44px; height: 44px; background: var(--aws-teal-50); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600); font-size: 20px;">2</div>
+            <p style="font-size: 19px; font-weight: 500; margin-top: 8px;">Capacity review</p>
+            <p style="font-size: 16px; color: var(--aws-gray-550); margin-top: 4px;">AWS reviews weekly<br>(~8 business days)</p>
+          </div>
+          <div style="flex: 0 0 32px; display: flex; align-items: center; justify-content: center; padding-top: 12px; color: var(--aws-gray-400); font-size: 22px;">→</div>
+          <div style="text-align: center; flex: 1;">
+            <div style="width: 44px; height: 44px; background: var(--aws-teal-50); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600); font-size: 20px;">3</div>
+            <p style="font-size: 19px; font-weight: 500; margin-top: 8px;">Pricing negotiation</p>
+            <p style="font-size: 16px; color: var(--aws-gray-550); margin-top: 4px;">Strategic Customer<br>Engagements (SCE)<br>negotiates private<br>rate card</p>
+          </div>
+          <div style="flex: 0 0 32px; display: flex; align-items: center; justify-content: center; padding-top: 12px; color: var(--aws-gray-400); font-size: 22px;">→</div>
+          <div style="text-align: center; flex: 1;">
+            <div style="width: 44px; height: 44px; background: var(--aws-teal-50); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600); font-size: 20px;">4</div>
+            <p style="font-size: 19px; font-weight: 500; margin-top: 8px;">Assisted ODCR</p>
+            <p style="font-size: 16px; color: var(--aws-gray-550); margin-top: 4px;">Hardware escrows,<br>delivered on date</p>
+          </div>
+          <div style="flex: 0 0 32px; display: flex; align-items: center; justify-content: center; padding-top: 12px; color: var(--aws-gray-400); font-size: 22px;">→</div>
+          <div style="text-align: center; flex: 1;">
+            <div style="width: 44px; height: 44px; background: var(--aws-teal-50); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600); font-size: 20px;">5</div>
+            <p style="font-size: 19px; font-weight: 500; margin-top: 8px;">Live</p>
+            <p style="font-size: 16px; color: var(--aws-gray-550); margin-top: 4px;">Instances available,<br>billing begins</p>
+          </div>
+        </div>
+        <div style="margin-top: 24px; padding: 16px 20px; background: var(--aws-gray-100); border-radius: 6px;">
+          <p style="font-size: 16px; color: var(--aws-gray-600);">For customers on a Strategic Collaboration Agreement (SCA), AWS may provide credits back for GPU costs tied to customer wins, reducing the marginal cost of sale.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-flexible-training.html</div>
+    <div class="slide-no">10 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       09. SECTION: INFRASTRUCTURE
+       ============================================================ -->
+  <section class="slide dark section-darkbg" data-label="Infrastructure layer">
+    <div class="pattern-strip" aria-hidden="true"></div>
+    <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 560px; top: 460px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 32px;">SECTION 04</div>
+      <h1 class="h-section" style="max-width: 1000px;">Infrastructure layer</h1>
+    </div>
+    <div class="slide-no">11 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       10. CLUSTER PROVISIONING AND TOPOLOGY
+       ============================================================ -->
+  <section class="slide" data-label="Cluster provisioning and topology">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFRASTRUCTURE</div>
+      <h1 class="h-content" style="max-width: 1300px;">Cluster topology: control plane, workers, and networking</h1>
+      <div class="two-col" style="margin-top: 48px;">
+        <div class="col">
+          <h3>Control plane (AWS-managed)</h3>
+          <ul>
+            <li>EKS control plane is fully managed by AWS (no customer nodes)</li>
+            <li>1:1 mapping between one EKS cluster and one HyperPod cluster</li>
+            <li>API server, etcd, and scheduler run in AWS-managed VPC</li>
+            <li>Accessible via kubectl, HyperPod CLI, or AWS Console</li>
+            <li>No load balancer required for training workloads (pod-to-pod only)</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Worker nodes (HyperPod-managed)</h3>
+          <ul>
+            <li>GPU instances (P5, P5e, P4d) placed in private subnets</li>
+            <li>EFA-enabled networking with placement groups for optimal topology</li>
+            <li>HyperPod manages lifecycle: provisioning, health checks, replacement</li>
+            <li>VPC, subnets, security groups, IAM created via CloudFormation</li>
+            <li>FSx for Lustre or S3 mounted for shared storage</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 40px; padding: 24px 32px; background: var(--aws-gray-100); border-radius: 8px;">
+        <p class="body-md"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">Topology-aware scheduling:</span> P5/P5e jobs are packed onto a single NVLink/NVSwitch domain first (900 GB/s), spreading to other nodes over EFA (3200 Gbps) only when local capacity is exhausted. UltraServers extend this to 72-GPU NVL72 chassis.</p>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks-prerequisites.html</div>
+    <div class="slide-no">12 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       11. UNIFIED CLUSTER
+       ============================================================ -->
+  <section class="slide" data-label="Unified cluster">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFRASTRUCTURE</div>
+      <h1 class="h-content" style="max-width: 1400px;">Unified cluster: the 1:1 EKS mapping and how to bring existing workloads</h1>
+      <div class="two-col" style="margin-top: 48px;">
+        <div class="col">
+          <h3>The 1:1 architecture</h3>
+          <ul>
+            <li>One HyperPod cluster maps to exactly one EKS control plane</li>
+            <li>HyperPod creates and owns the EKS cluster (via CloudFormation)</li>
+            <li>All GPU worker nodes are HyperPod-managed with health checks and auto-recovery</li>
+            <li>You get full kubectl and RBAC access to the underlying EKS cluster</li>
+            <li>Non-GPU workloads (APIs, data pipelines) can be scheduled on the same cluster using separate node groups</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Running mixed workloads</h3>
+          <ul>
+            <li>Add standard EKS managed node groups (CPU) alongside HyperPod GPU nodes</li>
+            <li>Kubernetes namespaces isolate ML workloads</li>
+            <li>Kueue governs GPU job admission; standard K8s pods schedule normally via the default scheduler</li>
+            <li>Shared cluster networking, service discovery, and IAM IRSA</li>
+            <li>Single observability stack (CloudWatch, Prometheus) for all workloads</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 40px; padding: 24px 32px; background: var(--aws-gray-100); border-radius: 8px;">
+        <p class="body-md"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">Key principle:</span> HyperPod maintains a 1:1 mapping between one EKS cluster and one HyperPod cluster. You can either let HyperPod create the EKS cluster via CloudFormation, or associate HyperPod with an existing EKS cluster. Either way, you can add your own non-HyperPod node groups and deploy any Kubernetes workload alongside the managed GPU nodes.</p>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks.html | HyperPod-EKS 1:1 mapping, long-lived GPU workers with health checks and auto-recovery</div>
+    <div class="slide-no">13 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       12. BASE IMAGE AND RUNTIME (DLAMI)
+       ============================================================ -->
+  <section class="slide" data-label="HyperPod DLAMI">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFRASTRUCTURE</div>
+      <h1 class="h-content" style="max-width: 1300px;">HyperPod DLAMI: the pre-validated runtime stack</h1>
+      <p class="body-md" style="margin-top: 16px; color: var(--aws-gray-550); max-width: 1100px;">Amazon Linux-based AMI (for EKS) with all dependencies pre-installed and version-locked for compatibility.</p>
+      <div class="two-col" style="margin-top: 40px;">
+        <div class="col">
+          <h3>GPU and compute runtime</h3>
+          <ul>
+            <li>NVIDIA GPU drivers (validated per instance type)</li>
+            <li>CUDA toolkit and cuDNN libraries</li>
+            <li>NCCL for multi-GPU collective communication</li>
+            <li>EFA installer and libfabric for RDMA networking</li>
+            <li>Kubelet and containerd for EKS integration</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>HyperPod agents and services</h3>
+          <ul>
+            <li>HyperPod health check agent for GPU/network fault detection</li>
+            <li>NVIDIA DCGM for GPU telemetry and diagnostics</li>
+            <li>Auto-resume agent for training job recovery (16+ node clusters)</li>
+            <li>Node replacement orchestrator for failed hardware</li>
+            <li>All agents are closed-source, updated via DLAMI releases</li>
+          </ul>
+        </div>
+      </div>
+      <p class="body-sm" style="margin-top: 32px; color: var(--aws-gray-550);"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">DIY alternative:</span> Build custom AMIs/containers, install and version-lock drivers/NCCL/K8s components yourself, implement your own health monitoring and job restart logic.</p>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-ref.html</div>
+    <div class="slide-no">14 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       12. RESILIENCE AND AUTO-RECOVERY
+       ============================================================ -->
+  <section class="slide" data-label="Resilience and auto-recovery">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFRASTRUCTURE</div>
+      <h1 class="h-content" style="max-width: 1300px;">Resilience: detecting faults and recovering training jobs</h1>
+      <div style="margin-top: 40px;">
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-teal-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600);">1</div>
+          <div>
+            <div class="comp-name">HyperPod health check agent</div>
+            <div class="comp-desc">Closed-source agent bundled in the HyperPod DLAMI, running on every worker node. Performs continuous GPU health checks (Xid errors, ECC memory, NVLink status), network connectivity validation, and storage mount checks. Reports failures to the HyperPod control plane.</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-teal-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600);">2</div>
+          <div>
+            <div class="comp-name">NVIDIA DCGM (Data Center GPU Manager)</div>
+            <div class="comp-desc">GPU telemetry collection at 1-second granularity. Reports GPU utilization, memory usage, temperature, power draw, and ECC error counts. Feeds into CloudWatch and Prometheus for observability dashboards.</div>
+            <div class="comp-repo">github.com/NVIDIA/DCGM</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-teal-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600);">3</div>
+          <div>
+            <div class="comp-name">Auto-resume and node replacement</div>
+            <div class="comp-desc">On clusters with 16+ nodes: when the health check agent detects a fault, it cordons the node, triggers EC2 instance replacement, and resumes the training job from the last checkpoint. Integrates with Kubeflow Training Operator for K8s-native job lifecycle management.</div>
+            <div class="comp-repo">Kubeflow Training Operator: github.com/kubeflow/training-operator</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-teal-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600);">4</div>
+          <div>
+            <div class="comp-name">Kueue integration for preemption and re-queue</div>
+            <div class="comp-desc">When a job fails or is preempted (Spot interruption), Kueue handles re-queuing with the correct priority. Ensures failed jobs are retried without manual intervention while respecting team quotas.</div>
+            <div class="comp-repo">github.com/kubernetes-sigs/kueue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks.html | HyperPod DLAMI bundles health-check and auto-resume agents (closed-source)</div>
+    <div class="slide-no">15 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       14. EFA AND INTERCONNECTS
+       ============================================================ -->
+  <section class="slide" data-label="EFA and interconnects">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">NETWORKING</div>
+      <h1 class="h-content" style="max-width: 1400px;">Intra-node and inter-node interconnects for distributed AI</h1>
+      <p class="body-md" style="margin-top: 16px; color: var(--aws-gray-550); max-width: 1300px;">Intra-node refers to communication between GPUs within a single instance (e.g. 8 GPUs in one p5.48xlarge). Inter-node refers to communication between separate instances across the network.</p>
+      <div class="two-col" style="margin-top: 32px;">
+        <div class="col">
+          <h3>Intra-node: NVLink and NVSwitch</h3>
+          <ul>
+            <li>NVLink 4 (P5/P5e): 900 GB/s bidirectional between all 8 GPUs within a single instance</li>
+            <li>NVSwitch provides full-mesh GPU-to-GPU connectivity (no CPU hop)</li>
+            <li>Used for tensor parallelism, where layer shards communicate every forward/backward pass</li>
+            <li>Coming: NVLink 5 on P6/UltraServers with higher per-link bandwidth across 72 GPUs</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Inter-node: Elastic Fabric Adapter (EFA)</h3>
+          <ul>
+            <li>P5/P5e: 3200 Gbps (400 GB/s) per instance via multiple EFA interfaces</li>
+            <li>OS-bypass RDMA via libfabric: data moves directly from application memory to the network card without going through the operating system kernel, dramatically reducing latency</li>
+            <li>Used for data parallelism (AllReduce gradients), pipeline parallelism (activations), and KV-cache transfer (NIXL)</li>
+            <li>Placement groups co-locate instances on the same network spine, minimizing hops and latency between nodes</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 40px; padding: 24px 32px; background: var(--aws-gray-100); border-radius: 8px;">
+        <p class="body-md"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">Why this matters:</span> Topology-aware scheduling in HyperPod packs tensor-parallel groups onto a single NVLink domain (900 GB/s) and only crosses the EFA boundary (400 GB/s) for data parallelism. Choosing the wrong parallelism-to-topology mapping can reduce training throughput by 2-5x.</p>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html | P5: 3200 Gbps EFA, NVLink 4 900 GB/s | P4d: 400 Gbps EFA, NVLink 600 GB/s</div>
+    <div class="slide-no">16 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       15. FSx FOR LUSTRE AND STORAGE
+       ============================================================ -->
+  <section class="slide" data-label="FSx for Lustre and storage">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">STORAGE</div>
+      <h1 class="h-content" style="max-width: 1400px;">Amazon FSx for Lustre: file storage built for HPC and ML</h1>
+      <p class="body-md" style="margin-top: 16px; color: var(--aws-gray-550); max-width: 1200px;">Lustre is the world's most widely used high-performance file system, powering the majority of the top 500 supercomputers. FSx for Lustre is the fully managed AWS implementation, purpose-built for workloads that need massive parallel throughput with sub-millisecond latency.</p>
+      <div class="two-col" style="margin-top: 40px;">
+        <div class="col">
+          <div class="comp-row">
+            <div style="width: 48px; height: 48px; background: var(--aws-teal-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600);">1</div>
+            <div>
+              <div class="comp-name">Extreme parallel throughput</div>
+              <div class="comp-desc">Up to 1,000 MB/s per TiB of provisioned storage. A 48 TiB file system delivers ~48 GB/s aggregate read throughput. Hundreds of GPU nodes read model weights simultaneously with sub-millisecond latency and millions of IOPS.</div>
+            </div>
+          </div>
+          <div class="comp-row">
+            <div style="width: 48px; height: 48px; background: var(--aws-teal-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600);">2</div>
+            <div>
+              <div class="comp-name">Transparent S3 integration</div>
+              <div class="comp-desc">Mounts as a POSIX file system on every worker node and automatically syncs with S3 via data repository associations. Store data in S3, access it at Lustre speed. No application changes needed.</div>
+            </div>
+          </div>
+          <div class="comp-row">
+            <div style="width: 48px; height: 48px; background: var(--aws-teal-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-teal-600);">3</div>
+            <div>
+              <div class="comp-name">Provisioned automatically by HyperPod</div>
+              <div class="comp-desc">CloudFormation templates create and mount FSx for Lustre with correct VPC, security groups, and mount targets. Training jobs and inference pods access storage immediately at full throughput.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div style="padding: 32px; background: var(--aws-gray-100); border-radius: 8px;">
+            <p style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 20px;">Performance at a glance</p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <div>
+                <p style="font-size: 36px; font-weight: 400; color: var(--aws-teal-600); margin-bottom: 4px;">1,000 MB/s</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">per TiB throughput</p>
+              </div>
+              <div>
+                <p style="font-size: 36px; font-weight: 400; color: var(--aws-teal-600); margin-bottom: 4px;">sub-ms</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">read latency</p>
+              </div>
+              <div>
+                <p style="font-size: 36px; font-weight: 400; color: var(--aws-teal-600); margin-bottom: 4px;">millions</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">of IOPS</p>
+              </div>
+              <div>
+                <p style="font-size: 36px; font-weight: 400; color: var(--aws-teal-600); margin-bottom: 4px;">100s of GB/s</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">aggregate at scale</p>
+              </div>
+            </div>
+          </div>
+          <p class="body-sm" style="margin-top: 20px; color: var(--aws-gray-550);">Why it matters for ML: a 70B parameter model (~140 GB in BF16) loads in seconds from FSx, versus minutes from S3 direct. Checkpoint writes during training happen without blocking GPU compute.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/fsx/latest/LustreGuide/what-is.html | Persistent_2 deployment type, 1000 MB/s/TiB throughput tier</div>
+    <div class="slide-no">17 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       13. SECTION: TRAINING
+       ============================================================ -->
+  <section class="slide dark section-darkbg" data-label="Training stack">
+    <div class="pattern-strip" aria-hidden="true"></div>
+    <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 560px; top: 460px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 32px;">SECTION 05</div>
+      <h1 class="h-section" style="max-width: 1000px;">Training stack</h1>
+    </div>
+    <div class="slide-no">18 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       14. DISTRIBUTED TRAINING PRIMER
+       ============================================================ -->
+  <section class="slide" data-label="Distributed training primer">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">TRAINING FUNDAMENTALS</div>
+      <h1 class="h-content" style="max-width: 1300px;">Parallelism strategies for large model training</h1>
+      <div class="three-col" style="margin-top: 48px;">
+        <div class="card">
+          <div class="card-title">Data parallelism</div>
+          <div class="card-body">Each GPU holds a full model copy and processes a different data shard. Gradients are synchronized via AllReduce. Simple but limited by model size fitting in one GPU.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Model/tensor parallelism</div>
+          <div class="card-body">Individual layers are split across GPUs (e.g. attention heads on separate devices). Reduces per-GPU memory. Requires high-bandwidth interconnect (NVLink).</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Pipeline parallelism</div>
+          <div class="card-body">Different layers are assigned to different GPUs in stages. Micro-batches flow through the pipeline. Balances memory and compute but introduces bubble overhead.</div>
+        </div>
+      </div>
+      <div class="two-col" style="margin-top: 32px;">
+        <div class="col">
+          <h3>Context parallelism</h3>
+          <ul>
+            <li>Splits long sequences across GPUs</li>
+            <li>Each GPU processes a portion of the sequence</li>
+            <li>Critical for long-context models (128K+ tokens)</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Expert parallelism (training and inference)</h3>
+          <ul>
+            <li>Different experts reside on different GPUs</li>
+            <li>Router sends tokens to relevant experts</li>
+            <li>Used in training (DeepSeek-V3, Mixtral) and inference (llm-d)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">Expert parallelism applies to both training (distributing experts across GPUs) and inference (llm-d routes to expert-specific nodes)</div>
+    <div class="slide-no">19 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       15. DEEPSPEED vs MEGATRON-LM vs FSDP
+       ============================================================ -->
+  <section class="slide" data-label="DeepSpeed vs Megatron-LM vs FSDP">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">TRAINING FUNDAMENTALS</div>
+      <h1 class="h-content" style="max-width: 1400px;">Open-source distributed training frameworks</h1>
+      <table class="cap-table">
+        <thead>
+          <tr>
+            <th>Framework</th>
+            <th>Core approach</th>
+            <th>Strengths</th>
+            <th>Choose when</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DeepSpeed (Microsoft)</td>
+            <td>ZeRO optimizer sharding (stages 1-3). Partitions optimizer states, gradients, and parameters across GPUs to reduce memory footprint.</td>
+            <td>Easy onramp (drop-in with existing PyTorch). ZeRO-Infinity offloads to NVMe. Strong 3D parallelism support.</td>
+            <td>Fastest path to distributed training. Teams with existing PyTorch code. Memory-constrained setups.</td>
+          </tr>
+          <tr>
+            <td>Megatron-LM (NVIDIA)</td>
+            <td>Tensor and pipeline parallelism with sequence parallelism. Splits individual layer operations (attention, MLP) across GPUs.</td>
+            <td>Highest MFU (Model FLOPS Utilization) at extreme scale. Topology-aware communication. Optimized for NVIDIA hardware.</td>
+            <td>Maximum training efficiency at 100+ GPU scale. Teams willing to refactor models into Megatron architecture.</td>
+          </tr>
+          <tr>
+            <td>FSDP (PyTorch)</td>
+            <td>Fully Sharded Data Parallel. PyTorch-native ZeRO-3 implementation. Shards parameters, gradients, and optimizer states.</td>
+            <td>First-party PyTorch support. Composable with other PyTorch features. No external dependencies.</td>
+            <td>PyTorch ecosystem alignment. Teams that want official PyTorch support without third-party frameworks.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="body-sm" style="margin-top: 24px; color: var(--aws-gray-550);">HyperPod's NeMo adapter uses Megatron-Core internally for tensor/pipeline parallelism. HyperPod Recipes abstract these choices, but understanding the underlying framework helps when tuning parallelism configs or debugging performance.</p>
+    </div>
+    <div class="footer-ref">github.com/microsoft/DeepSpeed | github.com/NVIDIA/Megatron-LM | pytorch.org/docs/stable/fsdp.html</div>
+    <div class="slide-no">20 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       16. TRAINING COMPONENTS
+       ============================================================ -->
+  <section class="slide" data-label="Training components">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">TRAINING STACK</div>
+      <h1 class="h-content" style="max-width: 1300px;">Three opinionated components form the training stack</h1>
+      <div style="margin-top: 48px;">
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-orange-100); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600);">1</div>
+          <div>
+            <div class="comp-name">SageMaker HyperPod Recipes</div>
+            <div class="comp-desc">Pre-configured training stacks for Llama, Mistral, Mixtral, DeepSeek, Nova, and more. Includes launcher scripts, model configs, and infrastructure settings for Slurm, EKS, and SageMaker Training.</div>
+            <div class="comp-repo">github.com/aws/sagemaker-hyperpod-recipes</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-orange-100); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600);">2</div>
+          <div>
+            <div class="comp-name">HyperPod training adapter for NeMo</div>
+            <div class="comp-desc">NeMo/PyTorch Lightning-based framework implementing data/model/context parallelism, mixed precision, checkpointing, and lifecycle management. Uses Megatron-Core internally for tensor/pipeline parallelism.</div>
+            <div class="comp-repo">github.com/aws/sagemaker-hyperpod-training-adapter-for-nemo</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-orange-100); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600);">3</div>
+          <div>
+            <div class="comp-name">SageMaker Distributed Libraries (SMDDP + SMP)</div>
+            <div class="comp-desc">SMDDP: AWS-optimized AllReduce and AllGather collectives tuned for EC2 network topology, providing the smddp backend for PyTorch's process group. SMP: model parallelism library for tensor/pipeline parallelism used by the NeMo adapter.</div>
+            <div class="comp-repo">Python packages: smdistributed.dataparallel, smdistributed.modelparallel</div>
+          </div>
+        </div>
+      </div>
+      <p class="body-sm" style="margin-top: 16px; color: var(--aws-gray-550);"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">DIY alternative:</span> Use DeepSpeed, Megatron-LM, or FSDP directly. Wire your own launchers, configure parallelism manually, implement checkpointing and fault recovery.</p>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-recipes.html</div>
+    <div class="slide-no">21 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       17. TRAINING DATA FLOW
+       ============================================================ -->
+  <section class="slide" data-label="Training data flow">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">TRAINING STACK</div>
+      <h1 class="h-content" style="max-width: 1300px;">How the training stack components connect</h1>
+      <div style="margin-top: 48px;">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div class="flow-content">
+            <div class="flow-title">Recipe config defines the job</div>
+            <div class="flow-desc">YAML recipe specifies model (e.g. Llama-3.1-405B), parallelism strategy (TP=8, PP=4, DP=16), cluster type (EKS), and hyperparameters. Entry point: main.py in recipes repo.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div class="flow-content">
+            <div class="flow-title">HyperPod CLI submits to EKS</div>
+            <div class="flow-desc">CLI translates recipe into Kubernetes pod specs, assigns namespace/priority class, and submits via Kueue. Respects task governance quotas.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div class="flow-content">
+            <div class="flow-title">NeMo adapter orchestrates training</div>
+            <div class="flow-desc">Adapter initializes parallelism groups, configures mixed precision (BF16/FP8), sets up distributed checkpointing to S3/FSx. Manages the training loop lifecycle.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div class="flow-content">
+            <div class="flow-title">SMDDP handles collective communication</div>
+            <div class="flow-desc">Gradient synchronization uses SMDDP's topology-aware AllReduce over EFA. Optimizes for the P5/P5e network hierarchy: NVLink within node, EFA across nodes.</div>
+          </div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div class="flow-content">
+            <div class="flow-title">Health agents monitor and recover</div>
+            <div class="flow-desc">Health check agent detects GPU/network failures, triggers node replacement, and auto-resumes training from the last checkpoint (clusters with 16+ nodes).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">github.com/aws/sagemaker-hyperpod-recipes | github.com/aws/sagemaker-hyperpod-cli</div>
+    <div class="slide-no">22 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       18. SECTION: INFERENCE
+       ============================================================ -->
+  <section class="slide dark section-darkbg" data-label="Inference stack">
+    <div class="pattern-strip" aria-hidden="true"></div>
+    <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 560px; top: 460px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 32px;">SECTION 06</div>
+      <h1 class="h-section" style="max-width: 1100px;">Inference stack</h1>
+    </div>
+    <div class="slide-no">23 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       19. DISAGGREGATED INFERENCE PRIMER
+       ============================================================ -->
+  <section class="slide" data-label="Disaggregated inference primer">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFERENCE FUNDAMENTALS</div>
+      <h1 class="h-content" style="max-width: 1300px;">Why disaggregate prefill from decode?</h1>
+      <div class="two-col" style="margin-top: 48px;">
+        <div class="col">
+          <h3>Prefill phase</h3>
+          <ul>
+            <li>Processes the full input prompt in one forward pass</li>
+            <li>Compute-bound: high FLOPS utilization</li>
+            <li>Generates the KV-cache for all input tokens</li>
+            <li>Benefits from high GPU compute density</li>
+            <li>Latency is O(input_length)</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Decode phase</h3>
+          <ul>
+            <li>Generates one token at a time, autoregressively</li>
+            <li>Memory-bandwidth-bound: reads full KV-cache per token</li>
+            <li>Benefits from high memory bandwidth (HBM3e)</li>
+            <li>Continuous batching improves throughput</li>
+            <li>Latency is O(output_length x KV_cache_reads)</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 48px; padding: 24px 32px; background: var(--aws-gray-100); border-radius: 8px;">
+        <p class="body-md">Prefill and decode have opposite hardware requirements. Running them on separate node pools (disaggregated) lets you optimize hardware allocation independently. For MoE models, expert parallelism routes tokens to expert-specific nodes during both prefill and decode, further benefiting from disaggregation.</p>
+      </div>
+    </div>
+    <div class="footer-ref">aws.amazon.com/blogs/machine-learning/introducing-disaggregated-inference-on-aws-powered-by-llm-d/</div>
+    <div class="slide-no">24 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       21. WHEN TO DISAGGREGATE
+       ============================================================ -->
+  <section class="slide" data-label="When to disaggregate">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFERENCE FUNDAMENTALS</div>
+      <h1 class="h-content" style="max-width: 1400px;">When to disaggregate inference and what characteristics matter</h1>
+      <div class="two-col" style="margin-top: 48px;">
+        <div class="col">
+          <h3>Disaggregation benefits you when</h3>
+          <ul>
+            <li>Long input contexts (32K+ tokens): prefill dominates end-to-end latency and benefits from dedicated compute</li>
+            <li>High request concurrency: independent scaling of prefill and decode pools avoids head-of-line blocking</li>
+            <li>Asymmetric traffic patterns: bursty prefill load with steady decode streams</li>
+            <li>MoE models: expert parallelism routes to specialized nodes, reducing memory duplication</li>
+            <li>Cost optimization: right-size instance types per phase (compute-dense vs memory-bandwidth-dense)</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Co-located (monolithic) is fine when</h3>
+          <ul>
+            <li>Short prompts (&lt;4K tokens): prefill is cheap and KV-cache transfer overhead outweighs the benefit</li>
+            <li>Low throughput requirements: single node handles both phases without saturation</li>
+            <li>Latency-sensitive, short-output tasks: KV-cache network hop adds P99 tail latency</li>
+            <li>Small models that fit in a single GPU: no cross-node communication needed</li>
+            <li>Simpler operations: fewer components to monitor and debug</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 40px; padding: 24px 32px; background: var(--aws-gray-100); border-radius: 8px;">
+        <p class="body-md"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">Rule of thumb:</span> If your P50 input is over 8K tokens and you need to serve 100+ concurrent requests, disaggregation typically yields 2-3x better throughput per dollar. Below that, monolithic vLLM is simpler and sufficient.</p>
+      </div>
+    </div>
+    <div class="footer-ref">Disaggregation requires EFA networking between prefill and decode pools for KV-cache transfer via NIXL</div>
+    <div class="slide-no">25 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       22. INFERENCE COMPONENTS
+       ============================================================ -->
+  <section class="slide" data-label="Inference components">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFERENCE STACK</div>
+      <h1 class="h-content" style="max-width: 1300px;">Four components power disaggregated inference on HyperPod</h1>
+      <div style="margin-top: 40px;">
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">1</div>
+          <div>
+            <div class="comp-name">llm-d</div>
+            <div class="comp-desc">Kubernetes-native inference framework. Provides disaggregated prefill/decode scheduling, expert parallelism routing (MoE models routed to expert-specific nodes), and KV-cache-aware request placement.</div>
+            <div class="comp-repo">github.com/llm-d/llm-d</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">2</div>
+          <div>
+            <div class="comp-name">vLLM</div>
+            <div class="comp-desc">High-throughput, memory-efficient inference engine. Implements PagedAttention for efficient KV-cache management, continuous batching, and speculative decoding. The core execution engine under llm-d.</div>
+            <div class="comp-repo">github.com/vllm-project/vllm</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">3</div>
+          <div>
+            <div class="comp-name">NIXL (NVIDIA Inference Xfer Library)</div>
+            <div class="comp-desc">Point-to-point data transfer abstraction across CPU/GPU memory and storage backends. Enables efficient KV-cache transfers between prefill and decode nodes. Supports libfabric, UCX, and GPUDirect backends.</div>
+            <div class="comp-repo">github.com/ai-dynamo/nixl</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">4</div>
+          <div>
+            <div class="comp-name">libfabric (EFA provider)</div>
+            <div class="comp-desc">Userspace fabric library with the EFA provider for OS-bypass RDMA transport on EC2. NIXL uses libfabric to transfer KV-cache over Elastic Fabric Adapter, minimizing latency and maximizing bandwidth.</div>
+            <div class="comp-repo">github.com/ofiwg/libfabric (prov/efa/)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">aws.amazon.com/blogs/machine-learning/introducing-disaggregated-inference-on-aws-powered-by-llm-d/</div>
+    <div class="slide-no">26 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       21. UNDERSTANDING LLM-D
+       ============================================================ -->
+  <section class="slide" data-label="Understanding llm-d">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFERENCE STACK</div>
+      <h1 class="h-content" style="max-width: 1400px;">Understanding llm-d: Kubernetes-native inference orchestration</h1>
+      <p class="body-md" style="margin-top: 16px; color: var(--aws-gray-550); max-width: 100%;">llm-d is an open-source inference orchestration framework built on vLLM. It adds intelligent scheduling, disaggregated serving, and tiered caching to solve LLM serving at scale. llm-d integrates low-level runtime components from NVIDIA Dynamo, including NIXL for KV cache transport and the Dynamo Planner for GPU resource management.</p>
+      <div class="two-col" style="margin-top: 32px;">
+        <div class="col">
+          <div class="comp-row">
+            <div style="width: 40px; height: 40px; background: var(--aws-orange-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600); font-size: 16px;">1</div>
+            <div>
+              <div class="comp-name">Inference Gateway (IGW)</div>
+              <div class="comp-desc">Entry point for all inference traffic. Extends the Kubernetes Gateway API with inference-aware routing via the Endpoint Picker Protocol (EPP) — a standard K8s interface that lets llm-d plug its routing logic into the gateway without a custom proxy</div>
+            </div>
+          </div>
+          <div class="comp-row">
+            <div style="width: 40px; height: 40px; background: var(--aws-orange-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600); font-size: 16px;">2</div>
+            <div>
+              <div class="comp-name">KV-cache-aware scheduler</div>
+              <div class="comp-desc">llm-d's EPP implementation — makes decisions like "this request has a prefix matching the KV cache on pod-7, send it there." Avoids redundant prefill by routing to replicas that already hold the relevant context</div>
+            </div>
+          </div>
+          <div class="comp-row">
+            <div style="width: 40px; height: 40px; background: var(--aws-orange-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600); font-size: 16px;">3</div>
+            <div>
+              <div class="comp-name">Pool orchestration sidecar</div>
+              <div class="comp-desc">Manages the lifecycle of disaggregated prefill and decode GPU pools via a sidecar on each node, coordinating request handoff and KV cache transfers between pools</div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="comp-row">
+            <div style="width: 40px; height: 40px; background: var(--aws-orange-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600); font-size: 16px;">4</div>
+            <div>
+              <div class="comp-name">NIXL transport (via NVIDIA Dynamo)</div>
+              <div class="comp-desc">Moves the KV cache directly from one GPU's memory to another GPU's memory across nodes, without copying through the CPU or operating system. Uses EFA for high-speed network transfer, keeping latency minimal during prefill-to-decode handoff</div>
+            </div>
+          </div>
+          <div class="comp-row">
+            <div style="width: 40px; height: 40px; background: var(--aws-orange-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600); font-size: 16px;">5</div>
+            <div>
+              <div class="comp-name">Managed tiered KV cache</div>
+              <div class="comp-desc">L1 per-node (CPU memory) + L2 distributed cluster-wide (terabyte-scale, GPU-aware zero-copy). Offloads KV cache beyond GPU VRAM — repeat prompts hit the cache and skip prefill entirely. Enabled via CRD on the HyperPod Inference Operator.</div>
+            </div>
+          </div>
+          <div class="comp-row">
+            <div style="width: 40px; height: 40px; background: var(--aws-orange-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-orange-600); font-size: 16px;">6</div>
+            <div>
+              <div class="comp-name">Workload Variant Autoscaler (WVA)</div>
+              <div class="comp-desc">Monitors request rates and GPU utilization per pool, then emits target replica counts as Prometheus metrics. KEDA consumes these signals and executes the actual pod scaling. A surge in long-context prompts scales up prefill; chatbot traffic scales up decode.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">github.com/llm-d/llm-d | github.com/ai-dynamo/dynamo | AWS container: ghcr.io/llm-d/llm-d-aws</div>
+    <div class="slide-no">27 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       24. INFERENCE AUTO-SCALING
+       ============================================================ -->
+  <section class="slide" data-label="Inference auto-scaling">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFERENCE STACK</div>
+      <h1 class="h-content" style="max-width: 1400px;">Auto-scaling inference workloads on HyperPod EKS</h1>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 40px;">
+        <div>
+          <div class="comp-row">
+            <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">1</div>
+            <div>
+              <div class="comp-name">Workload Variant Autoscaler (WVA)</div>
+              <div class="comp-desc">Monitors request rates and GPU utilization per pool. Calculates desired replicas for prefill, decode, and latency-tolerant pools, then emits target counts as Prometheus metrics.</div>
+            </div>
+          </div>
+          <p style="font-size: 22px; color: var(--aws-blue-300); text-align: center; margin: 4px 0 4px 56px;">↓</p>
+          <div class="comp-row">
+            <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">2</div>
+            <div>
+              <div class="comp-name">KEDA (Kubernetes Event-Driven Autoscaling)</div>
+              <div class="comp-desc">Consumes WVA metrics from Prometheus and triggers pod scaling per pool. Also supports vLLM metrics directly (queue depth, KV cache usage) and CloudWatch.</div>
+            </div>
+          </div>
+          <p style="font-size: 22px; color: var(--aws-blue-300); text-align: center; margin: 4px 0 4px 56px;">↓</p>
+          <div class="comp-row">
+            <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">3</div>
+            <div>
+              <div class="comp-name">Karpenter node provisioning</div>
+              <div class="comp-desc">When new pods are pending, Karpenter provisions GPU nodes automatically. Topology-aware for EFA placement groups and AZ constraints.</div>
+            </div>
+          </div>
+          <p style="font-size: 22px; color: var(--aws-blue-300); text-align: center; margin: 4px 0 4px 56px;">↓</p>
+          <div class="comp-row">
+            <div style="width: 48px; height: 48px; background: var(--aws-blue-50); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 400; color: var(--aws-blue-600);">4</div>
+            <div>
+              <div class="comp-name">KV-cache-aware routing (before scaling)</div>
+              <div class="comp-desc">Before any scaling occurs, llm-d maximizes existing capacity by routing to warm replicas that already hold relevant context.</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding: 40px; background: var(--aws-gray-100); border-radius: 8px;">
+          <p style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 28px;">Scaling behaviour on HyperPod</p>
+          <p style="font-size: 22px; color: var(--aws-gray-700); margin-bottom: 24px;"><span style="font-weight: 500;">Amazon FSx for Lustre (distributed model cache):</span> Shared across all nodes — new replicas load model weights instantly without individual S3 downloads, reducing 70B model load from minutes to seconds</p>
+          <p style="font-size: 22px; color: var(--aws-gray-700); margin-bottom: 24px;"><span style="font-weight: 500;">Deep Learning AMI (DLAMI):</span> New nodes boot with GPU drivers, NCCL, and runtime pre-installed, reducing node-ready time</p>
+          <p style="font-size: 22px; color: var(--aws-gray-700); margin-bottom: 24px;"><span style="font-weight: 500;">Container image caching:</span> Custom AMIs bake ML container images into the node, or DaemonSets pre-pull images across all nodes, eliminating multi-minute image pulls</p>
+          <p style="font-size: 22px; color: var(--aws-gray-700); margin-bottom: 24px;"><span style="font-weight: 500;">Elastic Fabric Adapter (EFA) + NIXL:</span> KV-cache transfers between prefill/decode nodes work immediately, no additional setup</p>
+          <p style="font-size: 22px; color: var(--aws-gray-700);"><span style="font-weight: 500;">Auto-recovery:</span> Failed inference nodes replaced automatically without manual intervention</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">github.com/kedacore/keda | github.com/aws/karpenter-provider-aws | FSx for Lustre parallel model loading from S3</div>
+    <div class="slide-no">28 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       24b. HYPERPOD INFERENCE OPERATOR
+       ============================================================ -->
+  <section class="slide" data-label="HyperPod Inference Operator">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFERENCE STACK</div>
+      <h1 class="h-content" style="max-width: 1400px;">HyperPod Inference Operator: the managed control plane</h1>
+      <p class="body-md" style="margin-top: 16px; color: var(--aws-gray-550); max-width: 100%;">A Kubernetes operator that abstracts inference complexity into a single Custom Resource Definition (CRD). Apply a YAML manifest and HyperPod handles model deployment, intelligent routing, tiered KV cache, autoscaling, and observability.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 36px;">
+        <div>
+          <p style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 20px;">What the operator manages</p>
+          <div style="margin-bottom: 16px;">
+            <p style="font-size: 20px; margin-bottom: 6px;"><span style="font-weight: 500;">Model deployment:</span> Downloads weights from S3, FSx, or HuggingFace. Spins up vLLM pods with the right GPU resources.</p>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <p style="font-size: 20px; margin-bottom: 6px;"><span style="font-weight: 500;">Intelligent routing:</span> Deploys a router with three strategies — prefix-aware (default), KV-cache-aware, or round-robin.</p>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <p style="font-size: 20px; margin-bottom: 6px;"><span style="font-weight: 500;">Managed tiered KV cache:</span> L1 per-node (CPU memory) + L2 distributed (terabyte-scale, GPU-aware zero-copy). No infra to provision.</p>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <p style="font-size: 20px; margin-bottom: 6px;"><span style="font-weight: 500;">Autoscaling:</span> Integrates Karpenter for scale-to-zero and back. Metrics from CloudWatch or Prometheus.</p>
+          </div>
+          <div>
+            <p style="font-size: 20px;"><span style="font-weight: 500;">Endpoint registration:</span> Automatically registers a SageMaker endpoint or provisions an ALB. Deleting the CRD cleans up everything.</p>
+          </div>
+        </div>
+        <div>
+          <p style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 20px;">Performance impact: routing + KV cache combined</p>
+          <p style="font-size: 16px; color: var(--aws-gray-550); margin-bottom: 16px;">Llama 3.1 70B Instruct on 7x p5.48xlarge. Intelligent routing avoids redundant prefill by sending requests to replicas that already hold the relevant KV cache. The L1/L2 tiered cache retains computed blocks so repeated context (system prompts, multi-turn history) skips prefill entirely.</p>
+          <div style="padding: 28px; background: var(--aws-gray-100); border-radius: 8px; margin-bottom: 24px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <p style="font-size: 36px; font-weight: 500; color: var(--aws-blue-600);">40%</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">TTFT reduction (P90, 8K context)</p>
+              </div>
+              <div>
+                <p style="font-size: 36px; font-weight: 500; color: var(--aws-blue-600);">94%</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">TTFT reduction (P50, 64K context)</p>
+              </div>
+              <div>
+                <p style="font-size: 36px; font-weight: 500; color: var(--aws-teal-600);">38%</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">Throughput increase (64K context)</p>
+              </div>
+              <div>
+                <p style="font-size: 36px; font-weight: 500; color: var(--aws-teal-600);">28%</p>
+                <p style="font-size: 16px; color: var(--aws-gray-550);">Cost reduction (64K context)</p>
+              </div>
+            </div>
+          </div>
+          <p style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 16px;">Custom Resource Definitions (CRDs)</p>
+          <p style="font-size: 18px; margin-bottom: 8px;"><span style="font-weight: 500;">InferenceEndpointConfig</span> — custom models from S3, FSx, HuggingFace</p>
+          <p style="font-size: 18px;"><span style="font-weight: 500;">JumpStartModel</span> — 400+ open-weight models, one-click deploy</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">aws.amazon.com/blogs/machine-learning/managed-tiered-kv-cache-and-intelligent-routing-for-amazon-sagemaker-hyperpod/</div>
+    <div class="slide-no">29 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       25. INFERENCE DATA FLOW (VISUAL)
+       ============================================================ -->
+  <section class="slide" data-label="Inference data flow">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">INFERENCE STACK</div>
+      <h1 class="h-content" style="max-width: 1300px;">Disaggregated inference request flow</h1>
+      <div style="margin-top: 48px; display: flex; align-items: stretch; gap: 0;">
+        <div style="flex: 1; padding: 24px; background: var(--aws-blue-50); border-radius: 12px; text-align: center;">
+          <div style="width: 48px; height: 48px; background: var(--aws-blue-100); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 500; color: var(--aws-blue-600);">1</div>
+          <p style="font-size: 18px; font-weight: 500; margin-top: 12px;">Client request</p>
+          <p style="font-size: 14px; color: var(--aws-gray-550); margin-top: 8px;">Inference request arrives at Inference Gateway</p>
+        </div>
+        <div style="flex: 0 0 48px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--aws-blue-400);">→</div>
+        <div style="flex: 1; padding: 24px; background: var(--aws-orange-50); border-radius: 12px; text-align: center;">
+          <div style="width: 48px; height: 48px; background: var(--aws-orange-100); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 500; color: var(--aws-orange-600);">2</div>
+          <p style="font-size: 18px; font-weight: 500; margin-top: 12px;">KV-cache scheduler</p>
+          <p style="font-size: 14px; color: var(--aws-gray-550); margin-top: 8px;">Routes to replica with cached context, or selects optimal prefill node</p>
+        </div>
+        <div style="flex: 0 0 48px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--aws-orange-400);">→</div>
+        <div style="flex: 1; padding: 24px; background: var(--aws-teal-50); border-radius: 12px; text-align: center;">
+          <div style="width: 48px; height: 48px; background: var(--aws-teal-100); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 500; color: var(--aws-teal-600);">3</div>
+          <p style="font-size: 18px; font-weight: 500; margin-top: 12px;">Prefill (vLLM)</p>
+          <p style="font-size: 14px; color: var(--aws-gray-550); margin-top: 8px;">Full prompt processed in one forward pass, KV cache generated</p>
+        </div>
+        <div style="flex: 0 0 48px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--aws-teal-400);">→</div>
+        <div style="flex: 1; padding: 24px; background: var(--aws-purple-50); border-radius: 12px; text-align: center;">
+          <div style="width: 48px; height: 48px; background: var(--aws-purple-100); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 500; color: var(--aws-purple-600);">4</div>
+          <p style="font-size: 18px; font-weight: 500; margin-top: 12px;">NIXL transfer</p>
+          <p style="font-size: 14px; color: var(--aws-gray-550); margin-top: 8px;">KV cache moved GPU-to-GPU over EFA (RDMA, zero-copy)</p>
+        </div>
+        <div style="flex: 0 0 48px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--aws-purple-400);">→</div>
+        <div style="flex: 1; padding: 24px; background: var(--aws-green-50); border-radius: 12px; text-align: center;">
+          <div style="width: 48px; height: 48px; background: var(--aws-green-100); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 500; color: var(--aws-green-600);">5</div>
+          <p style="font-size: 18px; font-weight: 500; margin-top: 12px;">Decode (vLLM)</p>
+          <p style="font-size: 14px; color: var(--aws-gray-550); margin-top: 8px;">Autoregressive token generation, streamed back to client</p>
+        </div>
+      </div>
+      <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px;">
+        <div style="padding: 28px; background: var(--aws-gray-100); border-radius: 8px;">
+          <p style="font-family: var(--aws-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 12px;">Prefill pool</p>
+          <p style="font-size: 20px; color: var(--aws-gray-700);">Compute-optimized, high FLOPS utilization. Processes long prompts in parallel.</p>
+        </div>
+        <div style="padding: 28px; background: var(--aws-gray-100); border-radius: 8px;">
+          <p style="font-family: var(--aws-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 12px;">Decode pool</p>
+          <p style="font-size: 20px; color: var(--aws-gray-700);">Memory-bandwidth-optimized, continuous batching. Serves many concurrent streams.</p>
+        </div>
+        <div style="padding: 28px; background: var(--aws-gray-100); border-radius: 8px;">
+          <p style="font-family: var(--aws-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--aws-gray-550); margin-bottom: 12px;">Managed KV cache (L1 + L2)</p>
+          <p style="font-size: 20px; color: var(--aws-gray-700);">L1 per-node CPU memory + L2 distributed cluster-wide. Repeat prompts hit cache, skip prefill entirely.</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">github.com/llm-d/llm-d | github.com/ai-dynamo/nixl | NIXL over EFA for RDMA KV cache transfer</div>
+    <div class="slide-no">30 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       26. SECTION: OPERATIONS
+       ============================================================ -->
+  <section class="slide dark section-darkbg" data-label="Orchestration and operations">
+    <div class="pattern-strip" aria-hidden="true"></div>
+    <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 560px; top: 460px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 32px;">SECTION 07</div>
+      <h1 class="h-section" style="max-width: 1100px;">Orchestration and operations</h1>
+    </div>
+    <div class="slide-no">31 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       23. GOVERNANCE AND OBSERVABILITY
+       ============================================================ -->
+  <section class="slide" data-label="Governance and observability">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">OPERATIONS</div>
+      <h1 class="h-content" style="max-width: 1300px;">Task governance, observability, and the HyperPod CLI</h1>
+      <div style="margin-top: 40px;">
+        <div class="comp-row">
+          <img src="assets/icons/Arch_Amazon-Elastic-Kubernetes-Service_48.png" alt="">
+          <div>
+            <div class="comp-name">Task governance (Kueue-based)</div>
+            <div class="comp-desc">Multi-team GPU sharing via Kubernetes namespaces and priority classes. Governance dashboard shows per-team GPU/vCPU utilization and quota usage. Built on Kueue for job queuing and fair-share scheduling.</div>
+            <div class="comp-repo">Kueue: github.com/kubernetes-sigs/kueue</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <img src="assets/icons/Arch_Amazon-CloudWatch_48.png" alt="">
+          <div>
+            <div class="comp-name">CloudWatch Observability EKS add-on</div>
+            <div class="comp-desc">Fluent Bit + CloudWatch Agent for GPU utilization, EFA traffic, memory pressure, and pod-level metrics. Pre-built dashboards surface HyperPod-specific health signals. Container Insights for cluster-wide visibility.</div>
+            <div class="comp-repo">CloudWatch Observability EKS add-on (AWS managed)</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <img src="assets/icons/Arch_Amazon-Managed-Grafana_48.png" alt="">
+          <div>
+            <div class="comp-name">Prometheus + Grafana dashboards</div>
+            <div class="comp-desc">Amazon Managed Service for Prometheus scrapes GPU/training metrics. Amazon Managed Grafana provides curated dashboards for training loss curves, GPU utilization heatmaps, and EFA bandwidth monitoring.</div>
+          </div>
+        </div>
+        <div class="comp-row">
+          <img src="assets/icons/Arch_Amazon-SageMaker-AI_48.png" alt="">
+          <div>
+            <div class="comp-name">HyperPod CLI</div>
+            <div class="comp-desc">Opinionated CLI for data scientists to list clusters, submit training jobs, and manage inference endpoints on HyperPod EKS. Understands HyperPod recipe schema for fast job submission without writing kubectl YAML.</div>
+            <div class="comp-repo">github.com/aws/sagemaker-hyperpod-cli</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer-ref">docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks-operate-console-ui-governance-setup-dashboard.html</div>
+    <div class="slide-no">32 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       27. GLOBAL CAPACITY ORCHESTRATION
+       ============================================================ -->
+  <section class="slide" data-label="Global capacity orchestration">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">OPERATIONS</div>
+      <h1 class="h-content" style="max-width: 1400px;">Global capacity orchestration: routing across regions</h1>
+      <div class="two-col" style="margin-top: 48px;">
+        <div class="col">
+          <h3>The challenge</h3>
+          <ul>
+            <li>GPU capacity (P5, P5e) is scarce and unevenly distributed across regions</li>
+            <li>HyperPod clusters are region-bound (1:1 EKS mapping; EKS is a regional service)</li>
+            <li>A single region may not satisfy all your GPU demand for training or inference</li>
+            <li>Data gravity: training datasets in S3/FSx are regional, so cross-region training incurs transfer costs</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Multi-region pattern</h3>
+          <ul>
+            <li>Deploy separate HyperPod EKS clusters in multiple regions (e.g. us-east-1, us-west-2, eu-west-1)</li>
+            <li>Use an AI gateway or routing layer to distribute inference requests across regional endpoints</li>
+            <li>Route 53 latency-based routing or health-check failover between regional llm-d endpoints</li>
+            <li>For training: job dispatcher routes to whichever region has available capacity</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 40px; padding: 24px 32px; background: var(--aws-gray-100); border-radius: 8px;">
+        <p class="body-md"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">AI gateway pattern:</span> A routing layer (API Gateway, CloudFront, or a custom gateway) that is capacity-aware and directs inference requests to whichever regional HyperPod cluster has available GPU resources. llm-d handles intra-cluster routing; the AI gateway handles inter-region routing. This is a customer-built architectural pattern, not a built-in HyperPod feature.</p>
+      </div>
+    </div>
+    <div class="footer-ref">HyperPod is region-bound via EKS 1:1 mapping | Multi-region routing is an architectural pattern, not a managed feature</div>
+    <div class="slide-no">33 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       28. OPINIONATED VS DIY
+       ============================================================ -->
+  <section class="slide" data-label="Opinionated vs DIY">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div class="safe">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 16px;">CHOOSING YOUR PATH</div>
+      <h1 class="h-content" style="max-width: 1400px;">HyperPod managed vs individual components on bare EKS</h1>
+      <div class="two-col" style="margin-top: 40px;">
+        <div class="col">
+          <h3>Use HyperPod when you want</h3>
+          <ul>
+            <li>Validated, pre-integrated stack with health management</li>
+            <li>Auto-resume for long-running training jobs</li>
+            <li>Topology-aware scheduling without custom logic</li>
+            <li>Built-in governance for multi-team GPU clusters</li>
+            <li>Fast path to production with recipes for popular models</li>
+            <li>Reduced undifferentiated heavy lifting on infra</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Cherry-pick components when you need</h3>
+          <ul>
+            <li>llm-d for inference orchestration on your own EKS cluster</li>
+            <li>vLLM as your serving engine (works standalone)</li>
+            <li>HyperPod Recipes for training configs (Slurm or K8s)</li>
+            <li>NIXL for KV-cache transfers in custom architectures</li>
+            <li>Kueue for job governance (K8s native, no HyperPod required)</li>
+            <li>Full control over driver versions, AMIs, and scheduling</li>
+          </ul>
+        </div>
+      </div>
+      <div style="margin-top: 40px; padding: 24px 32px; background: var(--aws-gray-100); border-radius: 8px;">
+        <p class="body-md"><span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.06em;">Key takeaway:</span> HyperPod's value is in the integration and operational management. Every component listed in this deck has a standalone OSS path if you prefer to assemble the stack yourself.</p>
+      </div>
+    </div>
+    <div class="slide-no">34 / 35</div>
+  </section>
+
+  <!-- ============================================================
+       25. CLOSING
+       ============================================================ -->
+  <section class="slide dark" data-label="Resources" style="background: var(--aws-gray-850);">
+    <img class="logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
+    <div class="safe" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 24px;">RESOURCES</div>
+      <h1 class="h-title" style="max-width: 1300px; margin-bottom: 56px;">Learn more and get started</h1>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px;">
+        <div>
+          <div style="font-weight: 400; font-size: 22px; margin-bottom: 16px; color: var(--aws-orange-400);">GitHub repositories</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-300);">
+            <span>aws/sagemaker-hyperpod-recipes</span>
+            <span>aws/sagemaker-hyperpod-training-adapter-for-nemo</span>
+            <span>aws/sagemaker-hyperpod-cli</span>
+            <span>llm-d/llm-d</span>
+            <span>vllm-project/vllm</span>
+            <span>ai-dynamo/nixl</span>
+            <span>ofiwg/libfabric</span>
+            <span>microsoft/DeepSpeed</span>
+            <span>NVIDIA/Megatron-LM</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-weight: 400; font-size: 22px; margin-bottom: 16px; color: var(--aws-orange-400);">Documentation</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-300);">
+            <span>docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-eks.html</span>
+            <span>docs.aws.amazon.com/sagemaker/latest/dg/sagemaker-hyperpod-recipes.html</span>
+            <span>docs.aws.amazon.com/sagemaker/latest/dg/data-parallel-intro.html</span>
+          </div>
+          <div style="font-weight: 400; font-size: 22px; margin-top: 32px; margin-bottom: 16px; color: var(--aws-orange-400);">Blog</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-300);">
+            <span>Introducing disaggregated inference on AWS powered by llm-d</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">35 / 35</div>
+  </section>
+
+</deck-stage>
+
+</body>
+</html>
