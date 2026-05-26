@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SaaS pricing and packaging on AWS</title>
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<script src="assets/deck-stage.js"></script>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P') {
+    const deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    if (!document.fullscreenElement) {
+      deck.setAttribute('no-rail', '');
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+      deck.removeAttribute('no-rail');
+    }
+    e.preventDefault();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.removeAttribute('no-rail');
+  }
+});
+</script>
+<style>
+  html, body { margin: 0; background: #000; }
+  deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
+
+  /* ---- Base slide chrome ---- */
+  .slide {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    font-family: var(--aws-font-display);
+    background: var(--aws-white); color: var(--aws-gray-850);
+  }
+  .slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+  .slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+
+  .logo-tl { position: absolute; top: 56px; left: 80px; height: 68px; width: auto; }
+  .logo-tr { position: absolute; top: 56px; right: 80px; height: 68px; width: auto; }
+  .logo-br { position: absolute; bottom: 56px; right: 80px; height: 68px; width: auto; }
+
+  .eyebrow {
+    font-family: var(--aws-font-mono); font-size: 20px; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.09em;
+  }
+  .caption {
+    font-family: var(--aws-font-mono); font-size: 17px; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.10em;
+  }
+  .h-cover   { font-size: 136px; line-height: 1.0;  font-weight: 400; letter-spacing: -0.01em; text-wrap: pretty; }
+  .h-section { font-size: 112px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-title   { font-size: 84px;  line-height: 1.1;  font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-content { font-size: 60px;  line-height: 1.15; font-weight: 400; text-wrap: pretty; }
+  .h-stat    { font-size: 280px; line-height: 0.88; font-weight: 400; letter-spacing: -0.03em; }
+  .body-lg   { font-size: 28px;  line-height: 1.35; font-weight: 400; }
+  .body-md   { font-size: 22px;  line-height: 1.40; font-weight: 400; }
+  .body-sm   { font-size: 18px;  line-height: 1.40; font-weight: 400; }
+
+  .rule { width: 48px; height: 4px; }
+  .rule-dark  { background: var(--aws-gray-850); }
+  .rule-light { background: var(--aws-white); }
+  .rule-amber { background: var(--aws-amber-400); }
+
+  .slide-no {
+    position: absolute; right: 80px; bottom: 56px;
+    font-family: var(--aws-font-mono); font-size: 15px;
+    letter-spacing: 0.08em; color: var(--aws-gray-500);
+  }
+  .dark .slide-no { color: var(--aws-gray-500); }
+
+  .cta {
+    font-family: var(--aws-font-display); font-weight: 500; font-size: 26px;
+    color: inherit; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .cta svg { width: 32px; height: 32px; }
+
+  /* ---- 01 Cover ---- */
+  .cover-bg {
+    position: absolute; inset: 0;
+    background: url(assets/aws-gradient-light-1d.png) center / cover no-repeat;
+  }
+  .cover-body {
+    position: absolute; left: 80px; top: 160px; right: 80px; bottom: 80px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+  }
+
+  /* ---- 02 Agenda ---- */
+  .agenda-grid {
+    position: absolute; left: 80px; right: 80px; top: 460px;
+    display: grid; grid-template-columns: 1fr 1fr; row-gap: 40px; column-gap: 120px;
+  }
+  .agenda-row { display: grid; grid-template-columns: 72px 1fr; align-items: baseline; gap: 0; }
+  .agenda-no  { font-family: var(--aws-font-mono); font-size: 18px; color: var(--aws-gray-500); }
+  .agenda-title { font-size: 34px; line-height: 1.2; font-weight: 400; }
+
+  /* ---- 03 / 07 / 10 Section divider ---- */
+  .pattern-strip {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 440px;
+    background: url(assets/aws-pattern-modular-1a.png) center / cover;
+  }
+
+  /* ---- 05 Pricing models ---- */
+  .model-grid {
+    position: absolute; left: 80px; right: 80px; top: 440px; bottom: 140px;
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 28px;
+  }
+  .model-card {
+    display: flex; flex-direction: column; gap: 20px;
+    padding: 36px 32px; border: 1.5px solid var(--aws-gray-250);
+    border-radius: var(--aws-radius-md);
+  }
+  .model-card.highlight {
+    background: var(--aws-violet-50);
+    border-color: var(--aws-violet-300);
+  }
+  .model-icon {
+    width: 44px; height: 44px; border-radius: var(--aws-radius-sm);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .model-name   { font-size: 24px; font-weight: 500; line-height: 1.2; }
+  .model-desc   { font-size: 17px; line-height: 1.45; color: var(--aws-gray-650); }
+  .model-eg     { font-family: var(--aws-font-mono); font-size: 14px; color: var(--aws-gray-550); text-transform: uppercase; letter-spacing: 0.07em; }
+
+  /* ---- 06 Tier architecture ---- */
+  .tier-grid {
+    position: absolute; left: 80px; right: 80px; top: 400px; bottom: 120px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;
+  }
+  .tier-card {
+    display: flex; flex-direction: column; gap: 0;
+    border: 1.5px solid var(--aws-gray-250); border-radius: var(--aws-radius-md); overflow: hidden;
+  }
+  .tier-card.featured { border-color: var(--aws-violet-400); }
+  .tier-header {
+    padding: 32px 36px 28px; border-bottom: 1.5px solid var(--aws-gray-200);
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .tier-card.featured .tier-header { background: var(--aws-violet-600); color: var(--aws-white); border-color: var(--aws-violet-500); }
+  .tier-badge { font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-gray-550); }
+  .tier-card.featured .tier-badge { color: var(--aws-violet-200); }
+  .tier-name { font-size: 42px; font-weight: 400; line-height: 1; }
+  .tier-price { font-size: 20px; color: var(--aws-gray-600); }
+  .tier-card.featured .tier-price { color: var(--aws-violet-100); }
+  .tier-body { padding: 28px 36px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+  .tier-feature { display: grid; grid-template-columns: 20px 1fr; gap: 12px; align-items: baseline; }
+  .tier-check { color: var(--aws-violet-600); font-size: 18px; }
+  .tier-card.featured .tier-check { color: var(--aws-violet-600); }
+  .tier-text { font-size: 19px; line-height: 1.35; }
+
+  /* ---- 08 Unit economics ---- */
+  .metrics-grid {
+    position: absolute; left: 80px; right: 80px; top: 420px; bottom: 120px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px;
+  }
+  .metric-card {
+    display: flex; flex-direction: column; gap: 16px; padding: 40px 36px;
+    border: 1.5px solid var(--aws-gray-250); border-radius: var(--aws-radius-md);
+  }
+  .metric-label { font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--aws-gray-550); }
+  .metric-value { font-size: 72px; font-weight: 400; line-height: 0.95; letter-spacing: -0.02em; }
+  .metric-desc  { font-size: 18px; line-height: 1.4; color: var(--aws-gray-650); }
+  .metric-good  { color: var(--aws-mint-600); }
+  .metric-warn  { color: var(--aws-amber-600); }
+
+  /* ---- 09 Three decisions ---- */
+  .decisions-col {
+    position: absolute; left: 80px; right: 80px; top: 400px; bottom: 120px;
+    display: flex; flex-direction: column; gap: 48px;
+  }
+  .decision-row { display: grid; grid-template-columns: 80px 360px 1fr; align-items: start; gap: 0; }
+  .decision-num { font-family: var(--aws-font-mono); font-size: 20px; color: var(--aws-gray-450); padding-top: 8px; }
+  .decision-title { font-size: 36px; font-weight: 500; line-height: 1.15; padding-top: 4px; padding-right: 48px; }
+  .decision-body  { font-size: 22px; line-height: 1.4; color: var(--aws-gray-650); border-left: 3px solid var(--aws-gray-250); padding-left: 40px; }
+
+  /* ---- 11 Metering architecture ---- */
+  .arch-wrap {
+    position: absolute; left: 80px; right: 80px; top: 380px; bottom: 120px;
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .arch-row {
+    display: grid; align-items: center; gap: 0;
+  }
+  .arch-node {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    padding: 24px 20px;
+    border: 1.5px solid var(--aws-gray-300); border-radius: var(--aws-radius-md);
+    background: var(--aws-white);
+  }
+  .arch-node img { width: 48px; height: 48px; }
+  .arch-node-label { font-size: 16px; font-weight: 500; text-align: center; line-height: 1.2; }
+  .arch-arrow { text-align: center; font-size: 28px; color: var(--aws-gray-400); }
+  .arch-group-label {
+    font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--aws-gray-500); margin-bottom: 16px;
+  }
+
+  /* ---- 12 Marketplace ---- */
+  .mp-grid {
+    position: absolute; left: 80px; right: 80px; top: 420px; bottom: 120px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  }
+  .mp-col { display: flex; flex-direction: column; gap: 36px; }
+  .mp-stat { display: flex; flex-direction: column; gap: 6px; }
+  .mp-stat-val { font-size: 88px; font-weight: 400; line-height: 0.9; letter-spacing: -0.02em; color: var(--aws-violet-700); }
+  .mp-stat-label { font-size: 22px; color: var(--aws-gray-650); }
+  .mp-list { display: flex; flex-direction: column; gap: 28px; }
+  .mp-item { display: grid; grid-template-columns: 32px 1fr; gap: 16px; align-items: start; }
+  .mp-dot { width: 8px; height: 8px; background: var(--aws-violet-500); border-radius: 50%; margin-top: 9px; }
+  .mp-item-text { font-size: 22px; line-height: 1.4; color: var(--aws-gray-700); }
+
+  /* ---- 13 Roadmap ---- */
+  .roadmap-grid {
+    position: absolute; left: 80px; right: 80px; top: 420px; bottom: 120px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;
+  }
+  .phase-card {
+    display: flex; flex-direction: column; gap: 24px; padding: 44px 40px;
+    border-radius: var(--aws-radius-md);
+  }
+  .phase-1 { background: var(--aws-gray-100); }
+  .phase-2 { background: var(--aws-violet-50); border: 1.5px solid var(--aws-violet-200); }
+  .phase-3 { background: var(--aws-violet-600); }
+  .phase-label { font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--aws-gray-500); }
+  .phase-2 .phase-label { color: var(--aws-violet-500); }
+  .phase-3 .phase-label { color: var(--aws-violet-200); }
+  .phase-title { font-size: 36px; font-weight: 400; line-height: 1.15; }
+  .phase-3 .phase-title { color: var(--aws-white); }
+  .phase-items { display: flex; flex-direction: column; gap: 14px; }
+  .phase-item { font-size: 19px; line-height: 1.35; color: var(--aws-gray-700); }
+  .phase-3 .phase-item { color: var(--aws-violet-100); }
+</style>
+<script type="application/json" id="speaker-notes">
+[
+  "Welcome. Today we're covering how to use pricing and packaging as a genuine growth lever — not just a finance exercise. Business context first, then the AWS-specific technical enablers.",
+  "Four sections: the opportunity, packaging decisions, the CFO view on unit economics, and the technical foundations on AWS.",
+  "Pricing is the highest-leverage growth decision a SaaS company makes. Most teams under-invest in it relative to its impact on ARR growth.",
+  "Companies that actively manage pricing strategy grow 2–4x faster. The question is not whether to invest in pricing — it's how fast.",
+  "Three decisions every SaaS company must get right: what to charge for, how to structure tiers, and how to go to market.",
+  "Five dominant SaaS pricing models. Usage-based is ascendant — especially for AI/ML workloads where value scales with consumption.",
+  "Section two: turning models into packages your customers actually buy.",
+  "Good/Better/Best is the most proven packaging structure. The 'Better' tier does most of the revenue work — design it deliberately.",
+  "CFO lens: pricing decisions live in your income statement. NRR above 120% means growth compounds even without new logo adds.",
+  "Section three: the technical foundations that make pricing strategies executable at scale.",
+  "The metering layer is where pricing strategy meets infrastructure. API Gateway captures events; Lambda transforms; Kinesis buffers; DynamoDB stores; S3 archives for billing reconciliation.",
+  "AWS Marketplace removes procurement friction — 330,000+ active customers, pre-committed spend via DRAW and EDP. Reduces your sales cycle by weeks.",
+  "A practical 90-day start: instrument first, package second, activate Marketplace third. Sequence matters — you can't optimize what you can't measure.",
+  "Thank you. The AWS SaaS Factory team has playbooks and reference architectures for every stage of this journey."
+]
+</script>
+</head>
+<body>
+<deck-stage>
+
+<!-- ============================================================
+     01 COVER · Color-forward gradient
+     ============================================================ -->
+<section class="slide" data-screen-label="01 Cover">
+  <div class="cover-bg"></div>
+  <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div class="cover-body">
+    <div class="eyebrow" style="color: var(--aws-gray-600); margin-bottom: 36px;">AWS SaaS Factory</div>
+    <h1 class="h-cover" style="max-width: 1400px; color: var(--aws-gray-850);">
+      SaaS pricing and<br>packaging on AWS
+    </h1>
+    <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 40px; max-width: 900px;">
+      How to use pricing strategy as a growth lever — from business model design to technical execution
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     02 AGENDA
+     ============================================================ -->
+<section class="slide" data-screen-label="02 Agenda">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Session overview</div>
+    <h1 class="h-title">What we'll cover</h1>
+  </div>
+  <div class="agenda-grid">
+    <div class="agenda-row">
+      <div class="agenda-no">01</div>
+      <div class="agenda-title">The pricing opportunity</div>
+    </div>
+    <div class="agenda-row">
+      <div class="agenda-no">02</div>
+      <div class="agenda-title">Packaging for growth</div>
+    </div>
+    <div class="agenda-row">
+      <div class="agenda-no">03</div>
+      <div class="agenda-title">The CFO view: unit economics</div>
+    </div>
+    <div class="agenda-row">
+      <div class="agenda-no">04</div>
+      <div class="agenda-title">Technical foundations on AWS</div>
+    </div>
+  </div>
+  <div class="slide-no">02 / 14</div>
+</section>
+
+<!-- ============================================================
+     03 SECTION DIVIDER · The pricing opportunity
+     ============================================================ -->
+<section class="slide dark" data-screen-label="03 Section: Pricing opportunity">
+  <div class="pattern-strip" aria-hidden="true"></div>
+  <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+  <div style="position: absolute; left: 520px; top: 440px; right: 80px;">
+    <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 01</div>
+    <h1 class="h-section" style="max-width: 1100px;">The pricing<br>opportunity</h1>
+  </div>
+  <div class="slide-no">03 / 14</div>
+</section>
+
+<!-- ============================================================
+     04 STAT · Pricing is the #1 growth lever
+     ============================================================ -->
+<section class="slide" data-screen-label="04 Stat: Pricing lever" style="background: var(--aws-amber-400);">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 180px;">
+    <div class="eyebrow" style="margin-bottom: 24px;">By the numbers</div>
+    <div class="h-stat" style="line-height: 0.85; letter-spacing: -0.03em;">2–4×</div>
+  </div>
+  <div style="position: absolute; left: 80px; right: 80px; bottom: 180px;">
+    <p class="body-lg" style="font-size: 38px; line-height: 1.25; max-width: 1200px;">
+      SaaS companies that actively manage pricing strategy grow 2–4× faster than those
+      that set prices once and leave them. Pricing is the highest-leverage growth decision you make.
+    </p>
+    <p class="body-md" style="color: var(--aws-gray-700); margin-top: 24px;">
+      Source: AWS SaaS Factory — Monetization Strategies for SaaS on AWS
+    </p>
+  </div>
+  <div class="slide-no" style="color: var(--aws-gray-700);">04 / 14</div>
+</section>
+
+<!-- ============================================================
+     05 THREE DECISIONS
+     ============================================================ -->
+<section class="slide" data-screen-label="05 Three pricing decisions">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px; max-width: 1500px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Pricing strategy</div>
+    <h1 class="h-content">Three decisions every SaaS leader must get right</h1>
+  </div>
+  <div class="decisions-col">
+    <div class="decision-row">
+      <div class="decision-num">01</div>
+      <div class="decision-title">What to charge for</div>
+      <div class="decision-body">Choose a value metric that scales with customer success — seats, API calls, data processed, outcomes delivered. Misalignment here creates churn.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-num">02</div>
+      <div class="decision-title">How to structure tiers</div>
+      <div class="decision-body">Good/Better/Best packaging guides buyers to the right plan and protects margin. Each tier should have a clear buyer persona and upgrade trigger.</div>
+    </div>
+    <div class="decision-row">
+      <div class="decision-num">03</div>
+      <div class="decision-title">How to go to market</div>
+      <div class="decision-body">Self-serve, sales-assisted, or marketplace-led. Your GTM motion must match your buyers' procurement preferences — especially in enterprise.</div>
+    </div>
+  </div>
+  <div class="slide-no">05 / 14</div>
+</section>
+
+<!-- ============================================================
+     06 FIVE PRICING MODELS
+     ============================================================ -->
+<section class="slide" data-screen-label="06 Five pricing models">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Pricing models</div>
+    <h1 class="h-content">Five dominant SaaS pricing approaches</h1>
+  </div>
+  <div class="model-grid">
+
+    <div class="model-card">
+      <div class="model-icon" style="background: var(--aws-gray-150);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--aws-gray-650)" stroke-width="1.8" stroke-linecap="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/>
+        </svg>
+      </div>
+      <div class="model-name">Flat rate</div>
+      <div class="model-desc">Single price for full access. Simple to buy, simple to sell. Hard to capture value at scale.</div>
+      <div class="model-eg">e.g. $499/month all-in</div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-icon" style="background: var(--aws-blue-100);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--aws-blue-700)" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><circle cx="12" cy="16" r="3"/>
+        </svg>
+      </div>
+      <div class="model-name">Per seat</div>
+      <div class="model-desc">Price per user. Predictable, easy to budget. Revenue grows with adoption — but can discourage broad rollout.</div>
+      <div class="model-eg">e.g. $30/user/month</div>
+    </div>
+
+    <div class="model-card highlight">
+      <div class="model-icon" style="background: var(--aws-violet-100);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--aws-violet-700)" stroke-width="1.8" stroke-linecap="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      <div class="model-name" style="color: var(--aws-violet-800);">Usage-based</div>
+      <div class="model-desc" style="color: var(--aws-violet-700);">Pay for what you consume. Lowers entry barrier, aligns cost to value. The dominant model for AI and data workloads.</div>
+      <div class="model-eg" style="color: var(--aws-violet-500);">e.g. $0.002/API call</div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-icon" style="background: var(--aws-mint-100);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--aws-mint-700)" stroke-width="1.8" stroke-linecap="round">
+          <line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div class="model-name">Tiered</div>
+      <div class="model-desc">Price changes at usage thresholds. Rewards high-volume customers, smooths expansion revenue curve.</div>
+      <div class="model-eg">e.g. first 10K calls free, then $0.001</div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-icon" style="background: var(--aws-amber-100);">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--aws-amber-700)" stroke-width="1.8" stroke-linecap="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+        </svg>
+      </div>
+      <div class="model-name">Feature-based</div>
+      <div class="model-desc">Gate premium capabilities behind higher plans. Drives upsell through feature discovery and business need.</div>
+      <div class="model-eg">e.g. SSO, audit logs on Enterprise</div>
+    </div>
+
+  </div>
+  <div class="slide-no">06 / 14</div>
+</section>
+
+<!-- ============================================================
+     07 SECTION DIVIDER · Packaging for growth
+     ============================================================ -->
+<section class="slide dark" data-screen-label="07 Section: Packaging">
+  <div class="pattern-strip" aria-hidden="true"></div>
+  <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+  <div style="position: absolute; left: 520px; top: 440px; right: 80px;">
+    <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 02</div>
+    <h1 class="h-section" style="max-width: 1100px;">Packaging<br>for growth</h1>
+  </div>
+  <div class="slide-no">07 / 14</div>
+</section>
+
+<!-- ============================================================
+     08 GOOD / BETTER / BEST TIERS
+     ============================================================ -->
+<section class="slide" data-screen-label="08 Tier architecture">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Packaging architecture</div>
+    <h1 class="h-content">Good, Better, Best — the proven packaging structure</h1>
+  </div>
+  <div class="tier-grid">
+
+    <div class="tier-card">
+      <div class="tier-header">
+        <div class="tier-badge">Starter</div>
+        <div class="tier-name">Good</div>
+        <div class="tier-price">Self-serve entry point</div>
+      </div>
+      <div class="tier-body">
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Core product value</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Usage limits to control cost</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Email support</div></div>
+        <div class="tier-feature"><div style="color: var(--aws-gray-350);">&#10003;</div><div class="tier-text" style="color: var(--aws-gray-400);">Advanced features</div></div>
+        <div class="tier-feature"><div style="color: var(--aws-gray-350);">&#10003;</div><div class="tier-text" style="color: var(--aws-gray-400);">Enterprise security</div></div>
+      </div>
+    </div>
+
+    <div class="tier-card featured">
+      <div class="tier-header">
+        <div class="tier-badge">Most popular</div>
+        <div class="tier-name">Better</div>
+        <div class="tier-price">Where most revenue lands</div>
+      </div>
+      <div class="tier-body">
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Everything in Starter</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Higher usage limits</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Priority support + SLA</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Advanced analytics</div></div>
+        <div class="tier-feature"><div style="color: var(--aws-gray-350);">&#10003;</div><div class="tier-text" style="color: var(--aws-gray-400);">Custom contracts</div></div>
+      </div>
+    </div>
+
+    <div class="tier-card">
+      <div class="tier-header">
+        <div class="tier-badge">Enterprise</div>
+        <div class="tier-name">Best</div>
+        <div class="tier-price">Negotiated, high-ACV</div>
+      </div>
+      <div class="tier-body">
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Everything in Better</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Unlimited or committed usage</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">SSO, audit logs, SCIM</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Dedicated CSM</div></div>
+        <div class="tier-feature"><div class="tier-check">&#10003;</div><div class="tier-text">Custom contracts and SLAs</div></div>
+      </div>
+    </div>
+
+  </div>
+  <p class="body-sm" style="position: absolute; left: 80px; bottom: 60px; color: var(--aws-gray-500);">
+    Design the "Better" tier deliberately — it should have the clearest value and the shortest time-to-value
+  </p>
+  <div class="slide-no">08 / 14</div>
+</section>
+
+<!-- ============================================================
+     09 SECTION DIVIDER · CFO view
+     ============================================================ -->
+<section class="slide dark" data-screen-label="09 Section: CFO view">
+  <div class="pattern-strip" aria-hidden="true"></div>
+  <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+  <div style="position: absolute; left: 520px; top: 400px; right: 80px;">
+    <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 03</div>
+    <h1 class="h-section" style="max-width: 1100px;">The CFO view:<br>unit economics</h1>
+  </div>
+  <div class="slide-no">09 / 14</div>
+</section>
+
+<!-- ============================================================
+     10 UNIT ECONOMICS
+     ============================================================ -->
+<section class="slide" data-screen-label="10 Unit economics">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px; max-width: 1600px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Financial health</div>
+    <h1 class="h-content">Pricing decisions live in your income statement</h1>
+  </div>
+  <div class="metrics-grid">
+
+    <div class="metric-card">
+      <div class="metric-label">NRR target</div>
+      <div class="metric-value metric-good">&gt;120%</div>
+      <div class="metric-desc">Net revenue retention above 120% means your existing book grows without a single new logo. Pricing expansion drives this.</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">LTV:CAC ratio</div>
+      <div class="metric-value metric-good">3:1</div>
+      <div class="metric-desc">Minimum healthy ratio. Usage-based models improve LTV as customers grow into the product — CAC stays fixed.</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Payback period</div>
+      <div class="metric-value metric-warn">&lt;18mo</div>
+      <div class="metric-desc">Time to recover CAC from gross margin. Tier packaging with a clear upgrade path compresses this meaningfully.</div>
+    </div>
+
+    <div class="metric-card">
+      <div class="metric-label">Gross margin</div>
+      <div class="metric-value metric-good">70–80%</div>
+      <div class="metric-desc">Target for scalable SaaS. Infrastructure cost optimization on AWS (reserved capacity, Graviton) protects margin as usage scales.</div>
+    </div>
+
+  </div>
+  <div class="slide-no">10 / 14</div>
+</section>
+
+<!-- ============================================================
+     11 SECTION DIVIDER · Technical foundations
+     ============================================================ -->
+<section class="slide dark" data-screen-label="11 Section: Technical foundations">
+  <div class="pattern-strip" aria-hidden="true"></div>
+  <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+  <div style="position: absolute; left: 520px; top: 400px; right: 80px;">
+    <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 04</div>
+    <h1 class="h-section" style="max-width: 1200px;">Technical<br>foundations on AWS</h1>
+  </div>
+  <div class="slide-no">11 / 14</div>
+</section>
+
+<!-- ============================================================
+     12 METERING ARCHITECTURE
+     ============================================================ -->
+<section class="slide" data-screen-label="12 Metering architecture">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px; max-width: 1600px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Reference architecture</div>
+    <h1 class="h-content">Usage metering — from API call to billing record</h1>
+  </div>
+
+  <!-- Architecture diagram -->
+  <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 100px; display: flex; flex-direction: column; justify-content: center;">
+
+    <!-- Layer labels + nodes -->
+    <div style="display: grid; grid-template-columns: 140px 1fr; gap: 0; align-items: center;">
+
+      <!-- Labels column -->
+      <div style="display: flex; flex-direction: column; gap: 0;">
+        <div style="height: 120px; display: flex; align-items: center;">
+          <div class="arch-group-label" style="writing-mode: unset; font-size: 13px;">Ingest</div>
+        </div>
+        <div style="height: 16px;"></div>
+        <div style="height: 120px; display: flex; align-items: center;">
+          <div class="arch-group-label" style="font-size: 13px;">Process</div>
+        </div>
+        <div style="height: 16px;"></div>
+        <div style="height: 120px; display: flex; align-items: center;">
+          <div class="arch-group-label" style="font-size: 13px;">Store &amp; bill</div>
+        </div>
+      </div>
+
+      <!-- Nodes area -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+
+        <!-- Ingest row -->
+        <div style="display: grid; grid-template-columns: 180px 60px 180px 60px 180px; align-items: center; height: 120px;">
+          <div class="arch-node" style="background: var(--aws-blue-50); border-color: var(--aws-blue-200);">
+            <img src="assets/icons/Arch_Amazon-API-Gateway_48.png" alt="API Gateway">
+            <div class="arch-node-label" style="color: var(--aws-blue-800);">Amazon API<br>Gateway</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node" style="background: var(--aws-orange-50); border-color: var(--aws-orange-200);">
+            <img src="assets/icons/Arch_AWS-Lambda_48.png" alt="Lambda">
+            <div class="arch-node-label" style="color: var(--aws-orange-800);">AWS Lambda<br>(ingest)</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node" style="background: var(--aws-teal-50); border-color: var(--aws-teal-200);">
+            <img src="assets/icons/Arch_Amazon-Kinesis-Data-Streams_48.png" alt="Kinesis">
+            <div class="arch-node-label" style="color: var(--aws-teal-800);">Amazon Kinesis<br>Data Streams</div>
+          </div>
+        </div>
+
+        <!-- Process row -->
+        <div style="display: grid; grid-template-columns: 180px 60px 180px; align-items: center; height: 120px; margin-left: 480px;">
+          <div style="text-align: center; font-size: 28px; color: var(--aws-gray-400); transform: rotate(90deg); margin-left: -60px;">→</div>
+          <div class="arch-node" style="background: var(--aws-violet-50); border-color: var(--aws-violet-200); margin-left: -60px;">
+            <img src="assets/icons/Arch_Amazon-EventBridge_48.png" alt="EventBridge">
+            <div class="arch-node-label" style="color: var(--aws-violet-800);">Amazon<br>EventBridge</div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-node" style="background: var(--aws-orange-50); border-color: var(--aws-orange-200);">
+            <img src="assets/icons/Arch_AWS-Lambda_48.png" alt="Lambda">
+            <div class="arch-node-label" style="color: var(--aws-orange-800);">AWS Lambda<br>(aggregate)</div>
+          </div>
+        </div>
+
+        <!-- Store row -->
+        <div style="display: grid; grid-template-columns: 180px 60px 180px 60px 180px; align-items: center; height: 120px; margin-left: 480px;">
+          <div style="text-align: center; font-size: 28px; color: var(--aws-gray-400); transform: rotate(90deg); margin-left: 80px; grid-column: 2 / 3;">↓</div>
+          <div class="arch-node" style="background: var(--aws-blue-50); border-color: var(--aws-blue-200); grid-column: 3 / 4; margin-left: -60px;">
+            <img src="assets/icons/Arch_Amazon-DynamoDB_48.png" alt="DynamoDB">
+            <div class="arch-node-label" style="color: var(--aws-blue-800);">Amazon<br>DynamoDB</div>
+          </div>
+          <div class="arch-arrow" style="grid-column: 4 / 5;">→</div>
+          <div class="arch-node" style="background: var(--aws-green-50); border-color: var(--aws-green-200); grid-column: 5 / 6;">
+            <img src="assets/icons/Arch_Amazon-Simple-Storage-Service_48.png" alt="S3">
+            <div class="arch-node-label" style="color: var(--aws-green-800);">Amazon S3<br>(billing archive)</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="slide-no">12 / 14</div>
+</section>
+
+<!-- ============================================================
+     13 AWS MARKETPLACE
+     ============================================================ -->
+<section class="slide" data-screen-label="13 AWS Marketplace">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px; max-width: 1400px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Go-to-market channel</div>
+    <h1 class="h-content">AWS Marketplace removes procurement friction</h1>
+  </div>
+  <div class="mp-grid">
+
+    <div class="mp-col">
+      <div class="mp-stat">
+        <div class="mp-stat-val">330K+</div>
+        <div class="mp-stat-label">active customers with pre-committed AWS spend (DRAW / EDP)</div>
+      </div>
+      <div class="mp-stat" style="margin-top: 24px;">
+        <div class="mp-stat-val" style="color: var(--aws-mint-600);">Weeks</div>
+        <div class="mp-stat-label">reduction in enterprise sales cycle — procurement already approved</div>
+      </div>
+    </div>
+
+    <div class="mp-col" style="justify-content: center;">
+      <div class="body-lg" style="color: var(--aws-gray-600); margin-bottom: 32px;">Why it matters for your GTM</div>
+      <div class="mp-list">
+        <div class="mp-item">
+          <div class="mp-dot" style="margin-top: 11px;"></div>
+          <div class="mp-item-text">Buyers consume your SaaS against existing AWS committed spend — no new PO process</div>
+        </div>
+        <div class="mp-item">
+          <div class="mp-dot" style="margin-top: 11px;"></div>
+          <div class="mp-item-text">AWS Marketplace supports usage-based, annual contract, and free-trial pricing natively</div>
+        </div>
+        <div class="mp-item">
+          <div class="mp-dot" style="margin-top: 11px;"></div>
+          <div class="mp-item-text">Private Offers let you negotiate custom terms without leaving the marketplace billing rail</div>
+        </div>
+        <div class="mp-item">
+          <div class="mp-dot" style="margin-top: 11px;"></div>
+          <div class="mp-item-text">Co-sell with AWS field teams accelerates enterprise deals at scale</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-no">13 / 14</div>
+</section>
+
+<!-- ============================================================
+     14 90-DAY ROADMAP
+     ============================================================ -->
+<section class="slide" data-screen-label="14 Getting started">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 200px; max-width: 1400px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Getting started</div>
+    <h1 class="h-content">A 90-day roadmap to execution</h1>
+  </div>
+  <div class="roadmap-grid">
+
+    <div class="phase-card phase-1">
+      <div class="phase-label">Days 1–30</div>
+      <div class="phase-title">Instrument and measure</div>
+      <div class="phase-items">
+        <div class="phase-item">Define your value metric — what usage correlates to customer success</div>
+        <div class="phase-item">Instrument with Amazon Kinesis + Lambda metering pipeline</div>
+        <div class="phase-item">Baseline current COGS per customer to protect margin</div>
+        <div class="phase-item">Audit current pricing vs. competitor landscape</div>
+      </div>
+    </div>
+
+    <div class="phase-card phase-2">
+      <div class="phase-label">Days 31–60</div>
+      <div class="phase-title">Package and test</div>
+      <div class="phase-items">
+        <div class="phase-item">Design Good/Better/Best tier structure with clear upgrade triggers</div>
+        <div class="phase-item">A/B test pricing page with real prospects</div>
+        <div class="phase-item">Map features to tiers — save SSO, audit logs for Enterprise</div>
+        <div class="phase-item">Set NRR, LTV:CAC, and payback period targets</div>
+      </div>
+    </div>
+
+    <div class="phase-card phase-3">
+      <div class="phase-label">Days 61–90</div>
+      <div class="phase-title">Activate and scale</div>
+      <div class="phase-items">
+        <div class="phase-item">List on AWS Marketplace with usage-based billing</div>
+        <div class="phase-item">Enable Private Offers for enterprise deals</div>
+        <div class="phase-item">Co-sell activation with your AWS partner development manager</div>
+        <div class="phase-item">Launch expansion playbook targeting existing accounts</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="slide-no">14 / 14</div>
+</section>
+
+<!-- ============================================================
+     15 CLOSING · Color-forward
+     ============================================================ -->
+<section class="slide" data-screen-label="15 Closing" style="background: var(--aws-violet-700);">
+  <img class="logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 0; right: 80px; bottom: 0; display: flex; flex-direction: column; justify-content: center;">
+    <div class="caption" style="color: var(--aws-violet-300); margin-bottom: 36px;">AWS SaaS Factory</div>
+    <h1 class="h-title" style="color: var(--aws-white); max-width: 1400px; line-height: 1.05;">
+      Pricing is a product decision.<br>Make it with the same rigour<br>as your architecture.
+    </h1>
+    <div style="margin-top: 80px; display: flex; flex-direction: column; gap: 16px;">
+      <a class="cta" href="https://aws.amazon.com/partners/saas-factory/" style="color: var(--aws-white);">
+        AWS SaaS Factory
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M4 16 H27 M20 9 L27 16 L20 23" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/>
+        </svg>
+      </a>
+      <a class="cta" href="https://aws.amazon.com/marketplace/" style="color: var(--aws-violet-200); font-size: 22px;">
+        AWS Marketplace
+        <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M4 16 H27 M20 9 L27 16 L20 23" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+</deck-stage>
+</body>
+</html>
