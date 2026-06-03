@@ -301,6 +301,7 @@ document.addEventListener('fullscreenchange', () => {
   "Three charge metrics for AI: consumption (per token/call) mirrors your infrastructure economics but confuses buyers; workflow (per task completed) is clearer but variable; outcome (per resolution, per document) is the highest value alignment. Most mature AI companies end up with hybrid — platform fee plus outcome credits.",
   "Amazon Bedrock AgentCore gives you multi-tenant agent infrastructure with the same silo/pool/bridge decision. Silo: dedicated runtime per tenant, maximum isolation, compliance-ready. Pool: shared infrastructure with namespace partitioning, cost-efficient. Bridge: premium tiers get siloed memory and tools, standard tiers share compute. Tier your architecture to match your pricing tiers.",
   "The 2026 renewal cliff is real — AI pilots from 2025 convert to production contracts this year. Soft ROI positioning doesn't survive renewal. The COMPASS framework from AWS, Zuora, and Simon-Kucher gives you the structure: scope of work and attributability are your two axes for picking the right pricing lever.",
+  "Six sources informed this deck: the BVP SaaS Monetization Playbook for AI pricing frameworks, the AWS ISV pricing strategies blog for the COMPASS framework, the Well-Architected SaaS Lens for isolation models, the AWS cost-per-tenant blog, the AWS unit metrics blog, and the Bedrock AgentCore page for multi-tenant agent infrastructure.",
   "Pricing is a product decision. Make it with the same rigour as your architecture. AWS has resources and playbooks for every stage of this journey — start with the SaaS on AWS page and the Well-Architected SaaS Lens."
 ]
 </script>
@@ -335,7 +336,7 @@ document.addEventListener('fullscreenchange', () => {
     <div class="agenda-row"><div class="agenda-no">04</div><div class="agenda-title">Technical foundations on AWS</div></div>
     <div class="agenda-row"><div class="agenda-no">05</div><div class="agenda-title">The agentic AI frontier</div></div>
   </div>
-  <div class="slide-no">02 / 24</div>
+  <div class="slide-no">02 / 25</div>
 </section>
 
 <!-- 03 SECTION: PRICING OPPORTUNITY -->
@@ -346,7 +347,7 @@ document.addEventListener('fullscreenchange', () => {
     <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 01</div>
     <h1 class="h-section" style="max-width: 1100px;">The pricing<br>opportunity</h1>
   </div>
-  <div class="slide-no">03 / 24</div>
+  <div class="slide-no">03 / 25</div>
 </section>
 
 <!-- 04 STAT -->
@@ -362,7 +363,7 @@ document.addEventListener('fullscreenchange', () => {
     </p>
     <p class="body-md" style="color: var(--aws-gray-700); margin-top: 24px;">Source: AWS — Monetization Strategies for SaaS on AWS</p>
   </div>
-  <div class="slide-no" style="color: var(--aws-gray-700);">04 / 24</div>
+  <div class="slide-no" style="color: var(--aws-gray-700);">04 / 25</div>
 </section>
 
 <!-- 05 THREE DECISIONS -->
@@ -389,7 +390,7 @@ document.addEventListener('fullscreenchange', () => {
       <div class="decision-body">Self-serve, sales-assisted, or marketplace-led. Your GTM motion must match your buyers' procurement preferences — especially in enterprise.</div>
     </div>
   </div>
-  <div class="slide-no">05 / 24</div>
+  <div class="slide-no">05 / 25</div>
 </section>
 
 <!-- 06 FIVE PRICING MODELS -->
@@ -441,7 +442,7 @@ document.addEventListener('fullscreenchange', () => {
       <div class="model-eg">e.g. SSO, audit logs on Enterprise</div>
     </div>
   </div>
-  <div class="slide-no">06 / 24</div>
+  <div class="slide-no">06 / 25</div>
 </section>
 
 <!-- 07 SECTION: PACKAGING -->
@@ -452,7 +453,7 @@ document.addEventListener('fullscreenchange', () => {
     <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 02</div>
     <h1 class="h-section" style="max-width: 1100px;">Packaging<br>for growth</h1>
   </div>
-  <div class="slide-no">07 / 24</div>
+  <div class="slide-no">07 / 25</div>
 </section>
 
 <!-- 08 GOOD / BETTER / BEST -->
@@ -507,7 +508,7 @@ document.addEventListener('fullscreenchange', () => {
     </div>
   </div>
   <p class="body-sm" style="position:absolute;left:80px;bottom:60px;color:var(--aws-gray-500)">Design the "Better" tier deliberately — clearest value, shortest time-to-value</p>
-  <div class="slide-no">08 / 24</div>
+  <div class="slide-no">08 / 25</div>
 </section>
 
 <!-- 09 SILO / POOL / BRIDGE -->
@@ -589,7 +590,7 @@ document.addEventListener('fullscreenchange', () => {
     </div>
 
   </div>
-  <div class="slide-no">09 / 24</div>
+  <div class="slide-no">09 / 25</div>
 </section>
 
 <!-- 10 SECTION: CFO VIEW -->
@@ -600,7 +601,7 @@ document.addEventListener('fullscreenchange', () => {
     <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 03</div>
     <h1 class="h-section" style="max-width: 1100px;">The CFO view:<br>unit economics</h1>
   </div>
-  <div class="slide-no">10 / 24</div>
+  <div class="slide-no">10 / 25</div>
 </section>
 
 <!-- 11 UNIT ECONOMICS -->
@@ -632,7 +633,7 @@ document.addEventListener('fullscreenchange', () => {
       <div class="metric-desc">Target for scalable SaaS. AI workloads compress this to 50–60% — fine-grained cost attribution is how you defend it.</div>
     </div>
   </div>
-  <div class="slide-no">11 / 24</div>
+  <div class="slide-no">11 / 25</div>
 </section>
 
 <!-- 12 CLOUD ECONOMICS MATURITY MODEL -->
@@ -678,8 +679,8 @@ document.addEventListener('fullscreenchange', () => {
 
   </div>
 
-  <p class="body-sm" style="position:absolute;left:80px;top:330px;color:var(--aws-gray-500)">Most SaaS companies operate at Level 2–3 · unit metrics require Level 4+ instrumentation</p>
-  <div class="slide-no">12 / 24</div>
+  <p class="body-sm" style="position:absolute;left:80px;top:395px;color:var(--aws-gray-500)">Most SaaS companies operate at Level 2–3 · unit metrics require Level 4+ instrumentation</p>
+  <div class="slide-no">12 / 25</div>
 </section>
 
 <!-- 13 UNIT METRICS -->
@@ -734,7 +735,7 @@ document.addEventListener('fullscreenchange', () => {
 
   </div>
 
-  <div class="slide-no">13 / 24</div>
+  <div class="slide-no">13 / 25</div>
 </section>
 
 <!-- 14 COST-PER-TENANT -->
@@ -785,7 +786,7 @@ document.addEventListener('fullscreenchange', () => {
     </div>
 
   </div>
-  <div class="slide-no">14 / 24</div>
+  <div class="slide-no">14 / 25</div>
 </section>
 
 <!-- 15 SECTION: TECHNICAL FOUNDATIONS -->
@@ -796,7 +797,7 @@ document.addEventListener('fullscreenchange', () => {
     <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 28px;">Chapter 04</div>
     <h1 class="h-section" style="max-width: 1200px;">Technical<br>foundations on AWS</h1>
   </div>
-  <div class="slide-no">15 / 24</div>
+  <div class="slide-no">15 / 25</div>
 </section>
 
 <!-- 16 METERING ARCHITECTURE -->
@@ -807,60 +808,69 @@ document.addEventListener('fullscreenchange', () => {
     <h1 class="h-content">Usage metering — from API call to billing record</h1>
   </div>
 
-  <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 100px; display: flex; flex-direction: column; justify-content: center;">
-    <div style="display: grid; grid-template-columns: 140px 1fr; gap: 0; align-items: center;">
-      <div style="display: flex; flex-direction: column; gap: 0;">
-        <div style="height: 120px; display: flex; align-items: center;"><div class="arch-group-label">Ingest</div></div>
-        <div style="height: 16px;"></div>
-        <div style="height: 120px; display: flex; align-items: center;"><div class="arch-group-label">Process</div></div>
-        <div style="height: 16px;"></div>
-        <div style="height: 120px; display: flex; align-items: center;"><div class="arch-group-label">Store &amp; bill</div></div>
+  <div style="position: absolute; left: 80px; right: 80px; top: 430px; bottom: 80px;">
+
+    <!-- Row 1: Ingest -->
+    <div style="display:flex; align-items:center; height:110px;">
+      <div class="arch-group-label" style="width:120px;flex-shrink:0;">Ingest</div>
+      <div class="arch-node" style="background:var(--aws-blue-50);border-color:var(--aws-blue-200);width:160px;flex-shrink:0;">
+        <img src="assets/icons/Arch_Amazon-API-Gateway_48.png" alt="API Gateway">
+        <div class="arch-node-label" style="color:var(--aws-blue-800)">Amazon API<br>Gateway</div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        <div style="display: grid; grid-template-columns: 180px 60px 180px 60px 180px; align-items: center; height: 120px;">
-          <div class="arch-node" style="background:var(--aws-blue-50);border-color:var(--aws-blue-200)">
-            <img src="assets/icons/Arch_Amazon-API-Gateway_48.png" alt="API Gateway">
-            <div class="arch-node-label" style="color:var(--aws-blue-800)">Amazon API<br>Gateway</div>
-          </div>
-          <div class="arch-arrow">→</div>
-          <div class="arch-node" style="background:var(--aws-orange-50);border-color:var(--aws-orange-200)">
-            <img src="assets/icons/Arch_AWS-Lambda_48.png" alt="Lambda">
-            <div class="arch-node-label" style="color:var(--aws-orange-800)">AWS Lambda<br>(ingest)</div>
-          </div>
-          <div class="arch-arrow">→</div>
-          <div class="arch-node" style="background:var(--aws-teal-50);border-color:var(--aws-teal-200)">
-            <img src="assets/icons/Arch_Amazon-Kinesis-Data-Streams_48.png" alt="Kinesis">
-            <div class="arch-node-label" style="color:var(--aws-teal-800)">Amazon Kinesis<br>Data Streams</div>
-          </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 180px 60px 180px 60px 180px; align-items: center; height: 120px; margin-left: 480px;">
-          <div style="text-align:center;font-size:28px;color:var(--aws-gray-400);transform:rotate(90deg);margin-left:-60px;">→</div>
-          <div class="arch-node" style="background:var(--aws-violet-50);border-color:var(--aws-violet-200);margin-left:-60px">
-            <img src="assets/icons/Arch_Amazon-EventBridge_48.png" alt="EventBridge">
-            <div class="arch-node-label" style="color:var(--aws-violet-800)">Amazon<br>EventBridge</div>
-          </div>
-          <div class="arch-arrow">→</div>
-          <div class="arch-node" style="background:var(--aws-orange-50);border-color:var(--aws-orange-200)">
-            <img src="assets/icons/Arch_AWS-Lambda_48.png" alt="Lambda">
-            <div class="arch-node-label" style="color:var(--aws-orange-800)">AWS Lambda<br>(aggregate)</div>
-          </div>
-        </div>
-        <div style="display: grid; grid-template-columns: 180px 60px 180px 60px 180px; align-items: center; height: 120px; margin-left: 480px;">
-          <div style="text-align:center;font-size:28px;color:var(--aws-gray-400);transform:rotate(90deg);margin-left:80px;grid-column:2/3;">↓</div>
-          <div class="arch-node" style="background:var(--aws-blue-50);border-color:var(--aws-blue-200);grid-column:3/4;margin-left:-60px">
-            <img src="assets/icons/Arch_Amazon-DynamoDB_48.png" alt="DynamoDB">
-            <div class="arch-node-label" style="color:var(--aws-blue-800)">Amazon<br>DynamoDB</div>
-          </div>
-          <div class="arch-arrow" style="grid-column:4/5">→</div>
-          <div class="arch-node" style="background:var(--aws-green-50);border-color:var(--aws-green-200);grid-column:5/6">
-            <img src="assets/icons/Arch_Amazon-Simple-Storage-Service_48.png" alt="S3">
-            <div class="arch-node-label" style="color:var(--aws-green-800)">Amazon S3<br>(billing archive)</div>
-          </div>
-        </div>
+      <div class="arch-arrow" style="width:60px;flex-shrink:0;text-align:center;">→</div>
+      <div class="arch-node" style="background:var(--aws-orange-50);border-color:var(--aws-orange-200);width:160px;flex-shrink:0;">
+        <img src="assets/icons/Arch_AWS-Lambda_48.png" alt="Lambda">
+        <div class="arch-node-label" style="color:var(--aws-orange-800)">AWS Lambda<br>(ingest)</div>
+      </div>
+      <div class="arch-arrow" style="width:60px;flex-shrink:0;text-align:center;">→</div>
+      <div class="arch-node" style="background:var(--aws-teal-50);border-color:var(--aws-teal-200);width:160px;flex-shrink:0;">
+        <img src="assets/icons/Arch_Amazon-Kinesis-Data-Streams_48.png" alt="Kinesis">
+        <div class="arch-node-label" style="color:var(--aws-teal-800)">Amazon Kinesis<br>Data Streams</div>
       </div>
     </div>
+
+    <!-- ↓ connector: Kinesis → EventBridge (center of Kinesis = 120+160+60+160+60+80 = 640px) -->
+    <div style="height:44px;display:flex;align-items:center;padding-left:628px;">
+      <span style="font-size:28px;color:var(--aws-gray-400);">↓</span>
+    </div>
+
+    <!-- Row 2: Process (EventBridge aligned under Kinesis at x=560, spacer=560-120=440px) -->
+    <div style="display:flex; align-items:center; height:110px;">
+      <div class="arch-group-label" style="width:120px;flex-shrink:0;">Process</div>
+      <div style="width:440px;flex-shrink:0;"></div>
+      <div class="arch-node" style="background:var(--aws-violet-50);border-color:var(--aws-violet-200);width:160px;flex-shrink:0;">
+        <img src="assets/icons/Arch_Amazon-EventBridge_48.png" alt="EventBridge">
+        <div class="arch-node-label" style="color:var(--aws-violet-800)">Amazon<br>EventBridge</div>
+      </div>
+      <div class="arch-arrow" style="width:60px;flex-shrink:0;text-align:center;">→</div>
+      <div class="arch-node" style="background:var(--aws-orange-50);border-color:var(--aws-orange-200);width:160px;flex-shrink:0;">
+        <img src="assets/icons/Arch_AWS-Lambda_48.png" alt="Lambda">
+        <div class="arch-node-label" style="color:var(--aws-orange-800)">AWS Lambda<br>(aggregate)</div>
+      </div>
+    </div>
+
+    <!-- ↓ connector: Lambda(agg) → DynamoDB (center of Lambda agg = 120+440+160+60+80 = 860px) -->
+    <div style="height:44px;display:flex;align-items:center;padding-left:848px;">
+      <span style="font-size:28px;color:var(--aws-gray-400);">↓</span>
+    </div>
+
+    <!-- Row 3: Store & bill (DynamoDB aligned under Lambda(agg) at x=780, spacer=780-120=660px) -->
+    <div style="display:flex; align-items:center; height:110px;">
+      <div class="arch-group-label" style="width:120px;flex-shrink:0;">Store &amp; bill</div>
+      <div style="width:660px;flex-shrink:0;"></div>
+      <div class="arch-node" style="background:var(--aws-blue-50);border-color:var(--aws-blue-200);width:160px;flex-shrink:0;">
+        <img src="assets/icons/Arch_Amazon-DynamoDB_48.png" alt="DynamoDB">
+        <div class="arch-node-label" style="color:var(--aws-blue-800)">Amazon<br>DynamoDB</div>
+      </div>
+      <div class="arch-arrow" style="width:60px;flex-shrink:0;text-align:center;">→</div>
+      <div class="arch-node" style="background:var(--aws-green-50);border-color:var(--aws-green-200);width:160px;flex-shrink:0;">
+        <img src="assets/icons/Arch_Amazon-Simple-Storage-Service_48.png" alt="S3">
+        <div class="arch-node-label" style="color:var(--aws-green-800)">Amazon S3<br>(billing archive)</div>
+      </div>
+    </div>
+
   </div>
-  <div class="slide-no">16 / 24</div>
+  <div class="slide-no">16 / 25</div>
 </section>
 
 <!-- 17 MARKETPLACE -->
@@ -891,7 +901,7 @@ document.addEventListener('fullscreenchange', () => {
       </div>
     </div>
   </div>
-  <div class="slide-no">17 / 24</div>
+  <div class="slide-no">17 / 25</div>
 </section>
 
 <!-- 18 90-DAY ROADMAP -->
@@ -933,7 +943,7 @@ document.addEventListener('fullscreenchange', () => {
       </div>
     </div>
   </div>
-  <div class="slide-no">18 / 24</div>
+  <div class="slide-no">18 / 25</div>
 </section>
 
 <!-- 19 SECTION: AGENTIC AI FRONTIER -->
@@ -945,7 +955,7 @@ document.addEventListener('fullscreenchange', () => {
     <h1 class="h-section" style="max-width: 1200px;">The agentic<br>AI frontier</h1>
     <p class="body-lg" style="color: var(--aws-gray-400); margin-top: 36px; max-width: 900px;">How autonomous AI is forcing a full repricing of what SaaS delivers</p>
   </div>
-  <div class="slide-no">19 / 24</div>
+  <div class="slide-no">19 / 25</div>
 </section>
 
 <!-- 20 WHY PER-SEAT FAILS -->
@@ -985,7 +995,7 @@ document.addEventListener('fullscreenchange', () => {
     </div>
 
   </div>
-  <div class="slide-no">20 / 24</div>
+  <div class="slide-no">20 / 25</div>
 </section>
 
 <!-- 21 THREE AI CHARGE METRICS -->
@@ -1055,7 +1065,7 @@ document.addEventListener('fullscreenchange', () => {
   <p class="body-sm" style="position:absolute;left:80px;bottom:56px;color:var(--aws-gray-500)">
     Hybrid wins in practice: platform fee (2× delivery cost) + outcome credits — provides predictability while capturing expansion upside
   </p>
-  <div class="slide-no">21 / 24</div>
+  <div class="slide-no">21 / 25</div>
 </section>
 
 <!-- 22 AGENTCORE MULTI-TENANT -->
@@ -1138,7 +1148,7 @@ document.addEventListener('fullscreenchange', () => {
     </div>
 
   </div>
-  <div class="slide-no">22 / 24</div>
+  <div class="slide-no">22 / 25</div>
 </section>
 
 <!-- 23 THE PATH FORWARD -->
@@ -1205,11 +1215,67 @@ document.addEventListener('fullscreenchange', () => {
     </div>
 
   </div>
-  <div class="slide-no">23 / 24</div>
+  <div class="slide-no">23 / 25</div>
 </section>
 
-<!-- 24 CLOSING -->
-<section class="slide" data-screen-label="23 Closing" style="background: var(--aws-violet-700);">
+<!-- 24 REFERENCES -->
+<section class="slide" data-screen-label="24 References">
+  <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 180px;">
+    <div class="eyebrow" style="color: var(--aws-gray-500); margin-bottom: 20px;">Further reading</div>
+    <h1 class="h-content">Sources that informed this deck</h1>
+  </div>
+
+  <div style="position: absolute; left: 80px; right: 80px; top: 400px; bottom: 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px 80px;">
+
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="caption" style="color:var(--aws-violet-500);">Pricing strategy</div>
+      <div style="font-size:24px;font-weight:400;line-height:1.2;color:var(--aws-gray-850);">The SaaS Monetization Playbook</div>
+      <div style="font-size:17px;line-height:1.45;color:var(--aws-gray-600);">Bessemer Venture Partners — consumption models, AI pricing, the 2026 renewal cliff</div>
+      <a style="font-family:var(--aws-font-mono);font-size:13px;color:var(--aws-blue-600);text-decoration:none;letter-spacing:0.04em;margin-top:4px;" href="https://www.bvp.com/atlas/the-saas-monetization-playbook">bvp.com/atlas/the-saas-monetization-playbook →</a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="caption" style="color:var(--aws-violet-500);">AI monetisation</div>
+      <div style="font-size:24px;font-weight:400;line-height:1.2;color:var(--aws-gray-850);">Pricing strategies for ISVs building AI</div>
+      <div style="font-size:17px;line-height:1.45;color:var(--aws-gray-600);">AWS — COMPASS framework, consumption vs workflow vs outcome charge metrics</div>
+      <a style="font-family:var(--aws-font-mono);font-size:13px;color:var(--aws-blue-600);text-decoration:none;letter-spacing:0.04em;margin-top:4px;" href="https://aws.amazon.com/blogs/apn/pricing-strategies-for-isv-partners-building-ai-powered-saas-solutions/">aws.amazon.com/blogs/apn/pricing-strategies-for-isv-partners →</a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="caption" style="color:var(--aws-violet-500);">Multi-tenancy</div>
+      <div style="font-size:24px;font-weight:400;line-height:1.2;color:var(--aws-gray-850);">Silo, pool, and bridge models</div>
+      <div style="font-size:17px;line-height:1.45;color:var(--aws-gray-600);">AWS Well-Architected SaaS Lens — isolation models and their pricing implications</div>
+      <a style="font-family:var(--aws-font-mono);font-size:13px;color:var(--aws-blue-600);text-decoration:none;letter-spacing:0.04em;margin-top:4px;" href="https://docs.aws.amazon.com/wellarchitected/latest/saas-lens/tenant-isolation-models.html">docs.aws.amazon.com/wellarchitected/saas-lens →</a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="caption" style="color:var(--aws-violet-500);">Cost attribution</div>
+      <div style="font-size:24px;font-weight:400;line-height:1.2;color:var(--aws-gray-850);">Calculating cost per tenant</div>
+      <div style="font-size:17px;line-height:1.45;color:var(--aws-gray-600);">AWS — coarse-grained vs fine-grained attribution strategies in pooled architectures</div>
+      <a style="font-family:var(--aws-font-mono);font-size:13px;color:var(--aws-blue-600);text-decoration:none;letter-spacing:0.04em;margin-top:4px;" href="https://aws.amazon.com/blogs/apn/calculating-tenant-costs-in-saas-environments/">aws.amazon.com/blogs/apn/calculating-tenant-costs-in-saas →</a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="caption" style="color:var(--aws-violet-500);">Unit metrics</div>
+      <div style="font-size:24px;font-weight:400;line-height:1.2;color:var(--aws-gray-850);">Choose, create, and track unit metrics</div>
+      <div style="font-size:17px;line-height:1.45;color:var(--aws-gray-600);">AWS — selecting business drivers, building a metering pipeline, visualising in QuickSight</div>
+      <a style="font-family:var(--aws-font-mono);font-size:13px;color:var(--aws-blue-600);text-decoration:none;letter-spacing:0.04em;margin-top:4px;" href="https://aws.amazon.com/blogs/mt/choose-create-and-track-your-unit-metrics-for-your-applications/">aws.amazon.com/blogs/mt/unit-metrics-for-your-applications →</a>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="caption" style="color:var(--aws-violet-500);">Agentic AI infrastructure</div>
+      <div style="font-size:24px;font-weight:400;line-height:1.2;color:var(--aws-gray-850);">Amazon Bedrock AgentCore</div>
+      <div style="font-size:17px;line-height:1.45;color:var(--aws-gray-600);">AWS — multi-tenant agent isolation, silo/pool/bridge patterns for production deployments</div>
+      <a style="font-family:var(--aws-font-mono);font-size:13px;color:var(--aws-blue-600);text-decoration:none;letter-spacing:0.04em;margin-top:4px;" href="https://aws.amazon.com/bedrock/agentcore/">aws.amazon.com/bedrock/agentcore →</a>
+    </div>
+
+  </div>
+  <div class="slide-no">24 / 25</div>
+</section>
+
+<!-- 25 CLOSING -->
+<section class="slide" data-screen-label="25 Closing" style="background: var(--aws-violet-700);">
   <img class="logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
   <div style="position: absolute; left: 80px; top: 0; right: 80px; bottom: 0; display: flex; flex-direction: column; justify-content: center;">
     <div class="caption" style="color: var(--aws-violet-300); margin-bottom: 36px;">AWS · SaaS pricing and packaging</div>
