@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Code w/ Claude Tokyo — Recap</title>
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<script src="assets/deck-stage.js" defer></script>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P') {
+    const deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    if (!document.fullscreenElement) {
+      deck.setAttribute('no-rail', '');
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+      deck.removeAttribute('no-rail');
+    }
+    e.preventDefault();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.removeAttribute('no-rail');
+  }
+});
+</script>
+<style>
+html, body { margin: 0; background: #000; }
+
+.slide {
+  position: relative;
+  width: 1920px; height: 1080px;
+  overflow: hidden;
+  font-family: var(--aws-font-display);
+  background: var(--aws-white);
+  color: var(--aws-gray-850);
+}
+.slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+.slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+
+/* ── Logo ── */
+.logo { position: absolute; height: 64px; width: auto; }
+.logo-tl { top: 56px; left: 80px; }
+.logo-bl { bottom: 56px; left: 80px; }
+.logo-br { bottom: 56px; right: 80px; }
+.logo-tr { top: 56px; right: 80px; }
+
+/* ── Type ── */
+.eyebrow {
+  font-family: var(--aws-font-mono);
+  font-size: 22px; font-weight: 400;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.h-cover   { font-size: 144px; line-height: 1.0;  font-weight: 400; letter-spacing: -0.005em; }
+.h-section { font-size: 120px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; }
+.h-title   { font-size: 88px;  line-height: 1.1;  font-weight: 400; letter-spacing: -0.005em; }
+.h-content { font-size: 60px;  line-height: 1.15; font-weight: 400; }
+.body-lg   { font-size: 28px;  line-height: 1.35; font-weight: 400; }
+.body-md   { font-size: 22px;  line-height: 1.4;  font-weight: 400; }
+.body-sm   { font-size: 18px;  line-height: 1.45; font-weight: 400; }
+
+.slide-no {
+  position: absolute; right: 80px; bottom: 56px;
+  font-family: var(--aws-font-mono); font-size: 16px; letter-spacing: 0.08em;
+  color: var(--aws-gray-500);
+}
+.dark .slide-no { color: var(--aws-gray-400); }
+
+/* ── Cover ── */
+.cover-photo {
+  position: absolute; inset: 0;
+  background: url('assets/IMG_3691.jpg') center / cover no-repeat;
+}
+.cover-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(22,29,38,0.92) 44%, rgba(22,29,38,0.30) 100%);
+}
+
+/* ── Pattern strip ── */
+.pattern-strip {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 480px;
+  background: url('assets/aws-pattern-modular-1a.png') center / cover;
+  opacity: 0.35;
+}
+
+/* ── Split photo ── */
+.split-r {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 780px;
+  overflow: hidden;
+}
+.split-r img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── Bullets ── */
+.bullets { display: flex; flex-direction: column; gap: 32px; }
+.bullet { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+.bullet-n {
+  font-family: var(--aws-font-mono); font-size: 17px;
+  color: var(--aws-gray-450); padding-top: 3px;
+}
+
+/* ── Full-bleed photo ── */
+.photo-full { position: absolute; inset: 0; overflow: hidden; }
+.photo-full img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.photo-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(22,29,38,0.92) 0%, rgba(22,29,38,0.0) 100%);
+  padding: 140px 80px 64px;
+}
+
+/* ── 2×2 grid ── */
+.grid-2x2 {
+  position: absolute;
+  left: 80px; right: 80px; top: 360px; bottom: 80px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 48px 80px;
+}
+.grid-card { display: flex; flex-direction: column; gap: 16px; }
+.grid-rule { width: 48px; height: 3px; background: var(--aws-gray-850); }
+.dark .grid-rule { background: var(--aws-white); }
+
+/* ── Platform primitives ── */
+.primitives {
+  position: absolute;
+  left: 80px; right: 80px; top: 400px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+.primitive {
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 36px 32px;
+  border: 1px solid var(--aws-gray-200);
+}
+.primitive-tag {
+  font-family: var(--aws-font-mono); font-size: 14px;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--aws-gray-500);
+}
+.primitive-title { font-size: 34px; font-weight: 400; line-height: 1.1; }
+.primitive-body { font-size: 20px; line-height: 1.4; color: var(--aws-gray-650); }
+
+/* ── Quote ── */
+.quote-box { position: absolute; left: 80px; right: 80px; top: 300px; }
+.quote { font-size: 68px; line-height: 1.1; font-weight: 400; }
+
+/* ── 2-col layout ── */
+.two-col {
+  position: absolute; left: 80px; right: 80px; top: 440px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+}
+
+/* ── Close ── */
+.close-dot {
+  width: 10px; height: 10px;
+  background: var(--aws-gray-850); border-radius: 50%; flex-shrink: 0;
+}
+</style>
+<script type="application/json" id="speaker-notes">
+[
+  "Cover: Code w/ Claude Tokyo, June 2026 — Anthropic's developer event. Beautiful venue, packed room, highly technical crowd.",
+  "Two complementary talks, one clear thesis: stop managing infrastructure and start managing agent quality.",
+  "Section break: the sessions.",
+  "Claude Managed Agents Platform — four primitives that remove the production burden from developers. Every agent has identity, environment, runtime, and structured event output.",
+  "The enterprise features: Memory + Dreaming for persistent context, Vaults for zero-trust credential handling. Rakuten used both to ship monitoring agents that satisfy governance requirements.",
+  "Verification Loops — the practitioner session. Three progressive levels: verify, multi-task, then disappear from the keyboard entirely via /loop and Routines.",
+  "Kazuya Iwami (AWS SA, Japan) presented a practical 2x2 framework for adopting Claude Code. Grounded in what Japanese enterprise customers need.",
+  "Energy in the room — packed, engaged, already building.",
+  "Four themes that connected both sessions.",
+  "What this means for us — grounded in what we actually heard.",
+  "Close: three concrete next steps."
+]
+</script>
+</head>
+<body>
+
+<deck-stage>
+
+<!-- ================================================================
+     1. COVER
+     ================================================================ -->
+<section class="slide dark" data-screen-label="01 Cover">
+  <div class="cover-photo"></div>
+  <div class="cover-overlay"></div>
+  <div style="position:absolute; left:80px; bottom:130px;">
+    <div class="eyebrow" style="color:rgba(255,255,255,0.44); margin-bottom:28px;">Anthropic · Tokyo · June 2026</div>
+    <h1 class="h-cover" style="color:var(--aws-white); max-width:1060px; line-height:1.0;">
+      Code w/ Claude<br>Tokyo recap
+    </h1>
+    <p class="body-lg" style="color:rgba(255,255,255,0.54); margin-top:32px; max-width:720px; line-height:1.4;">
+      Sessions, highlights, and takeaways for the AWS team
+    </p>
+  </div>
+  <img class="logo logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
+</section>
+
+<!-- ================================================================
+     2. THE THESIS
+     ================================================================ -->
+<section class="slide dark" data-screen-label="02 The thesis">
+  <img class="logo logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:196px;">
+    <div class="eyebrow" style="color:rgba(255,255,255,0.4); margin-bottom:28px;">Two sessions · One clear message</div>
+    <h1 class="h-title" style="color:var(--aws-white); max-width:1400px; line-height:1.05;">
+      Stop managing infrastructure.<br>Start managing agent quality.
+    </h1>
+  </div>
+  <div style="position:absolute; left:80px; right:80px; top:580px; display:grid; grid-template-columns:1fr 1fr; gap:80px;">
+    <div style="display:flex; flex-direction:column; gap:20px; border-left:3px solid rgba(255,255,255,0.2); padding-left:40px;">
+      <div class="eyebrow" style="color:rgba(255,255,255,0.4); font-size:18px;">Session 01</div>
+      <div style="font-size:34px; color:var(--aws-white); line-height:1.15;">Claude Managed Agents Platform</div>
+      <div class="body-md" style="color:rgba(255,255,255,0.55);">The infrastructure layer that removes the production burden — so you can focus on what your agent does, not how it runs</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px; border-left:3px solid rgba(255,255,255,0.2); padding-left:40px;">
+      <div class="eyebrow" style="color:rgba(255,255,255,0.4); font-size:18px;">Session 02</div>
+      <div style="font-size:34px; color:var(--aws-white); line-height:1.15;">Verification Loops &amp; Multi-tasking</div>
+      <div class="body-md" style="color:rgba(255,255,255,0.55);">Practical patterns to build trust in agents — verify work, run many agents in parallel, then step away from the keyboard entirely</div>
+    </div>
+  </div>
+  <div class="slide-no">02 / 11</div>
+</section>
+
+<!-- ================================================================
+     3. SECTION DIVIDER · The sessions
+     ================================================================ -->
+<section class="slide dark" data-screen-label="03 The sessions">
+  <div class="pattern-strip" aria-hidden="true"></div>
+  <img class="logo logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+  <div style="position:absolute; left:560px; top:400px; right:80px;">
+    <div class="eyebrow" style="color:rgba(255,255,255,0.38); margin-bottom:32px;">Chapter 01</div>
+    <h1 class="h-section" style="max-width:1100px;">The sessions</h1>
+  </div>
+  <div class="slide-no">03 / 11</div>
+</section>
+
+<!-- ================================================================
+     4. SESSION 01 · Claude Managed Agents Platform
+     ================================================================ -->
+<section class="slide" data-screen-label="04 Managed Agents Platform">
+  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:196px;">
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 01 — Claude Managed Agents</div>
+    <h1 class="h-content" style="max-width:1760px;">Every agent is built from four primitives</h1>
+  </div>
+  <div class="primitives">
+    <div class="primitive">
+      <div class="primitive-tag">Identity</div>
+      <div class="primitive-title">Agent</div>
+      <div class="primitive-body">System prompt, model, skills, tools, and permissions — the agent's stable identity</div>
+    </div>
+    <div class="primitive">
+      <div class="primitive-tag">Template</div>
+      <div class="primitive-title">Environment</div>
+      <div class="primitive-body">Network allow list and pre-installed packages — the sandbox the agent runs in</div>
+    </div>
+    <div class="primitive">
+      <div class="primitive-tag">Runtime</div>
+      <div class="primitive-title">Session</div>
+      <div class="primitive-body">Provisions the harness, mounts credentials, and starts Claude — the live execution unit</div>
+    </div>
+    <div class="primitive">
+      <div class="primitive-tag">Output</div>
+      <div class="primitive-title">Events</div>
+      <div class="primitive-body">Durable structured transcripts of every user action, agent turn, tool call, and lifecycle transition</div>
+    </div>
+  </div>
+  <div class="slide-no">04 / 11</div>
+</section>
+
+<!-- ================================================================
+     5. SESSION 01 · Enterprise features
+     ================================================================ -->
+<section class="slide" data-screen-label="05 Enterprise features">
+  <div class="split-r">
+    <img src="assets/IMG_3685.jpg" alt="Code w/ Claude session on stage">
+  </div>
+  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:196px; right:860px;">
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 01 — Enterprise features</div>
+    <h1 class="h-title" style="line-height:1.05; max-width:820px;">Memory, Vaults,<br>and multi-agent</h1>
+    <div class="bullets" style="margin-top:52px;">
+      <div class="bullet">
+        <div class="bullet-n">01</div>
+        <div class="body-md" style="color:var(--aws-gray-650);">
+          <span style="font-weight:500;">Memory + Dreaming</span> — agents persist context across sessions and automatically consolidate learnings into curated memory after each run
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">02</div>
+        <div class="body-md" style="color:var(--aws-gray-650);">
+          <span style="font-weight:500;">Vaults (secure env vars)</span> — Claude sees a placeholder token; real credentials are injected at the network layer. Claude never touches the actual secret — clean compliance story
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">03</div>
+        <div class="body-md" style="color:var(--aws-gray-650);">
+          <span style="font-weight:500;">Multi-agent orchestration</span> — Claude delegates to subagents with independent context windows for true parallel execution
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">04</div>
+        <div class="body-md" style="color:var(--aws-gray-650);">
+          <span style="font-weight:500;">Scheduled deployments</span> — recurring session triggers for reports, monitoring, and any repeating workflow
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">05 / 11</div>
+</section>
+
+<!-- ================================================================
+     6. SESSION 02 · Verification Loops
+     ================================================================ -->
+<section class="slide" data-screen-label="06 Verification Loops">
+  <div class="split-r">
+    <img src="assets/IMG_3709.jpg" alt="Speaker presenting verification patterns" style="object-position:35% center;">
+  </div>
+  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:196px; right:860px;">
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 02 — Three levels of autonomy</div>
+    <h1 class="h-title" style="line-height:1.05; max-width:820px;">Verification,<br>multi-tasking, background</h1>
+    <div class="bullets" style="margin-top:52px;">
+      <div class="bullet">
+        <div class="bullet-n">01</div>
+        <div class="body-md" style="color:var(--aws-gray-650);">
+          <span style="font-weight:500;">Verification loops</span> — spin up a server, give Claude browser access, define "done" with screenshots or log checks. Distill the pattern into a skill file anyone can reuse
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">02</div>
+        <div class="body-md" style="color:var(--aws-gray-650);">
+          <span style="font-weight:500;">Multi-tasking</span> — Claude Code desktop and CLI both manage parallel sessions with attention indicators. <span style="font-style:italic;">claude agents</span> in the terminal gives the same session view as the sidebar
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">03</div>
+        <div class="body-md" style="color:var(--aws-gray-650);">
+          <span style="font-weight:500;">Background loops</span> — <span style="font-style:italic;">/loop</span> runs a prompt on a recurring schedule (e.g., babysit PRs, fix CI every 10 min). Routines extend this to the cloud, triggered by time or events
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">06 / 11</div>
+</section>
+
+<!-- ================================================================
+     7. AWS REPRESENTATION · Kazuya Iwami
+     ================================================================ -->
+<section class="slide" data-screen-label="07 AWS at the event">
+  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:196px; right:860px;">
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">AWS represented</div>
+    <h1 class="h-title" style="line-height:1.05; max-width:820px;">Kazuya Iwami<br>presenting for AWS</h1>
+    <p class="body-md" style="color:var(--aws-gray-650); margin-top:28px; max-width:760px; line-height:1.5;">AWS SA Kazuya Iwami delivered a session in Japanese on practical Claude Code adoption — covering a 2×2 framework for progressing from basic usage to long-running autonomous workflows</p>
+    <div style="margin-top:48px; display:grid; grid-template-columns:1fr 1fr; gap:20px 40px;">
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Context control</div>
+        <div class="body-sm" style="color:var(--aws-gray-700);">/clear, /compact, /model, /effort, think mode</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Output quality</div>
+        <div class="body-sm" style="color:var(--aws-gray-700);">CLAUDE.md, Rules, Hooks</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Workflow packaging</div>
+        <div class="body-sm" style="color:var(--aws-gray-700);">Skills, Plugins, shared public Skills</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Autonomous operation</div>
+        <div class="body-sm" style="color:var(--aws-gray-700);">Auto mode, /goal, ultracode, MCP + E2E loops, git worktree</div>
+      </div>
+    </div>
+  </div>
+  <div class="split-r">
+    <img src="assets/IMG_3680.jpg" alt="Kazuya Iwami presenting at Code with Claude Tokyo" style="object-position:center 20%;">
+  </div>
+  <div class="slide-no">07 / 11</div>
+</section>
+
+<!-- ================================================================
+     8. ENERGY IN THE ROOM
+     ================================================================ -->
+<section class="slide dark" data-screen-label="08 Energy in the room">
+  <div class="photo-full">
+    <img src="assets/IMG_3704.jpg" alt="Developer audience at Code with Claude Tokyo">
+  </div>
+  <div class="photo-caption">
+    <div class="eyebrow" style="color:rgba(255,255,255,0.45); margin-bottom:18px;">Tokyo · June 2026</div>
+    <p class="h-content" style="color:var(--aws-white); max-width:1100px; line-height:1.1;">
+      A packed room of builders who are<br>already shipping, not just evaluating
+    </p>
+  </div>
+  <img class="logo logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+  <div class="slide-no" style="color:rgba(255,255,255,0.3);">08 / 11</div>
+</section>
+
+<!-- ================================================================
+     9. KEY THEMES
+     ================================================================ -->
+<section class="slide" data-screen-label="09 Key themes">
+  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:196px;">
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">What connected the sessions</div>
+    <h1 class="h-title">Key themes</h1>
+  </div>
+  <div class="grid-2x2">
+    <div class="grid-card">
+      <div class="grid-rule"></div>
+      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Infrastructure is solved</h2>
+      <p class="body-md" style="color:var(--aws-gray-650); max-width:640px;">
+        Managed Agents abstracts away hosting, scaling, sessions, and sandboxing. The conversation is now about agent design — not DevOps
+      </p>
+    </div>
+    <div class="grid-card">
+      <div class="grid-rule"></div>
+      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Trust is the unlock</h2>
+      <p class="body-md" style="color:var(--aws-gray-650); max-width:640px;">
+        Verification loops, Vaults, and structured event output all serve one goal: earning enough trust in agent behavior to let it run unsupervised
+      </p>
+    </div>
+    <div class="grid-card">
+      <div class="grid-rule"></div>
+      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Enterprise is ready</h2>
+      <p class="body-md" style="color:var(--aws-gray-650); max-width:640px;">
+        Rakuten is already scheduling agent runs for reports and monitoring — with Vaults handling the governance requirements that previously blocked deployment
+      </p>
+    </div>
+    <div class="grid-card">
+      <div class="grid-rule"></div>
+      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Japan is building</h2>
+      <p class="body-md" style="color:var(--aws-gray-650); max-width:640px;">
+        Deep questions, packed room, AWS SA already presenting. Japanese developers are past evaluation — they want architecture and production patterns
+      </p>
+    </div>
+  </div>
+  <div class="slide-no">09 / 11</div>
+</section>
+
+<!-- ================================================================
+     10. WHAT THIS MEANS FOR AWS
+     ================================================================ -->
+<section class="slide" data-screen-label="10 What this means for AWS">
+  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:196px;">
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Implications for our work</div>
+    <h1 class="h-title">What this means for AWS</h1>
+  </div>
+  <div class="two-col">
+    <div class="bullets">
+      <div class="bullet">
+        <div class="bullet-n">01</div>
+        <div class="body-md">
+          <span style="font-weight:500;">Bedrock + Claude Managed Agents</span> — customers asking about agentic architecture need to understand the four primitives (Agent, Environment, Session, Events). Use these as the framework for your next architecture conversation
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">02</div>
+        <div class="body-md">
+          <span style="font-weight:500;">The Vaults story maps to compliance requirements</span> — Japanese enterprise customers blocked on governance can use Vaults as the answer. Claude never sees the real credential. This is worth leading with
+        </div>
+      </div>
+    </div>
+    <div class="bullets">
+      <div class="bullet">
+        <div class="bullet-n">03</div>
+        <div class="body-md">
+          <span style="font-weight:500;">Verification patterns as a workshop topic</span> — Kazuya's 2×2 adoption framework and the verification loop content from session 2 are ready-to-run technical content. Strong candidate for a GenAIIC half-day
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">04</div>
+        <div class="body-md">
+          <span style="font-weight:500;">Follow up with attendees</span> — the developers who attended are warm on Claude Code. Reach out with the Managed Agents announcement and an offer to run a technical deep-dive
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">10 / 11</div>
+</section>
+
+<!-- ================================================================
+     11. CLOSING
+     ================================================================ -->
+<section class="slide" data-screen-label="11 Closing">
+  <div style="position:absolute; inset:0; background:var(--aws-amber-400);"></div>
+  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position:absolute; left:80px; top:50%; transform:translateY(-50%);">
+    <div class="eyebrow" style="color:var(--aws-gray-700); margin-bottom:36px;">What's next</div>
+    <h1 class="h-title" style="color:var(--aws-gray-850); max-width:1500px; line-height:1.05;">
+      Let's bring these patterns<br>to our customers
+    </h1>
+    <div style="margin-top:64px; display:flex; flex-direction:column; gap:28px;">
+      <div style="display:flex; align-items:center; gap:28px;">
+        <div class="close-dot"></div>
+        <p class="body-lg" style="color:var(--aws-gray-850);">Run a Claude Code technical session using Kazuya's 2×2 adoption framework — context, quality, packaging, autonomy</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:28px;">
+        <div class="close-dot"></div>
+        <p class="body-lg" style="color:var(--aws-gray-850);">Lead with Vaults for any enterprise customer blocked on governance — it's the compliance answer for agentic deployments</p>
+      </div>
+      <div style="display:flex; align-items:center; gap:28px;">
+        <div class="close-dot"></div>
+        <p class="body-lg" style="color:var(--aws-gray-850);">Reach out to today's attendees with the Managed Agents platform announcement and an offer to go deep</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no" style="color:var(--aws-gray-650);">11 / 11</div>
+</section>
+
+</deck-stage>
+</body>
+</html>

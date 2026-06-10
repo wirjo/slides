@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Code w/ Claude Tokyo — Recap</title>
+<style>deck-stage:not(:defined){visibility:hidden}</style>
+<link rel="stylesheet" href="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/colors_and_type.css">
+<script src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/ui_kits/presentations/deck-stage.js" defer></script>
+<style>
+html, body { margin: 0; background: #000; }
+
+.slide {
+  position: relative;
+  width: 1920px; height: 1080px;
+  overflow: hidden;
+  font-family: var(--aws-font-display);
+  background: var(--aws-white);
+  color: var(--aws-gray-850);
+}
+.slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+.slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+
+/* ── Logo ── */
+.logo { position: absolute; height: 64px; width: auto; }
+.logo-tl { top: 56px; left: 80px; }
+.logo-bl { bottom: 56px; left: 80px; }
+.logo-br { bottom: 56px; right: 80px; }
+.logo-tr { top: 56px; right: 80px; }
+
+/* ── Type scale ── */
+.eyebrow {
+  font-family: var(--aws-font-mono);
+  font-size: 22px; font-weight: 400;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.h-cover   { font-size: 144px; line-height: 1.0;  font-weight: 400; letter-spacing: -0.005em; }
+.h-section { font-size: 120px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; }
+.h-title   { font-size: 88px;  line-height: 1.1;  font-weight: 400; letter-spacing: -0.005em; }
+.h-content { font-size: 64px;  line-height: 1.15; font-weight: 400; }
+.body-lg   { font-size: 28px;  line-height: 1.35; font-weight: 400; }
+.body-md   { font-size: 22px;  line-height: 1.4;  font-weight: 400; }
+
+.slide-no {
+  position: absolute; right: 80px; bottom: 56px;
+  font-family: var(--aws-font-mono); font-size: 16px; letter-spacing: 0.08em;
+  color: var(--aws-gray-500);
+}
+.dark .slide-no { color: var(--aws-gray-400); }
+
+/* ── Cover ── */
+.cover-photo {
+  position: absolute; inset: 0;
+  background: url('/Users/wirjo/Downloads/CWC Tokyo/IMG_3691.jpg') center / cover no-repeat;
+}
+.cover-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, rgba(22,29,38,0.92) 42%, rgba(22,29,38,0.38) 100%);
+}
+
+/* ── Stats grid ── */
+.stat-grid {
+  position: absolute;
+  left: 80px; right: 80px; top: 440px;
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+}
+.stat-item {
+  display: flex; flex-direction: column; gap: 16px;
+  padding: 0 80px;
+}
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child { padding-right: 0; }
+.stat-item + .stat-item { border-left: 1px solid rgba(22,29,38,0.12); }
+.stat-num { font-size: 160px; line-height: 0.9; font-weight: 400; letter-spacing: -0.025em; }
+.stat-label {
+  font-family: var(--aws-font-mono); font-size: 20px;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--aws-gray-550);
+}
+
+/* ── Pattern strip ── */
+.pattern-strip {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 480px;
+  background: url('/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-pattern-modular-1a.png') center / cover;
+  opacity: 0.35;
+}
+
+/* ── Split photo (right) ── */
+.split-r {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 800px;
+  overflow: hidden;
+}
+.split-r img {
+  width: 100%; height: 100%; object-fit: cover; object-position: center;
+}
+
+/* ── Numbered bullets ── */
+.bullets { display: flex; flex-direction: column; gap: 36px; }
+.bullet { display: grid; grid-template-columns: 52px 1fr; gap: 16px; align-items: start; }
+.bullet-n {
+  font-family: var(--aws-font-mono); font-size: 18px;
+  color: var(--aws-gray-500); padding-top: 3px;
+}
+
+/* ── Full-bleed photo ── */
+.photo-full { position: absolute; inset: 0; overflow: hidden; }
+.photo-full img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.photo-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, rgba(22,29,38,0.90) 0%, transparent 100%);
+  padding: 120px 80px 60px;
+}
+
+/* ── 2-up photo strip ── */
+.photo-strip {
+  position: absolute;
+  left: 80px; right: 80px; top: 320px; bottom: 96px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  border-radius: 6px; overflow: hidden;
+}
+.photo-strip img { width: 100%; height: 100%; object-fit: cover; }
+
+/* ── Themes 2×2 ── */
+.themes-grid {
+  position: absolute;
+  left: 80px; right: 80px; top: 380px; bottom: 80px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 56px 96px;
+}
+.theme-card { display: flex; flex-direction: column; gap: 18px; }
+.theme-rule { width: 56px; height: 4px; background: var(--aws-gray-850); }
+
+/* ── 2-column bullets ── */
+.two-col-bullets {
+  position: absolute;
+  left: 80px; right: 80px; top: 460px;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0 96px;
+}
+
+/* ── Closing ── */
+.close-bg { position: absolute; inset: 0; background: var(--aws-amber-400); }
+.close-dot {
+  width: 10px; height: 10px;
+  background: var(--aws-gray-850); border-radius: 50%; flex-shrink: 0;
+}
+</style>
+<script type="application/json" id="speaker-notes">
+[
+  "Cover: Code w/ Claude Tokyo, June 2026 — Anthropic's developer event. Set the scene: beautiful venue, energetic crowd, deep technical content.",
+  "At a glance: 100+ developers, 3 sessions, one day in Tokyo. Strong turnout with engaged builder community.",
+  "Section break: Two standout technical sessions worth unpacking.",
+  "Memory systems: The 'unified memory system' session covered how Claude Code persists context across sessions — long-term memory as an architectural primitive for reliable agentic workflows.",
+  "Verification: Structured checkpoints for agentic systems. The key insight: the biggest barrier to agentic adoption is trust, not capability. Verification patterns unlock deployment at scale.",
+  "The room: packed, engaged, sharp questions. Tokyo's developer community brings depth — they're already building, not just evaluating.",
+  "Four themes that cut across every session. Use these as conversation starters with your accounts.",
+  "Implications for our work: where Bedrock, GenAIIC, and CChamps intersect with what we heard today.",
+  "Close: three concrete next steps. Let's not let this event be a one-day thing."
+]
+</script>
+</head>
+<body>
+
+<deck-stage>
+
+<!-- ================================================================
+     1. COVER · Full-bleed photo, dark overlay
+     ================================================================ -->
+<section class="slide dark" data-screen-label="01 Cover">
+  <div class="cover-photo"></div>
+  <div class="cover-overlay"></div>
+  <div style="position: absolute; left: 80px; bottom: 140px;">
+    <div class="eyebrow" style="color: rgba(255,255,255,0.48); margin-bottom: 32px;">Anthropic · Tokyo · June 2026</div>
+    <h1 class="h-cover" style="color: var(--aws-white); max-width: 1000px; line-height: 1.0;">
+      Code w/ Claude<br>Tokyo recap
+    </h1>
+    <p class="body-lg" style="color: rgba(255,255,255,0.58); margin-top: 36px; max-width: 700px; line-height: 1.45;">
+      Sessions, highlights, and takeaways from<br>Anthropic's Tokyo developer event
+    </p>
+  </div>
+  <img class="logo logo-tl" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-white.svg" alt="AWS">
+</section>
+
+<!-- ================================================================
+     2. AT A GLANCE
+     ================================================================ -->
+<section class="slide" data-screen-label="02 At a glance">
+  <img class="logo logo-tl" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 196px;">
+    <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 24px;">Event overview</div>
+    <h1 class="h-title">At a glance</h1>
+  </div>
+  <div class="stat-grid">
+    <div class="stat-item">
+      <div class="stat-num">100<span style="font-size: 88px; vertical-align: top; line-height: 1.35;">+</span></div>
+      <div class="stat-label">Developers attended</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Technical sessions</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Day · Tokyo</div>
+    </div>
+  </div>
+  <div class="slide-no">02 / 09</div>
+</section>
+
+<!-- ================================================================
+     3. SECTION DIVIDER · The sessions
+     ================================================================ -->
+<section class="slide dark" data-screen-label="03 The sessions">
+  <div class="pattern-strip" aria-hidden="true"></div>
+  <img class="logo logo-tr" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-white.svg" alt="AWS">
+  <div style="position: absolute; left: 560px; top: 400px; right: 80px;">
+    <div class="eyebrow" style="color: rgba(255,255,255,0.4); margin-bottom: 32px;">Chapter 01</div>
+    <h1 class="h-section" style="max-width: 1000px;">The sessions</h1>
+  </div>
+  <div class="slide-no">03 / 09</div>
+</section>
+
+<!-- ================================================================
+     4. SESSION 01 · A unified memory system
+     ================================================================ -->
+<section class="slide" data-screen-label="04 Memory systems">
+  <div class="split-r">
+    <img src="/Users/wirjo/Downloads/CWC Tokyo/IMG_3685.jpg" alt="Speaker presenting on unified memory system">
+  </div>
+  <img class="logo logo-tl" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 196px; right: 880px;">
+    <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 28px;">Session 01</div>
+    <h1 class="h-title" style="max-width: 900px; line-height: 1.05;">A unified<br>memory system</h1>
+    <div class="bullets" style="margin-top: 56px;">
+      <div class="bullet">
+        <div class="bullet-n">01</div>
+        <div class="body-md" style="color: var(--aws-gray-650);">Persistent context across sessions — Claude Code remembers what you've built, enabling continuity across multi-day and multi-session workflows</div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">02</div>
+        <div class="body-md" style="color: var(--aws-gray-650);">Real-time streaming memory updates — no stale state between agent turns; context stays fresh as work progresses</div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">03</div>
+        <div class="body-md" style="color: var(--aws-gray-650);">Memory as a first-class primitive — not just a convenience feature, but a foundational layer for reliable agentic systems</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">04 / 09</div>
+</section>
+
+<!-- ================================================================
+     5. SESSION 02 · Verification in practice
+     ================================================================ -->
+<section class="slide" data-screen-label="05 Verification in practice">
+  <div class="split-r">
+    <img src="/Users/wirjo/Downloads/CWC Tokyo/IMG_3709.jpg" alt="Speaker presenting verification patterns" style="object-position: 35% center;">
+  </div>
+  <img class="logo logo-tl" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 196px; right: 880px;">
+    <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 28px;">Session 02</div>
+    <h1 class="h-title" style="max-width: 900px; line-height: 1.05;">Verification<br>in practice</h1>
+    <div class="bullets" style="margin-top: 56px;">
+      <div class="bullet">
+        <div class="bullet-n">01</div>
+        <div class="body-md" style="color: var(--aws-gray-650);">Structured checkpoints at each agentic step — define what "done" looks like before the agent starts, not after</div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">02</div>
+        <div class="body-md" style="color: var(--aws-gray-650);">Human-in-the-loop escalation for high-stakes actions — automation with earned trust, not automation at all costs</div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">03</div>
+        <div class="body-md" style="color: var(--aws-gray-650);">Audit trails and reproducibility — every agent action should be explainable and, where possible, reversible</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">05 / 09</div>
+</section>
+
+<!-- ================================================================
+     6. PHOTO MOMENT · Energy in the room
+     ================================================================ -->
+<section class="slide dark" data-screen-label="06 Energy in the room">
+  <div class="photo-full">
+    <img src="/Users/wirjo/Downloads/CWC Tokyo/IMG_3704.jpg" alt="Developer audience at Code with Claude Tokyo">
+  </div>
+  <div class="photo-caption">
+    <div class="eyebrow" style="color: rgba(255,255,255,0.5); margin-bottom: 18px;">Tokyo · June 2026</div>
+    <p class="h-content" style="color: var(--aws-white); max-width: 1000px; line-height: 1.1;">
+      A packed room, sharp questions,<br>and builders who are already shipping
+    </p>
+  </div>
+  <img class="logo logo-tr" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-white.svg" alt="AWS">
+  <div class="slide-no" style="color: rgba(255,255,255,0.35);">06 / 09</div>
+</section>
+
+<!-- ================================================================
+     7. KEY THEMES
+     ================================================================ -->
+<section class="slide" data-screen-label="07 Key themes">
+  <img class="logo logo-tl" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 196px;">
+    <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 24px;">What we heard</div>
+    <h1 class="h-title">Key themes</h1>
+  </div>
+  <div class="themes-grid">
+    <div class="theme-card">
+      <div class="theme-rule"></div>
+      <h2 style="font-size: 38px; font-weight: 400; line-height: 1.15;">Agents over assistants</h2>
+      <p class="body-md" style="color: var(--aws-gray-650); max-width: 600px;">
+        Developers are moving beyond chat — Claude-powered workflows that operate autonomously across multi-step tasks are the new baseline expectation
+      </p>
+    </div>
+    <div class="theme-card">
+      <div class="theme-rule"></div>
+      <h2 style="font-size: 38px; font-weight: 400; line-height: 1.15;">Memory as infrastructure</h2>
+      <p class="body-md" style="color: var(--aws-gray-650); max-width: 600px;">
+        Persistent context is table stakes — developers expect their tools to remember what they've built, not start fresh with every session
+      </p>
+    </div>
+    <div class="theme-card">
+      <div class="theme-rule"></div>
+      <h2 style="font-size: 38px; font-weight: 400; line-height: 1.15;">Trust through verification</h2>
+      <p class="body-md" style="color: var(--aws-gray-650); max-width: 600px;">
+        The biggest barrier to agentic adoption isn't capability — it's confidence. Structured verification patterns are what unlock production deployments
+      </p>
+    </div>
+    <div class="theme-card">
+      <div class="theme-rule"></div>
+      <h2 style="font-size: 38px; font-weight: 400; line-height: 1.15;">Japan's builder momentum</h2>
+      <p class="body-md" style="color: var(--aws-gray-650); max-width: 600px;">
+        Tokyo's developer community is sophisticated, eager, and actively shipping — strong appetite for deep technical engagement, not product pitches
+      </p>
+    </div>
+  </div>
+  <div class="slide-no">07 / 09</div>
+</section>
+
+<!-- ================================================================
+     8. WHAT THIS MEANS FOR AWS
+     ================================================================ -->
+<section class="slide" data-screen-label="08 What this means for AWS">
+  <img class="logo logo-tl" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 196px;">
+    <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 24px;">Implications for our work</div>
+    <h1 class="h-title">What this means for AWS</h1>
+  </div>
+  <div class="two-col-bullets">
+    <div class="bullets">
+      <div class="bullet">
+        <div class="bullet-n">01</div>
+        <div class="body-md">
+          <span style="font-weight: 500;">Bedrock + Claude Code</span> — customers building agentic workflows need the same memory and verification primitives covered today. This is the conversation to bring to every architecture session
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">02</div>
+        <div class="body-md">
+          <span style="font-weight: 500;">Partner pipeline</span> — Japanese ISVs are evaluating Bedrock for Claude-powered products right now. Today's attendees are warm leads for Bedrock workshops and GenAIIC engagements
+        </div>
+      </div>
+    </div>
+    <div class="bullets">
+      <div class="bullet">
+        <div class="bullet-n">03</div>
+        <div class="body-md">
+          <span style="font-weight: 500;">Go deep, not broad</span> — Tokyo developers want architecture conversations. Bring the verification and memory patterns to your next customer technical session, not just the product overview
+        </div>
+      </div>
+      <div class="bullet">
+        <div class="bullet-n">04</div>
+        <div class="body-md">
+          <span style="font-weight: 500;">CChamps recruitment</span> — strong candidate pool from today's attendees. The builders who asked the sharpest questions are the ones to nominate for CChamps and accelerate
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no">08 / 09</div>
+</section>
+
+<!-- ================================================================
+     9. CLOSING
+     ================================================================ -->
+<section class="slide" data-screen-label="09 Closing">
+  <div class="close-bg"></div>
+  <img class="logo logo-tl" src="/Users/wirjo/Developer/sa-assist/.claude/skills/aws-slides/assets/aws-logo-gray850.svg" alt="AWS">
+  <div style="position: absolute; left: 80px; top: 50%; transform: translateY(-50%);">
+    <div class="eyebrow" style="color: var(--aws-gray-700); margin-bottom: 40px;">What's next</div>
+    <h1 class="h-title" style="max-width: 1400px; color: var(--aws-gray-850); line-height: 1.05;">
+      Let's bring these sessions<br>to our customers
+    </h1>
+    <div style="margin-top: 64px; display: flex; flex-direction: column; gap: 28px;">
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <div class="close-dot"></div>
+        <p class="body-lg" style="color: var(--aws-gray-850);">Schedule a Bedrock + Claude Code technical session for accounts actively evaluating agentic workflows</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <div class="close-dot"></div>
+        <p class="body-lg" style="color: var(--aws-gray-850);">Nominate standout builders from today's event for GenAIIC and CChamps</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 28px;">
+        <div class="close-dot"></div>
+        <p class="body-lg" style="color: var(--aws-gray-850);">Share memory and verification patterns in your next customer architecture review</p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-no" style="color: var(--aws-gray-650);">09 / 09</div>
+</section>
+
+</deck-stage>
+</body>
+</html>
