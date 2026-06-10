@@ -138,79 +138,28 @@ html, body { margin: 0; background: #000; }
 .primitive-title { font-size: 34px; font-weight: 400; line-height: 1.1; }
 .primitive-body { font-size: 20px; line-height: 1.4; color: var(--aws-gray-650); }
 
-/* Two-col */
-.two-col {
-  position: absolute; left: 80px; right: 80px; top: 440px;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
-}
-
 /* Photo pair */
 .photo-pair {
   position: absolute; right: 0; top: 0; bottom: 0; width: 820px;
   display: grid; grid-template-rows: 1fr 1fr;
 }
 .photo-pair img { width: 100%; height: 100%; object-fit: cover; }
-
-/* YouTube cards */
-.yt-cards {
-  position: absolute;
-  left: 80px; right: 80px; top: 380px; bottom: 100px;
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 36px;
-}
-.yt-card {
-  display: flex; flex-direction: column; gap: 0;
-  border: 1px solid var(--aws-gray-200);
-  overflow: hidden;
-}
-.yt-thumb {
-  width: 100%; aspect-ratio: 16/9;
-  background: var(--aws-gray-100);
-  display: flex; align-items: center; justify-content: center;
-  position: relative; overflow: hidden;
-}
-.yt-thumb-bg {
-  position: absolute; inset: 0;
-  background: var(--aws-gray-850);
-  display: flex; align-items: center; justify-content: center;
-}
-.yt-play {
-  width: 64px; height: 64px;
-  background: rgba(255,255,255,0.15);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-}
-.yt-play svg { width: 28px; height: 28px; margin-left: 4px; }
-.yt-info { padding: 24px 28px 28px; display: flex; flex-direction: column; gap: 10px; }
-.yt-tag {
-  font-family: var(--aws-font-mono); font-size: 13px;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  color: var(--aws-gray-500);
-}
-.yt-title { font-size: 26px; line-height: 1.2; font-weight: 400; }
-.yt-url {
-  font-family: var(--aws-font-mono); font-size: 15px;
-  color: var(--aws-blue-600); text-decoration: none;
-  letter-spacing: -0.01em;
-  word-break: break-all;
-}
 </style>
 <script type="application/json" id="speaker-notes">
 [
   "Cover: Code w/ Claude Tokyo, June 2026.",
-  "Two complementary sessions. One thesis: stop managing infrastructure, start managing agent quality.",
-  "Section break.",
-  "Managed Agents Platform — the four primitives every agent is built from.",
-  "Enterprise features: Memory, Vaults, multi-agent. Now available on the Claude Platform on AWS.",
-  "Verification loops, multi-tasking, background loops — three progressive levels of autonomy.",
-  "Task budgets: let Claude choose how to use its token budget rather than hardcoding rules.",
-  "Interleaved reasoning: Claude reasons between tool calls, not just before them. More adaptive agentic behavior.",
-  "Customer demos: real-world examples from the event floor.",
-  "Kazuya Iwami's AWS session — practical 2x2 adoption framework for Japanese enterprise.",
+  "Three themes that shaped everything at the event.",
+  "Section break — the sessions.",
+  "Managed Agents: four primitives every agent is built from.",
+  "Memory, Vaults, multi-agent — now on Claude Platform on AWS.",
+  "Verification loops, multi-tasking, background loops.",
+  "Task Budgets and reasoning effort — tunable quality.",
+  "Three thinking modes: adaptive, extended, interleaved.",
+  "Customer demos from the event floor.",
+  "Kazuya Iwami presenting for AWS.",
   "Energy in the room.",
-  "Key themes that connected everything.",
-  "What this means for us — grounded in actual announcements.",
-  "Watch the recordings.",
+  "Key themes across all sessions.",
+  "Watch the recording.",
   "Close."
 ]
 </script>
@@ -238,29 +187,32 @@ html, body { margin: 0; background: #000; }
 </section>
 
 <!-- ================================================================
-     2. THE THESIS
+     2. THREE THEMES
      ================================================================ -->
-<section class="slide dark" data-screen-label="02 The thesis">
+<section class="slide dark" data-screen-label="02 Themes">
   <img class="logo logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:196px;">
-    <div class="eyebrow" style="color:rgba(255,255,255,0.4); margin-bottom:28px;">Two sessions · One clear message</div>
-    <h1 class="h-title" style="color:var(--aws-white); max-width:1500px; line-height:1.05;">
-      Stop managing infrastructure.<br>Start managing agent quality.
-    </h1>
+    <div class="eyebrow" style="color:rgba(255,255,255,0.4); margin-bottom:28px;">What shaped the event</div>
+    <h1 class="h-title" style="color:var(--aws-white); max-width:1400px; line-height:1.05;">Three ideas ran through every session</h1>
   </div>
-  <div style="position:absolute; left:80px; right:80px; top:580px; display:grid; grid-template-columns:1fr 1fr; gap:80px;">
+  <div style="position:absolute; left:80px; right:80px; top:530px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:48px;">
     <div style="display:flex; flex-direction:column; gap:20px; border-left:3px solid rgba(255,255,255,0.2); padding-left:40px;">
-      <div class="eyebrow" style="color:rgba(255,255,255,0.4); font-size:18px;">Session 01</div>
-      <div style="font-size:34px; color:var(--aws-white); line-height:1.15;">Claude Managed Agents Platform</div>
-      <div class="body-md" style="color:rgba(255,255,255,0.55);">The infrastructure layer — Memory, Vaults, multi-agent — now available on the Claude Platform on AWS</div>
+      <div class="eyebrow" style="color:rgba(255,255,255,0.35); font-size:17px;">Theme 01</div>
+      <div style="font-size:36px; color:var(--aws-white); line-height:1.15;">Long-horizon agents</div>
+      <div class="body-md" style="color:rgba(255,255,255,0.55);">Agents that run for hours or days — not seconds. Memory, scheduling, and multi-agent orchestration make this real today</div>
     </div>
     <div style="display:flex; flex-direction:column; gap:20px; border-left:3px solid rgba(255,255,255,0.2); padding-left:40px;">
-      <div class="eyebrow" style="color:rgba(255,255,255,0.4); font-size:18px;">Session 02</div>
-      <div style="font-size:34px; color:var(--aws-white); line-height:1.15;">Verification Loops, Task Budgets &amp; Multi-tasking</div>
-      <div class="body-md" style="color:rgba(255,255,255,0.55);">Practical patterns to build trust in agents — verify work, control cost via token budgets, run many agents in parallel</div>
+      <div class="eyebrow" style="color:rgba(255,255,255,0.35); font-size:17px;">Theme 02</div>
+      <div style="font-size:36px; color:var(--aws-white); line-height:1.15;">Building for next capability</div>
+      <div class="body-md" style="color:rgba(255,255,255,0.55);">Task Budgets, interleaved thinking, and reasoning effort are designed to scale with Claude 4 — write once, improve as models improve</div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px; border-left:3px solid rgba(255,255,255,0.2); padding-left:40px;">
+      <div class="eyebrow" style="color:rgba(255,255,255,0.35); font-size:17px;">Theme 03</div>
+      <div style="font-size:36px; color:var(--aws-white); line-height:1.15;">Managed agents on AWS</div>
+      <div class="body-md" style="color:rgba(255,255,255,0.55);">Memory, Vaults, and multi-agent are now first-class infrastructure on the Claude Platform on AWS — not a DIY concern</div>
     </div>
   </div>
-  <div class="slide-no">02 / 15</div>
+  <div class="slide-no">02 / 13</div>
 </section>
 
 <!-- ================================================================
@@ -273,16 +225,16 @@ html, body { margin: 0; background: #000; }
     <div class="eyebrow" style="color:rgba(255,255,255,0.38); margin-bottom:32px;">Chapter 01</div>
     <h1 class="h-section" style="max-width:1100px;">The sessions</h1>
   </div>
-  <div class="slide-no">03 / 15</div>
+  <div class="slide-no">03 / 13</div>
 </section>
 
 <!-- ================================================================
-     4. SESSION 01 · Platform primitives
+     4. MANAGED AGENTS — Four primitives
      ================================================================ -->
 <section class="slide" data-screen-label="04 Managed Agents Platform">
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:196px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 01 — Claude Managed Agents</div>
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Claude Managed Agents</div>
     <h1 class="h-content" style="max-width:1760px;">Every agent is built from four primitives</h1>
   </div>
   <div class="primitives">
@@ -307,11 +259,11 @@ html, body { margin: 0; background: #000; }
       <div class="primitive-body">Durable structured transcripts of every action, tool call, and lifecycle transition</div>
     </div>
   </div>
-  <div class="slide-no">04 / 15</div>
+  <div class="slide-no">04 / 13</div>
 </section>
 
 <!-- ================================================================
-     5. SESSION 01 · Enterprise features — Memory, Vaults, multi-agent
+     5. MEMORY, VAULTS, MULTI-AGENT
      ================================================================ -->
 <section class="slide" data-screen-label="05 Memory Vaults Multi-agent">
   <div class="split-r">
@@ -319,13 +271,13 @@ html, body { margin: 0; background: #000; }
   </div>
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:196px; right:860px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 01 — Now on Claude Platform on AWS</div>
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Claude Platform on AWS</div>
     <h1 class="h-title" style="line-height:1.05; max-width:820px;">Memory, Vaults,<br>and multi-agent</h1>
     <div class="bullets" style="margin-top:48px;">
       <div class="bullet">
         <div class="bullet-n">01</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          <span style="font-weight:500;">Memory + Dreaming</span> — agents persist context across sessions; Claude automatically consolidates learnings into curated memory after each run
+          <span style="font-weight:500;">Memory + Dreaming</span> — agents persist context across sessions; Claude automatically consolidates learnings into curated memory after each run, enabling true long-horizon workflows
         </div>
       </div>
       <div class="bullet">
@@ -337,16 +289,16 @@ html, body { margin: 0; background: #000; }
       <div class="bullet">
         <div class="bullet-n">03</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          <span style="font-weight:500;">Multi-agent orchestration</span> — Claude delegates to subagents with independent context windows for true parallel execution; now available on the Claude Platform on AWS
+          <span style="font-weight:500;">Multi-agent orchestration</span> — Claude delegates to subagents with independent context windows for true parallel execution; all available now on the Claude Platform on AWS
         </div>
       </div>
     </div>
   </div>
-  <div class="slide-no">05 / 15</div>
+  <div class="slide-no">05 / 13</div>
 </section>
 
 <!-- ================================================================
-     6. SESSION 02 · Verification Loops
+     6. VERIFICATION LOOPS
      ================================================================ -->
 <section class="slide" data-screen-label="06 Verification Loops">
   <div class="split-r">
@@ -354,8 +306,8 @@ html, body { margin: 0; background: #000; }
   </div>
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:196px; right:860px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 02 — Three levels of autonomy</div>
-    <h1 class="h-title" style="line-height:1.05; max-width:820px;">Verification,<br>multi-tasking, background</h1>
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Verification loops, multi-tasking, background</div>
+    <h1 class="h-title" style="line-height:1.05; max-width:820px;">Three levels<br>of autonomy</h1>
     <div class="bullets" style="margin-top:48px;">
       <div class="bullet">
         <div class="bullet-n">01</div>
@@ -366,18 +318,18 @@ html, body { margin: 0; background: #000; }
       <div class="bullet">
         <div class="bullet-n">02</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          <span style="font-weight:500;">Multi-tasking</span> — Claude Code desktop and <span style="font-style:italic;">claude agents</span> CLI manage parallel sessions with attention indicators
+          <span style="font-weight:500;">Multi-tasking</span> — Claude Code desktop and <span style="font-style:italic;">claude agents</span> CLI manage parallel sessions with attention indicators and git worktree isolation
         </div>
       </div>
       <div class="bullet">
         <div class="bullet-n">03</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          <span style="font-weight:500;">Background loops</span> — <span style="font-style:italic;">/loop</span> runs a prompt on a recurring schedule; Routines extend this to the cloud, triggered by time or events
+          <span style="font-weight:500;">Background loops</span> — <span style="font-style:italic;">/loop</span> runs a prompt on a recurring schedule; Routines extend this to the cloud, triggered by time or webhook events
         </div>
       </div>
     </div>
   </div>
-  <div class="slide-no">06 / 15</div>
+  <div class="slide-no">06 / 13</div>
 </section>
 
 <!-- ================================================================
@@ -389,78 +341,74 @@ html, body { margin: 0; background: #000; }
   </div>
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:196px; right:940px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 02 — Task Budgets</div>
-    <h1 class="h-title" style="line-height:1.05; max-width:800px;">Turn budgets<br>into quality</h1>
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Task Budgets · Reasoning effort</div>
+    <h1 class="h-title" style="line-height:1.05; max-width:800px;">Tunable quality,<br>tunable cost</h1>
     <div class="bullets" style="margin-top:48px;">
       <div class="bullet">
         <div class="bullet-n">01</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          Set a token budget — let Claude decide how to use it most effectively, rather than hardcoding explicit rules
+          <span style="font-weight:500;">Task Budgets</span> — set a token budget; let Opus 4.8 decide how to allocate it across dynamic workflows. Higher budget triggers deeper exploration, more reasoning steps, richer output
         </div>
       </div>
       <div class="bullet">
         <div class="bullet-n">02</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          Higher budget → more thorough exploration, richer output. Lower budget → faster, leaner result. Same prompt, tunable quality
+          <span style="font-weight:500;">Reasoning effort</span> — dial thinking depth from low to high without rewriting prompts. Same task, same model, different fidelity — prefer this over hardcoded step counts or explicit rules
         </div>
       </div>
       <div class="bullet">
         <div class="bullet-n">03</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          Available now with Claude Opus 4.8 in the managed agents harness — prefer task budgets over hardcoded step counts
+          Both are designed to scale with model capability — as Claude improves, the same budget produces better results without any changes to your workflow
         </div>
       </div>
     </div>
   </div>
-  <div class="slide-no">07 / 15</div>
+  <div class="slide-no">07 / 13</div>
 </section>
 
 <!-- ================================================================
-     8. INTERLEAVED REASONING
+     8. THINKING MODES
      ================================================================ -->
-<section class="slide" data-screen-label="08 Interleaved Reasoning">
+<section class="slide" data-screen-label="08 Thinking Modes">
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:196px; right:80px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 02 — Claude 4 thinking modes</div>
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Claude 4 — Thinking modes</div>
     <h1 class="h-content" style="max-width:1760px;">Three modes of thinking, each for a different depth of work</h1>
   </div>
-  <!-- Three thinking mode cards -->
   <div style="position:absolute; left:80px; right:80px; top:430px; bottom:80px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px;">
-    <!-- Adaptive -->
-    <div style="display:flex; flex-direction:column; gap:0; border:1px solid var(--aws-gray-200);">
+    <div style="display:flex; flex-direction:column; border:1px solid var(--aws-gray-200);">
       <div style="padding:32px 32px 0; display:flex; flex-direction:column; gap:16px;">
         <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Mode 01</div>
         <div style="font-size:38px; font-weight:400; line-height:1.1;">Adaptive thinking</div>
       </div>
       <div style="padding:24px 32px 32px; flex:1; display:flex; flex-direction:column; gap:16px;">
-        <p class="body-sm" style="color:var(--aws-gray-650);">Claude decides whether to think based on task complexity. Simple tasks respond immediately; harder tasks trigger internal reasoning automatically — no explicit mode toggle needed</p>
-        <p class="body-sm" style="color:var(--aws-gray-650);">Best for: general-purpose use where you want Claude to self-regulate thinking cost</p>
+        <p class="body-sm" style="color:var(--aws-gray-650);">Claude decides whether to think based on task complexity — simple tasks respond immediately; harder tasks trigger internal reasoning automatically. No explicit mode toggle needed</p>
+        <p class="body-sm" style="color:var(--aws-gray-600); font-weight:500;">Best for: general-purpose use where you want Claude to self-regulate thinking cost</p>
       </div>
     </div>
-    <!-- Extended -->
-    <div style="display:flex; flex-direction:column; gap:0; border:1px solid var(--aws-gray-200);">
+    <div style="display:flex; flex-direction:column; border:1px solid var(--aws-gray-200);">
       <div style="padding:32px 32px 0; display:flex; flex-direction:column; gap:16px;">
         <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Mode 02</div>
         <div style="font-size:38px; font-weight:400; line-height:1.1;">Extended thinking</div>
       </div>
       <div style="padding:24px 32px 32px; flex:1; display:flex; flex-direction:column; gap:16px;">
-        <p class="body-sm" style="color:var(--aws-gray-650);">Claude thinks deeply before responding — a single, extended reasoning block before the final answer. You control the budget. Higher budget = more thorough exploration of the problem</p>
-        <p class="body-sm" style="color:var(--aws-gray-650);">Best for: complex single-shot tasks — math, coding, analysis — where depth of reasoning matters more than speed</p>
+        <p class="body-sm" style="color:var(--aws-gray-650);">A single deep reasoning block before the final answer — you set the budget, Claude uses it fully. Higher budget = more thorough exploration before committing to an answer</p>
+        <p class="body-sm" style="color:var(--aws-gray-600); font-weight:500;">Best for: complex single-shot tasks — math, coding, analysis — where depth matters more than speed</p>
       </div>
     </div>
-    <!-- Interleaved -->
-    <div style="display:flex; flex-direction:column; gap:0; border:2px solid var(--aws-gray-850); background:var(--aws-gray-50);">
+    <div style="display:flex; flex-direction:column; border:2px solid var(--aws-gray-850); background:var(--aws-gray-50);">
       <div style="padding:32px 32px 0; display:flex; flex-direction:column; gap:16px;">
         <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-550);">Mode 03 — New in Claude 4</div>
         <div style="font-size:38px; font-weight:400; line-height:1.1;">Interleaved thinking</div>
       </div>
       <div style="padding:24px 32px 32px; flex:1; display:flex; flex-direction:column; gap:16px;">
-        <p class="body-sm" style="color:var(--aws-gray-650);">Previously: Claude reasoned once, then called all tools. Now: Claude reasons <em>between</em> each tool call — adapting its plan as results come in rather than committing upfront</p>
-        <p class="body-sm" style="color:var(--aws-gray-650);">Best for: agentic workflows with multiple tool calls — Bedrock Agents, Claude Code, any task where intermediate results should change the next step</p>
+        <p class="body-sm" style="color:var(--aws-gray-650);">Previously: Claude reasoned once, then called all tools. Now: Claude reasons <em>between</em> each tool call — adapting its plan as results come in, not committing to a full plan upfront</p>
+        <p class="body-sm" style="color:var(--aws-gray-600); font-weight:500;">Best for: agentic workflows with multiple tool calls where intermediate results should change the next step</p>
       </div>
     </div>
   </div>
-  <div class="slide-no">08 / 15</div>
+  <div class="slide-no">08 / 13</div>
 </section>
 
 <!-- ================================================================
@@ -485,7 +433,7 @@ html, body { margin: 0; background: #000; }
       <div class="bullet">
         <div class="bullet-n">02</div>
         <div class="body-md" style="color:var(--aws-gray-650);">
-          Claude Code in production — teams using Claude Code as an always-on coding pair, not just a chat assistant
+          Claude Code in production — teams running Claude Code as an always-on coding pair with verification loops and background routines
         </div>
       </div>
       <div class="bullet">
@@ -496,11 +444,11 @@ html, body { margin: 0; background: #000; }
       </div>
     </div>
   </div>
-  <div class="slide-no">09 / 15</div>
+  <div class="slide-no">09 / 13</div>
 </section>
 
 <!-- ================================================================
-     10. KAZUYA IWAMI — AWS REPRESENTATION
+     10. KAZUYA IWAMI
      ================================================================ -->
 <section class="slide" data-screen-label="10 AWS at the event">
   <div class="split-r">
@@ -510,7 +458,7 @@ html, body { margin: 0; background: #000; }
   <div style="position:absolute; left:80px; top:196px; right:860px;">
     <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">AWS represented</div>
     <h1 class="h-title" style="line-height:1.05; max-width:820px;">Kazuya Iwami<br>presenting for AWS</h1>
-    <p class="body-md" style="color:var(--aws-gray-650); margin-top:24px; max-width:760px; line-height:1.5;">AWS SA Kazuya Iwami presented a practical 2×2 adoption framework for Claude Code — covering the four capabilities enterprise teams need to progress from basic usage to long-running autonomous workflows</p>
+    <p class="body-md" style="color:var(--aws-gray-650); margin-top:24px; max-width:760px; line-height:1.5;">AWS SA Kazuya Iwami presented a practical 2×2 adoption framework for Claude Code — four capabilities enterprise teams need to progress from basic usage to long-running autonomous workflows</p>
     <div style="margin-top:44px; display:grid; grid-template-columns:1fr 1fr; gap:20px 40px;">
       <div style="display:flex; flex-direction:column; gap:8px;">
         <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Context control</div>
@@ -530,7 +478,7 @@ html, body { margin: 0; background: #000; }
       </div>
     </div>
   </div>
-  <div class="slide-no">10 / 15</div>
+  <div class="slide-no">10 / 13</div>
 </section>
 
 <!-- ================================================================
@@ -547,153 +495,48 @@ html, body { margin: 0; background: #000; }
     </p>
   </div>
   <img class="logo logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
-  <div class="slide-no" style="color:rgba(255,255,255,0.3);">11 / 15</div>
+  <div class="slide-no" style="color:rgba(255,255,255,0.3);">11 / 13</div>
 </section>
 
 <!-- ================================================================
-     12. KEY THEMES
+     12. WATCH THE RECORDING
      ================================================================ -->
-<section class="slide" data-screen-label="12 Key themes">
+<section class="slide" data-screen-label="12 Watch the recording">
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:196px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">What connected the sessions</div>
-    <h1 class="h-title">Key themes</h1>
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Available online</div>
+    <h1 class="h-title">Watch the recording</h1>
   </div>
-  <div class="grid-2x2">
-    <div class="grid-card">
-      <div class="grid-rule"></div>
-      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Managed infrastructure is here</h2>
-      <p class="body-md" style="color:var(--aws-gray-650); max-width:680px;">
-        Claude Managed Agents handles hosting, scaling, sessions, Memory, and Vaults — available on the Claude Platform on AWS. Developers focus on agent design, not DevOps
-      </p>
-    </div>
-    <div class="grid-card">
-      <div class="grid-rule"></div>
-      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Cost and quality are now tunable</h2>
-      <p class="body-md" style="color:var(--aws-gray-650); max-width:680px;">
-        Task Budgets let teams dial quality vs. cost without rewriting prompts — set a token budget, let Opus 4.8 decide how to use it. Same workflow, different fidelity
-      </p>
-    </div>
-    <div class="grid-card">
-      <div class="grid-rule"></div>
-      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Trust is built through verification</h2>
-      <p class="body-md" style="color:var(--aws-gray-650); max-width:680px;">
-        Verification loops, interleaved reasoning, and structured event output all serve one goal: earning enough confidence in agent behavior to remove the human from the loop
-      </p>
-    </div>
-    <div class="grid-card">
-      <div class="grid-rule"></div>
-      <h2 style="font-size:36px; font-weight:400; line-height:1.15;">Japan is already building</h2>
-      <p class="body-md" style="color:var(--aws-gray-650); max-width:680px;">
-        Packed room, deep technical questions, AWS SA on stage. Japanese developers — Rakuten included — are past evaluation and scheduling production agent runs
-      </p>
+  <!-- Single large video card -->
+  <div style="position:absolute; left:80px; right:80px; top:460px; bottom:96px; display:grid; grid-template-columns:1.4fr 1fr; gap:56px; align-items:center;">
+    <a href="https://www.youtube.com/watch?v=GiqyYQdYoIY" target="_blank" style="display:block; text-decoration:none; position:relative;">
+      <img src="https://img.youtube.com/vi/GiqyYQdYoIY/maxresdefault.jpg"
+           alt="Code with Claude Tokyo recording"
+           style="width:100%; aspect-ratio:16/9; object-fit:cover; display:block;">
+      <!-- Play button overlay -->
+      <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.2);">
+        <div style="width:96px; height:96px; background:rgba(255,255,255,0.92); border-radius:50%; display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="var(--aws-gray-850)" aria-hidden="true" style="margin-left:5px;"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+      </div>
+    </a>
+    <div style="display:flex; flex-direction:column; gap:24px;">
+      <div style="font-family:var(--aws-font-mono); font-size:18px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Full session recording</div>
+      <div style="font-size:44px; font-weight:400; line-height:1.1; color:var(--aws-gray-850);">Code w/ Claude Tokyo</div>
+      <p class="body-md" style="color:var(--aws-gray-650);">All sessions from the Anthropic Tokyo developer event — Claude Managed Agents, Verification Loops, Task Budgets, and interleaved thinking</p>
+      <a href="https://www.youtube.com/watch?v=GiqyYQdYoIY" target="_blank"
+         style="font-family:var(--aws-font-mono); font-size:18px; color:var(--aws-blue-600); text-decoration:none; word-break:break-all;">
+        youtube.com/watch?v=GiqyYQdYoIY
+      </a>
     </div>
   </div>
-  <div class="slide-no">12 / 15</div>
+  <div class="slide-no">12 / 13</div>
 </section>
 
 <!-- ================================================================
-     13. WHAT THIS MEANS FOR AWS
+     13. CLOSING
      ================================================================ -->
-<section class="slide" data-screen-label="13 What this means for AWS">
-  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
-  <div style="position:absolute; left:80px; top:196px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Implications for our work</div>
-    <h1 class="h-title">What this means for AWS</h1>
-  </div>
-  <div class="two-col">
-    <div class="bullets">
-      <div class="bullet">
-        <div class="bullet-n">01</div>
-        <div class="body-md">
-          <span style="font-weight:500;">Claude Platform on AWS is the story</span> — Memory, Vaults, and multi-agent are all available now. Lead with this when customers ask about agentic architecture — it's not just Claude API, it's a managed runtime on AWS infrastructure
-        </div>
-      </div>
-      <div class="bullet">
-        <div class="bullet-n">02</div>
-        <div class="body-md">
-          <span style="font-weight:500;">Vaults unblocks enterprise deals</span> — customers held back by governance and credential security now have a clear answer. Claude never sees the real secret. Bring this into security-sensitive architecture reviews
-        </div>
-      </div>
-    </div>
-    <div class="bullets">
-      <div class="bullet">
-        <div class="bullet-n">03</div>
-        <div class="body-md">
-          <span style="font-weight:500;">Task Budgets as a cost conversation</span> — when customers ask "how do we control spend?", Task Budgets is the answer. Set the budget, let the model optimize. Relevant for any Bedrock Agents or Claude Code workflow using Opus
-        </div>
-      </div>
-      <div class="bullet">
-        <div class="bullet-n">04</div>
-        <div class="body-md">
-          <span style="font-weight:500;">Kazuya's 2×2 as a workshop template</span> — context control, output quality, workflow packaging, autonomous operation. Ready-to-run framework for a Claude Code adoption session with Japanese enterprise customers
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="slide-no">13 / 15</div>
-</section>
-
-<!-- ================================================================
-     14. WATCH THE RECORDINGS
-     ================================================================ -->
-<section class="slide" data-screen-label="14 Watch the recordings">
-  <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
-  <div style="position:absolute; left:80px; top:196px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">All sessions available online</div>
-    <h1 class="h-title">Watch the recordings</h1>
-  </div>
-  <div class="yt-cards">
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <div class="yt-thumb-bg" style="background:var(--aws-gray-850);">
-          <div class="yt-play">
-            <svg viewBox="0 0 24 24" fill="white" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
-        </div>
-      </div>
-      <div class="yt-info">
-        <div class="yt-tag">Session 01</div>
-        <div class="yt-title">Claude Managed Agents Platform</div>
-        <a class="yt-url" href="https://www.youtube.com/watch?v=GiqyYQdYoIY" target="_blank">youtube.com/watch?v=GiqyYQdYoIY</a>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <div class="yt-thumb-bg" style="background:var(--aws-gray-850);">
-          <div class="yt-play">
-            <svg viewBox="0 0 24 24" fill="white" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
-        </div>
-      </div>
-      <div class="yt-info">
-        <div class="yt-tag">Session 02</div>
-        <div class="yt-title">Verification Loops &amp; Multi-tasking</div>
-        <a class="yt-url" href="https://youtube.com" target="_blank">youtube.com/<!-- TODO: add link --></a>
-      </div>
-    </div>
-    <div class="yt-card">
-      <div class="yt-thumb">
-        <div class="yt-thumb-bg" style="background:var(--aws-gray-850);">
-          <div class="yt-play">
-            <svg viewBox="0 0 24 24" fill="white" aria-hidden="true"><polygon points="5,3 19,12 5,21"/></svg>
-          </div>
-        </div>
-      </div>
-      <div class="yt-info">
-        <div class="yt-tag">Session 03</div>
-        <div class="yt-title">Claude 4: Task Budgets &amp; Interleaved Reasoning</div>
-        <a class="yt-url" href="https://youtube.com" target="_blank">youtube.com/<!-- TODO: add link --></a>
-      </div>
-    </div>
-  </div>
-  <div class="slide-no">14 / 15</div>
-</section>
-
-<!-- ================================================================
-     15. CLOSING
-     ================================================================ -->
-<section class="slide" data-screen-label="15 Closing">
+<section class="slide" data-screen-label="13 Closing">
   <div style="position:absolute; inset:0; background:var(--aws-amber-400);"></div>
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
   <div style="position:absolute; left:80px; top:50%; transform:translateY(-50%);">
@@ -702,7 +545,7 @@ html, body { margin: 0; background: #000; }
       Let's bring these patterns<br>to our customers
     </h1>
   </div>
-  <div class="slide-no" style="color:var(--aws-gray-650);">15 / 15</div>
+  <div class="slide-no" style="color:var(--aws-gray-650);">13 / 13</div>
 </section>
 
 </deck-stage>
