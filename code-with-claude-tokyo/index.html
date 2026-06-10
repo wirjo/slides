@@ -419,31 +419,44 @@ html, body { margin: 0; background: #000; }
      8. INTERLEAVED REASONING
      ================================================================ -->
 <section class="slide" data-screen-label="08 Interleaved Reasoning">
-  <div class="split-r" style="width:860px;">
-    <img src="assets/IMG_3710.jpg" alt="Interleaved reasoning diagram" style="object-position:center 20%;">
-  </div>
   <img class="logo logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
-  <div style="position:absolute; left:80px; top:196px; right:940px;">
-    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 02 — Claude 4 / Interleaved Thinking</div>
-    <h1 class="h-title" style="line-height:1.05; max-width:800px;">Reasoning<br>between tool calls</h1>
-    <div class="bullets" style="margin-top:48px;">
-      <div class="bullet">
-        <div class="bullet-n">01</div>
-        <div class="body-md" style="color:var(--aws-gray-650);">
-          Previously: Claude reasoned once, then called all tools. Now: reasoning interleaves with each tool call — Claude adapts its plan as results come in
-        </div>
+  <div style="position:absolute; left:80px; top:196px; right:80px;">
+    <div class="eyebrow" style="color:var(--aws-gray-550); margin-bottom:22px;">Session 02 — Claude 4 thinking modes</div>
+    <h1 class="h-content" style="max-width:1760px;">Three modes of thinking, each for a different depth of work</h1>
+  </div>
+  <!-- Three thinking mode cards -->
+  <div style="position:absolute; left:80px; right:80px; top:430px; bottom:80px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px;">
+    <!-- Adaptive -->
+    <div style="display:flex; flex-direction:column; gap:0; border:1px solid var(--aws-gray-200);">
+      <div style="padding:32px 32px 0; display:flex; flex-direction:column; gap:16px;">
+        <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Mode 01</div>
+        <div style="font-size:38px; font-weight:400; line-height:1.1;">Adaptive thinking</div>
       </div>
-      <div class="bullet">
-        <div class="bullet-n">02</div>
-        <div class="body-md" style="color:var(--aws-gray-650);">
-          More adaptive agentic behavior — each tool result shapes the next reasoning step, producing better decisions in multi-step tasks
-        </div>
+      <div style="padding:24px 32px 32px; flex:1; display:flex; flex-direction:column; gap:16px;">
+        <p class="body-sm" style="color:var(--aws-gray-650);">Claude decides whether to think based on task complexity. Simple tasks respond immediately; harder tasks trigger internal reasoning automatically — no explicit mode toggle needed</p>
+        <p class="body-sm" style="color:var(--aws-gray-650);">Best for: general-purpose use where you want Claude to self-regulate thinking cost</p>
       </div>
-      <div class="bullet">
-        <div class="bullet-n">03</div>
-        <div class="body-md" style="color:var(--aws-gray-650);">
-          Directly relevant for Bedrock Agents and Claude Code workflows that chain multiple tools — improved reasoning quality without prompt changes
-        </div>
+    </div>
+    <!-- Extended -->
+    <div style="display:flex; flex-direction:column; gap:0; border:1px solid var(--aws-gray-200);">
+      <div style="padding:32px 32px 0; display:flex; flex-direction:column; gap:16px;">
+        <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-500);">Mode 02</div>
+        <div style="font-size:38px; font-weight:400; line-height:1.1;">Extended thinking</div>
+      </div>
+      <div style="padding:24px 32px 32px; flex:1; display:flex; flex-direction:column; gap:16px;">
+        <p class="body-sm" style="color:var(--aws-gray-650);">Claude thinks deeply before responding — a single, extended reasoning block before the final answer. You control the budget. Higher budget = more thorough exploration of the problem</p>
+        <p class="body-sm" style="color:var(--aws-gray-650);">Best for: complex single-shot tasks — math, coding, analysis — where depth of reasoning matters more than speed</p>
+      </div>
+    </div>
+    <!-- Interleaved -->
+    <div style="display:flex; flex-direction:column; gap:0; border:2px solid var(--aws-gray-850); background:var(--aws-gray-50);">
+      <div style="padding:32px 32px 0; display:flex; flex-direction:column; gap:16px;">
+        <div style="font-family:var(--aws-font-mono); font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color:var(--aws-gray-550);">Mode 03 — New in Claude 4</div>
+        <div style="font-size:38px; font-weight:400; line-height:1.1;">Interleaved thinking</div>
+      </div>
+      <div style="padding:24px 32px 32px; flex:1; display:flex; flex-direction:column; gap:16px;">
+        <p class="body-sm" style="color:var(--aws-gray-650);">Previously: Claude reasoned once, then called all tools. Now: Claude reasons <em>between</em> each tool call — adapting its plan as results come in rather than committing upfront</p>
+        <p class="body-sm" style="color:var(--aws-gray-650);">Best for: agentic workflows with multiple tool calls — Bedrock Agents, Claude Code, any task where intermediate results should change the next step</p>
       </div>
     </div>
   </div>
