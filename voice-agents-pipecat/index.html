@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Voice agents people actually want to talk to</title>
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<script src="assets/deck-stage.js"></script>
+<style>
+  html, body { margin: 0; background: #000; }
+  deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
+
+  .slide {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    font-family: var(--aws-font-display);
+    background: var(--aws-white); color: var(--aws-gray-850);
+  }
+  .slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+  .slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+
+  .logo-tl { position: absolute; top: 73px; left: 80px; height: 76px; width: auto; }
+  .logo-bl { position: absolute; bottom: 73px; left: 80px; height: 76px; width: auto; }
+  .logo-tr { position: absolute; top: 73px; right: 80px; height: 76px; width: auto; }
+  .logo-br { position: absolute; bottom: 73px; right: 80px; height: 76px; width: auto; }
+
+  .eyebrow {
+    font-family: var(--aws-font-mono); font-size: 22px; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .caption {
+    font-family: var(--aws-font-mono); font-size: 18px;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .h-cover   { font-size: 144px; line-height: 1.0;  font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-section { font-size: 120px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-title   { font-size: 88px;  line-height: 1.1;  font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-content { font-size: 64px;  line-height: 1.1;  font-weight: 400; text-wrap: pretty; }
+  .h-stat    { font-size: 320px; line-height: 0.9;  font-weight: 400; letter-spacing: -0.02em; margin-left: -16px; }
+  .body-lg   { font-size: 28px;  line-height: 1.35; font-weight: 400; }
+  .body-md   { font-size: 22px;  line-height: 1.4;  font-weight: 400; }
+
+  .slide-no {
+    position: absolute; right: 80px; bottom: 73px;
+    font-family: var(--aws-font-mono); font-size: 16px; letter-spacing: 0.08em;
+    color: var(--aws-gray-500);
+  }
+  .dark .slide-no { color: var(--aws-gray-400); }
+
+  /* Cover */
+  .cover-bg {
+    position: absolute; inset: 0;
+    background: url(assets/aws-gradient-light-1d.png) center / cover no-repeat;
+  }
+
+  /* Section divider */
+  .pattern-strip {
+    position: absolute; left: 0; top: 0; bottom: 0; width: 480px;
+    background: url(assets/aws-pattern-modular-1a.png) center / cover;
+  }
+
+  /* Agenda */
+  .agenda-list { position: absolute; left: 80px; right: 80px; top: 420px; display: grid; grid-template-columns: 1fr 1fr; row-gap: 36px; column-gap: 96px; }
+  .agenda-row  { display: grid; grid-template-columns: 80px 1fr; align-items: baseline; }
+  .agenda-no   { font-family: var(--aws-font-mono); font-size: 20px; color: var(--aws-gray-550); }
+  .agenda-title { font-size: 36px; line-height: 1.15; }
+
+  /* Numbered bullets */
+  .bullets { display: flex; flex-direction: column; gap: 36px; }
+  .bullet  { display: grid; grid-template-columns: 60px 1fr; gap: 18px; align-items: start; }
+  .num     { font-family: var(--aws-font-mono); font-size: 20px; line-height: 1; padding-top: 6px; color: var(--aws-gray-550); }
+
+  /* Rule accent */
+  .rule { width: 56px; height: 4px; background: var(--aws-gray-850); }
+
+  /* Pipeline node */
+  .pipe-node { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .pipe-box  {
+    border: 2px solid var(--aws-gray-300); border-radius: 12px;
+    padding: 22px 20px; text-align: center; width: 100%;
+  }
+  .pipe-name { font-size: 24px; font-weight: 500; }
+  .pipe-sub  { font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 6px; }
+  .pipe-arrow { font-size: 28px; color: var(--aws-gray-400); padding: 0 10px; flex-shrink: 0; display: flex; align-items: center; }
+
+  /* Code blocks */
+  pre.code-block {
+    font-family: var(--aws-font-mono);
+    font-size: 20px; line-height: 1.55;
+    background: #0F141A; border-radius: 12px;
+    padding: 28px 32px; color: #e6edf3;
+    margin: 0; overflow: hidden; white-space: pre;
+  }
+  pre.code-block .kw { color: #ff7b72; }
+  pre.code-block .fn { color: #d2a8ff; }
+  pre.code-block .st { color: #a5d6ff; }
+  pre.code-block .cm { color: #8b949e; font-style: italic; }
+  pre.code-block .pm { color: #ffa657; }
+</style>
+<script type="application/json" id="speaker-notes">
+[
+  "Welcome. 30 minutes. The goal is to leave you with the mental model and engineering patterns to build voice agents that people actually keep using — not impressive demos that fall over in production.",
+  "Six sections. We'll move through the problem space quickly and spend most of our time on the three specific engineering challenges and the audio layer that sits under all of them.",
+  "This is the number that changes everything. Chat agents get seconds — users are comfortable waiting. Voice agents get 200 milliseconds from the end of a user sentence to the first audio out. Miss it and the user thinks the call dropped. They don't retry. They hang up.",
+  "Three specific failure modes. Most voice demos get at least one wrong. We'll go through each one — the failure mode, why it's hard, and how to build the right solution.",
+  "Interruption. The user starts talking while your agent is mid-sentence. Three possible responses: stop immediately, fade, or finish. The right answer depends on whether they corrected you, asked a clarifying question, or just said 'yeah'. Most implementations just stop — which feels like talking to a robot.",
+  "Silence detection. After the user stops speaking, how long do you wait? 300ms cuts them off. 1,500ms is dead air. Adaptive VAD uses prosody cues, syntax completion signals, and the user's own speech rhythm. Get this right and the conversation feels natural.",
+  "The latency budget. STT is about 40ms. LLM first token is about 100ms with a fast model. TTS first audio chunk is 60ms. That adds to 200ms — with zero margin. Sequential calls will always be too slow. Everything must stream in parallel.",
+  "Here's the thing nobody warns you about. The AI part — choosing a model, writing a prompt — is actually the easy part. What breaks in production is below the AI: the audio transport layer.",
+  "Three specific audio engineering problems. Echo cancellation: your agent's audio feeds back into the mic and the STT starts transcribing the agent's own voice. Backpressure: when the LLM is slower than real-time, audio chunks queue and you get garbled output. Chunking: STT models expect specific frame sizes over WebSocket — get it wrong and accuracy tanks.",
+  "The stack that handles all of this. Pipecat is the open-source real-time AI framework — it manages the pipeline, flow control, and chunking. Daily is WebRTC — handles transport and echo cancellation. Deepgram for streaming STT and TTS. Any LLM behind it. Swap any component without rewriting the rest.",
+  "This is the actual Pipecat code. Five lines to wire the pipeline — transport input, STT, LLM, TTS, transport output. The SileroVADAnalyzer is passed into DailyParams. The key things to notice: no glue code between stages, no queue management, and the LLM receives streaming partial transcripts, not a final transcript after silence.",
+  "How to tune Silero VAD. Three parameters: confidence threshold, start_secs, and stop_secs. stop_secs is your primary lever — 0.6 seconds is a good starting point. The key advantage over energy-based VAD is that Silero is a neural model running locally — it won't fire on keyboard noise or background TV, and it adds zero latency.",
+  "VAD tells you when audio stops. Smart turn models tell you when the thought is complete. Turn-GPT (2022) is the academic foundation. Daily shipped a production version in 2024 called Smart Turn — and Pipecat exposes it as SmartTurnAnalyzer, a drop-in replacement for SileroVADAnalyzer. Same interface, much better turn detection for conversational agents.",
+  "Three things to take away: pipeline everything in parallel, let Daily handle audio transport, let Pipecat handle the orchestration. The engineering you write should be the interruption logic and the silence model — not the plumbing."
+]
+</script>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P') {
+    const deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    if (!document.fullscreenElement) {
+      deck.setAttribute('no-rail', '');
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+      deck.removeAttribute('no-rail');
+    }
+    e.preventDefault();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.removeAttribute('no-rail');
+  }
+});
+</script>
+</head>
+<body>
+
+<deck-stage>
+
+  <!-- ============================================================
+       01. COVER
+       ============================================================ -->
+  <section class="slide" data-screen-label="01 Cover">
+    <div class="cover-bg"></div>
+    <div style="position: absolute; left: 80px; top: 73px;">
+      <div class="eyebrow" style="color: var(--aws-gray-850);">AWS · 2026</div>
+    </div>
+    <div style="position: absolute; left: 80px; top: 220px; max-width: 1400px;">
+      <h1 class="h-cover">Voice agents people<br>actually want to talk to</h1>
+    </div>
+    <div style="position: absolute; left: 80px; bottom: 220px; max-width: 960px;">
+      <p class="body-lg" style="color: var(--aws-gray-700);">
+        The gap between impressive voice demo and agent people keep coming back to
+        is entirely in the engineering: latency budgets, barge-in handling,
+        turn-taking, and the silence detection problem nobody warns you about.
+      </p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       02. AGENDA
+       ============================================================ -->
+  <section class="slide" data-screen-label="02 Agenda">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 24px;">30 minutes</div>
+      <h1 class="h-title">What we'll cover</h1>
+    </div>
+    <div class="agenda-list">
+      <div class="agenda-row"><div class="agenda-no">01</div><div class="agenda-title">The 200ms problem</div></div>
+      <div class="agenda-row"><div class="agenda-no">02</div><div class="agenda-title">Interruption and barge-in</div></div>
+      <div class="agenda-row"><div class="agenda-no">03</div><div class="agenda-title">Silence detection</div></div>
+      <div class="agenda-row"><div class="agenda-no">04</div><div class="agenda-title">Latency budget and streaming pipelines</div></div>
+      <div class="agenda-row"><div class="agenda-no">05</div><div class="agenda-title">Audio engineering</div></div>
+      <div class="agenda-row"><div class="agenda-no">06</div><div class="agenda-title">The Pipecat stack</div></div>
+      <div class="agenda-row"><div class="agenda-no">07</div><div class="agenda-title">Pipeline code and VAD implementation</div></div>
+      <div class="agenda-row"><div class="agenda-no">08</div><div class="agenda-title">Smart turn detection and the research</div></div>
+    </div>
+    <div class="slide-no">02 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       03. STAT — 200ms
+       ============================================================ -->
+  <section class="slide" data-screen-label="03 200ms" style="background: var(--aws-cyan-950);">
+    <img class="logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 160px;">
+      <div class="eyebrow" style="color: var(--aws-cyan-300); margin-bottom: 28px;">Your total time budget</div>
+      <h1 class="h-stat" style="color: var(--aws-white);">200ms</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 180px; max-width: 1300px;">
+      <p style="font-size: 38px; line-height: 1.25; font-weight: 400; color: var(--aws-cyan-100);">
+        From the user finishing a sentence to your agent starting to respond.
+        Chat agents get seconds. Voice agents don't get a second chance.
+        If you miss the window, the user thinks the call dropped.
+      </p>
+    </div>
+    <div class="slide-no" style="color: var(--aws-cyan-600);">03 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       04. THREE PROBLEMS
+       ============================================================ -->
+  <section class="slide" data-screen-label="04 Three problems">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; max-width: 1500px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">Where most implementations break</div>
+      <h1 class="h-content">Three things most voice agents get wrong</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 480px; bottom: 180px;">
+      <div class="bullets">
+        <div class="bullet">
+          <div class="num">01</div>
+          <div>
+            <p class="body-lg" style="font-weight: 500;">Interruption</p>
+            <p class="body-md" style="color: var(--aws-gray-650); margin-top: 8px;">User starts talking mid-response. Do you stop, fade, or finish? The answer depends on context, and most agents don't know the difference</p>
+          </div>
+        </div>
+        <div class="bullet">
+          <div class="num">02</div>
+          <div>
+            <p class="body-lg" style="font-weight: 500;">Silence</p>
+            <p class="body-md" style="color: var(--aws-gray-650); margin-top: 8px;">Is the user done talking or just thinking? Get this wrong and you either interrupt them or leave dead air</p>
+          </div>
+        </div>
+        <div class="bullet">
+          <div class="num">03</div>
+          <div>
+            <p class="body-lg" style="font-weight: 500;">Latency</p>
+            <p class="body-md" style="color: var(--aws-gray-650); margin-top: 8px;">200ms total for STT to LLM to TTS. Sequential calls can't hit it. You need a streaming pipeline where all three stages overlap</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">04 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       05. INTERRUPTION
+       ============================================================ -->
+  <section class="slide" data-screen-label="05 Interruption">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">Problem 01</div>
+      <h1 class="h-content">Interruption</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 480px; bottom: 180px; display: grid; grid-template-columns: 1fr 1fr; gap: 96px;">
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div class="rule"></div>
+        <h2 style="font-size: 34px; font-weight: 500;">The three responses</h2>
+        <div class="bullets" style="gap: 28px;">
+          <div class="bullet">
+            <div class="num">A</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Stop</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">Cut audio immediately. Maximally responsive, but jarring on false positives</p>
+            </div>
+          </div>
+          <div class="bullet">
+            <div class="num">B</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Fade</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">Taper out over 200ms. Natural-feeling, hides the latency</p>
+            </div>
+          </div>
+          <div class="bullet">
+            <div class="num">C</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Finish</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">Complete the sentence before yielding. Right for ambient noise and back-channel cues</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div class="rule"></div>
+        <h2 style="font-size: 34px; font-weight: 500;">The decision logic</h2>
+        <div class="bullets" style="gap: 28px;">
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">User corrected you → Stop immediately, discard pending audio</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">User affirmed ("yeah", "right") → Fade, continue response</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">User asked a new question → Stop, re-prompt LLM</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">Ambient noise or short utterance → Finish, don't interrupt yourself</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">05 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       06. SILENCE DETECTION
+       ============================================================ -->
+  <section class="slide" data-screen-label="06 Silence detection">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">Problem 02</div>
+      <h1 class="h-content">Silence detection</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 480px; bottom: 180px; display: grid; grid-template-columns: 1fr 1fr; gap: 96px;">
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div class="rule"></div>
+        <p class="body-lg">Three regimes, each wrong in a different way</p>
+        <div class="bullets" style="gap: 28px;">
+          <div class="bullet">
+            <div class="num">300ms</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Too eager</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">Cuts the user off mid-thought. Feels robotic and doesn't respect natural pause rhythms</p>
+            </div>
+          </div>
+          <div class="bullet">
+            <div class="num">1.5s</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Dead air</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">The user assumes the agent is broken or the call dropped. They'll speak again to fill the silence</p>
+            </div>
+          </div>
+          <div class="bullet">
+            <div class="num">VAD</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Adaptive</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">Models speech rhythm and prosody to infer completion. The right answer</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div class="rule"></div>
+        <p class="body-lg">What adaptive VAD watches</p>
+        <div class="bullets" style="gap: 24px;">
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">Falling intonation at the end of a phrase</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">Sentence-completion syntax ("...so that's it", "...you know?")</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">Pause length relative to the user's own cadence in this call</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md">Backoff: lengthen the timeout after a complex question</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">06 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       07. LATENCY BUDGET
+       ============================================================ -->
+  <section class="slide" data-screen-label="07 Latency budget">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">Problem 03</div>
+      <h1 class="h-content">The 200ms budget</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px;">
+      <!-- Latency bar -->
+      <div style="display: flex; height: 96px; border-radius: 12px; overflow: hidden; width: 100%;">
+        <div style="flex: 40; background: var(--aws-teal-700); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 30px; font-weight: 700; color: var(--aws-white);">~40ms</span>
+          <span style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-teal-200);">STT</span>
+        </div>
+        <div style="flex: 100; background: var(--aws-violet-800); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 30px; font-weight: 700; color: var(--aws-white);">~100ms</span>
+          <span style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-violet-200);">LLM first token</span>
+        </div>
+        <div style="flex: 60; background: var(--aws-cyan-700); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 30px; font-weight: 700; color: var(--aws-white);">~60ms</span>
+          <span style="font-family: var(--aws-font-mono); font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-cyan-200);">TTS first chunk</span>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: flex-end; margin-top: 14px;">
+        <span style="font-family: var(--aws-font-mono); font-size: 22px; color: var(--aws-gray-550); text-transform: uppercase; letter-spacing: 0.08em;">= 200ms total</span>
+      </div>
+      <!-- Two col below the bar -->
+      <div style="margin-top: 48px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px;">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="rule" style="background: var(--aws-red-600);"></div>
+          <p class="body-lg" style="color: var(--aws-red-700);">Sequential calls can't hit this</p>
+          <p class="body-md" style="color: var(--aws-gray-650);">Wait for STT to finish, then call the LLM, then wait for TTS to start — and you're already at 400ms before any audio plays. Users notice.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="rule" style="background: var(--aws-teal-600);"></div>
+          <p class="body-lg" style="color: var(--aws-teal-700);">Streaming pipeline is the answer</p>
+          <p class="body-md" style="color: var(--aws-gray-650);">STT streams partial transcripts to the LLM. LLM streams first tokens to TTS. TTS synthesizes before the LLM finishes. Parallel, overlapping, pipelined.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">07 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       08. SECTION DIVIDER — audio engineering
+       ============================================================ -->
+  <section class="slide dark" data-screen-label="08 Section divider">
+    <div class="pattern-strip" aria-hidden="true"></div>
+    <img class="logo-tr" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 560px; top: 400px; right: 80px;">
+      <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 32px;">The thing nobody tells you</div>
+      <h1 class="h-section" style="max-width: 1100px;">The hardest problem<br>isn't the AI</h1>
+    </div>
+    <div class="slide-no">08 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       09. AUDIO ENGINEERING
+       ============================================================ -->
+  <section class="slide" data-screen-label="09 Audio engineering">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">The real hard problems</div>
+      <h1 class="h-content">Audio engineering</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 480px; bottom: 180px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 64px;">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="rule"></div>
+        <h2 style="font-size: 34px; font-weight: 500; line-height: 1.1;">Echo cancellation</h2>
+        <p class="body-md" style="color: var(--aws-gray-650);">Your agent's audio feeds back into the mic. Without AEC, the STT hears the agent's own voice and generates spurious transcripts that trigger false interruptions. Daily's WebRTC handles this — don't try to roll your own.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="rule"></div>
+        <h2 style="font-size: 34px; font-weight: 500; line-height: 1.1;">Backpressure</h2>
+        <p class="body-md" style="color: var(--aws-gray-650);">When the LLM is slower than real-time, audio chunks queue. If you don't manage flow control, you get garbled output, dropped frames, or a buffer that grows unbounded. Pipecat's pipeline handles this for you.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        <div class="rule"></div>
+        <h2 style="font-size: 34px; font-weight: 500; line-height: 1.1;">Audio chunking</h2>
+        <p class="body-md" style="color: var(--aws-gray-650);">You can't send one audio blob. STT models expect a specific frame size over WebSocket — typically 20ms chunks. Get the frame size or chunking cadence wrong and transcription accuracy drops significantly.</p>
+      </div>
+    </div>
+    <div class="slide-no">09 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       10. THE STACK — pipeline
+       ============================================================ -->
+  <section class="slide" data-screen-label="10 The stack">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">The stack</div>
+      <h1 class="h-content">Pipecat + Daily + Deepgram + LLM</h1>
+    </div>
+    <!-- Pipeline diagram -->
+    <div style="position: absolute; left: 80px; right: 80px; top: 530px;">
+      <div style="display: flex; align-items: stretch; gap: 0;">
+        <!-- User in -->
+        <div class="pipe-node">
+          <div class="pipe-box">
+            <div class="pipe-name">User</div>
+            <div class="pipe-sub" style="color: var(--aws-gray-550);">Microphone</div>
+          </div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <!-- Daily in -->
+        <div class="pipe-node">
+          <div class="pipe-box" style="border-color: var(--aws-teal-400); background: var(--aws-teal-50);">
+            <div class="pipe-name">Daily</div>
+            <div class="pipe-sub" style="color: var(--aws-teal-700);">WebRTC · AEC</div>
+          </div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <!-- Deepgram STT -->
+        <div class="pipe-node">
+          <div class="pipe-box" style="border-color: var(--aws-cyan-400); background: var(--aws-cyan-50);">
+            <div class="pipe-name">Deepgram</div>
+            <div class="pipe-sub" style="color: var(--aws-cyan-700);">STT · Streaming</div>
+          </div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <!-- LLM -->
+        <div class="pipe-node">
+          <div class="pipe-box" style="border-color: var(--aws-violet-400); background: var(--aws-violet-50);">
+            <div class="pipe-name">LLM</div>
+            <div class="pipe-sub" style="color: var(--aws-violet-700);">Claude · Bedrock</div>
+          </div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <!-- Deepgram TTS -->
+        <div class="pipe-node">
+          <div class="pipe-box" style="border-color: var(--aws-cyan-400); background: var(--aws-cyan-50);">
+            <div class="pipe-name">Deepgram</div>
+            <div class="pipe-sub" style="color: var(--aws-cyan-700);">TTS · Streaming</div>
+          </div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <!-- Daily out -->
+        <div class="pipe-node">
+          <div class="pipe-box" style="border-color: var(--aws-teal-400); background: var(--aws-teal-50);">
+            <div class="pipe-name">Daily</div>
+            <div class="pipe-sub" style="color: var(--aws-teal-700);">WebRTC · Playback</div>
+          </div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <!-- User out -->
+        <div class="pipe-node">
+          <div class="pipe-box">
+            <div class="pipe-name">User</div>
+            <div class="pipe-sub" style="color: var(--aws-gray-550);">Speaker</div>
+          </div>
+        </div>
+      </div>
+      <!-- Pipecat label -->
+      <div style="margin-top: 36px; display: flex; justify-content: center;">
+        <div style="display: inline-flex; align-items: center; gap: 20px; border: 2px solid var(--aws-gray-300); border-radius: 8px; padding: 14px 40px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-gray-550);">Orchestrated by</span>
+          <span style="font-size: 26px; font-weight: 500;">Pipecat</span>
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-gray-550);">open-source real-time AI framework</span>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">10 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       11. PIPECAT CODE
+       ============================================================ -->
+  <!-- ============================================================
+       11. CASCADED ARCHITECTURE
+       ============================================================ -->
+  <section class="slide dark" data-screen-label="11 Cascaded architecture">
+    <img class="logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 22px;">Architecture pattern</div>
+      <h1 class="h-content" style="color: var(--aws-white);">Cascaded pipeline: how the stages chain</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 100px;">
+      <!-- Top row: the cascade with timing annotations -->
+      <div style="display: flex; align-items: center; gap: 0; margin-bottom: 40px;">
+        <div style="flex: 1; background: var(--aws-teal-900); border-radius: 10px; padding: 18px 20px; text-align: center;">
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-teal-300); margin-bottom: 6px;">WebRTC</div>
+          <div style="font-size: 22px; font-weight: 500; color: var(--aws-white);">Daily</div>
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-teal-400); margin-top: 6px;">20ms audio frames</div>
+        </div>
+        <div style="padding: 0 12px; color: var(--aws-gray-600); font-size: 24px;">→</div>
+        <div style="flex: 1; background: var(--aws-cyan-900); border-radius: 10px; padding: 18px 20px; text-align: center;">
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-cyan-300); margin-bottom: 6px;">STT</div>
+          <div style="font-size: 22px; font-weight: 500; color: var(--aws-white);">Deepgram</div>
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-cyan-400); margin-top: 6px;">streams partials ~40ms</div>
+        </div>
+        <div style="padding: 0 12px; color: var(--aws-gray-600); font-size: 24px;">→</div>
+        <div style="flex: 1.2; background: var(--aws-violet-900); border-radius: 10px; padding: 18px 20px; text-align: center;">
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-violet-300); margin-bottom: 6px;">LLM</div>
+          <div style="font-size: 22px; font-weight: 500; color: var(--aws-white);">Claude on Bedrock</div>
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-violet-400); margin-top: 6px;">first token ~100ms</div>
+        </div>
+        <div style="padding: 0 12px; color: var(--aws-gray-600); font-size: 24px;">→</div>
+        <div style="flex: 1; background: var(--aws-cyan-900); border-radius: 10px; padding: 18px 20px; text-align: center;">
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-cyan-300); margin-bottom: 6px;">TTS</div>
+          <div style="font-size: 22px; font-weight: 500; color: var(--aws-white);">Deepgram</div>
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-cyan-400); margin-top: 6px;">audio chunk ~60ms</div>
+        </div>
+        <div style="padding: 0 12px; color: var(--aws-gray-600); font-size: 24px;">→</div>
+        <div style="flex: 1; background: var(--aws-teal-900); border-radius: 10px; padding: 18px 20px; text-align: center;">
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-teal-300); margin-bottom: 6px;">WebRTC</div>
+          <div style="font-size: 22px; font-weight: 500; color: var(--aws-white);">Daily</div>
+          <div style="font-family: var(--aws-font-mono); font-size: 13px; color: var(--aws-teal-400); margin-top: 6px;">plays to speaker</div>
+        </div>
+      </div>
+      <!-- Pipecat orchestration bar -->
+      <div style="background: var(--aws-gray-800); border-radius: 8px; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 44px;">
+        <span style="font-family: var(--aws-font-mono); font-size: 15px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--aws-gray-400);">Pipecat — queue-per-stage · backpressure · frame routing · VAD events</span>
+        <span style="font-family: var(--aws-font-mono); font-size: 15px; color: var(--aws-gray-500);">github.com/pipecat-ai/pipecat</span>
+      </div>
+      <!-- Three key cascade properties -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 56px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="width: 56px; height: 4px; background: var(--aws-teal-500);"></div>
+          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">No waiting between stages</p>
+          <p class="body-md" style="color: var(--aws-gray-400);">Partial transcripts flow through the pipeline continuously. The LLM starts generating before the user finishes speaking. TTS starts before the LLM finishes.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="width: 56px; height: 4px; background: var(--aws-violet-500);"></div>
+          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">VAD gates the LLM</p>
+          <p class="body-md" style="color: var(--aws-gray-400);">The LLM only receives a <span style="font-family: var(--aws-font-mono); font-size: 17px; color: var(--aws-violet-300);">UserStoppedSpeaking</span> frame when VAD confirms turn end — not on every partial transcript.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="width: 56px; height: 4px; background: var(--aws-cyan-500);"></div>
+          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">Interruption cancels downstream</p>
+          <p class="body-md" style="color: var(--aws-gray-400);"><span style="font-family: var(--aws-font-mono); font-size: 17px; color: var(--aws-cyan-300);">UserStartedSpeaking</span> flushes the LLM output queue and cancels in-flight TTS frames. No extra glue code.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">11 / 15</div>
+  </section>
+
+  <section class="slide" data-screen-label="12 Pipecat code">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">Pipecat · pipeline setup</div>
+      <h1 class="h-content">Building the voice pipeline</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 450px; bottom: 100px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px;">
+      <pre class="code-block"><span class="kw">from</span> pipecat.pipeline.pipeline <span class="kw">import</span> Pipeline
+<span class="kw">from</span> pipecat.services.deepgram <span class="kw">import</span> DeepgramSTTService, DeepgramTTSService
+<span class="kw">from</span> pipecat.services.anthropic <span class="kw">import</span> AnthropicLLMService
+<span class="kw">from</span> pipecat.transports.daily <span class="kw">import</span> DailyTransport
+<span class="kw">from</span> pipecat.audio.vad.silero <span class="kw">import</span> SileroVADAnalyzer
+
+transport = <span class="fn">DailyTransport</span>(
+    room_url, token,
+    params=DailyParams(
+        audio_in_enabled=<span class="pm">True</span>,
+        audio_out_enabled=<span class="pm">True</span>,
+        vad_analyzer=<span class="fn">SileroVADAnalyzer</span>(params=<span class="fn">VADParams</span>(
+            stop_secs=<span class="pm">0.6</span>          <span class="cm"># wait 600ms of silence</span>
+        ))
+    )
+)
+
+pipeline = <span class="fn">Pipeline</span>([
+    transport.input(),         <span class="cm"># WebRTC audio in + AEC</span>
+    <span class="fn">DeepgramSTTService</span>(api_key=...), <span class="cm"># streaming STT</span>
+    <span class="fn">AnthropicLLMService</span>(model=<span class="st">"claude-sonnet-4-6"</span>),
+    <span class="fn">DeepgramTTSService</span>(api_key=...), <span class="cm"># streaming TTS</span>
+    transport.output()         <span class="cm"># WebRTC audio out</span>
+])</pre>
+      <div style="display: flex; flex-direction: column; gap: 28px; padding-top: 8px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="rule"></div>
+          <p class="body-md" style="font-weight: 500;">What Pipecat handles for you</p>
+        </div>
+        <div class="bullets" style="gap: 22px;">
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">Each stage is a processor that reads from an input queue and writes to an output queue — backpressure is built in</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">STT partial transcripts flow into the LLM immediately — no waiting for a final transcript</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">LLM token stream feeds directly into TTS — audio starts before generation completes</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">Swap any stage without touching the rest — same interface for all STT, TTS, and LLM providers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">12 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       12. VAD IMPLEMENTATION
+       ============================================================ -->
+  <section class="slide" data-screen-label="13 VAD implementation">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">Silence detection · implementation</div>
+      <h1 class="h-content">Implementing VAD in Pipecat</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 450px; bottom: 100px; display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px;">
+      <pre class="code-block"><span class="kw">from</span> pipecat.audio.vad.silero <span class="kw">import</span> SileroVADAnalyzer, VADParams
+<span class="kw">from</span> pipecat.audio.vad.vad_analyzer <span class="kw">import</span> VADState
+
+<span class="cm"># Tune the three key parameters</span>
+vad = <span class="fn">SileroVADAnalyzer</span>(params=<span class="fn">VADParams</span>(
+    confidence=<span class="pm">0.7</span>,    <span class="cm"># speech probability threshold</span>
+    start_secs=<span class="pm">0.2</span>,    <span class="cm"># speech detected after 200ms</span>
+    stop_secs=<span class="pm">0.6</span>,     <span class="cm"># speech ended after 600ms silence</span>
+))
+
+<span class="cm"># Hook VAD state changes</span>
+<span class="kw">async def</span> <span class="fn">on_user_speech_start</span>(frame):
+    <span class="cm"># Cancel in-flight TTS if user starts talking</span>
+    <span class="kw">await</span> pipeline.<span class="fn">cancel_tts</span>()
+
+<span class="kw">async def</span> <span class="fn">on_user_speech_stop</span>(frame):
+    <span class="cm"># Trigger LLM only when VAD confirms turn end</span>
+    <span class="kw">await</span> llm.<span class="fn">process_frame</span>(transcript_frame)
+
+transport.<span class="fn">on</span>(<span class="st">"vad_started"</span>, on_user_speech_start)
+transport.<span class="fn">on</span>(<span class="st">"vad_stopped"</span>, on_user_speech_stop)</pre>
+      <div style="display: flex; flex-direction: column; gap: 26px; padding-top: 8px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="rule"></div>
+          <p class="body-md" style="font-weight: 500;">Silero VAD vs energy-based VAD</p>
+        </div>
+        <div class="bullets" style="gap: 20px;">
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">Energy thresholds trigger on keyboard noise, background TV, HVAC. Silero is a neural model that distinguishes speech from non-speech</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);"><span style="font-weight: 500;">stop_secs</span> is your primary tuning lever. 0.6s works well conversationally. Increase to 0.8–1.0s for complex questions where users pause to think</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">Silero runs locally at ~5ms per frame — no round-trip latency, no API cost, no data leaving the server</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">13 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       13. SMART TURN MODELS
+       ============================================================ -->
+  <section class="slide" data-screen-label="14 Smart turn models">
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">Research · beyond VAD</div>
+      <h1 class="h-content">Smart turn detection</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 450px; bottom: 100px; display: grid; grid-template-columns: 1fr 1fr; gap: 80px;">
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="rule"></div>
+          <p class="body-md" style="font-weight: 500;">The problem with VAD alone</p>
+        </div>
+        <div class="bullets" style="gap: 22px;">
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">VAD tells you when audio energy stops. It can't tell you if the user's thought is complete. "I want to book a flight to... Sydney" — VAD fires after the pause, before Sydney</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">Listing items ("I need milk, eggs, uh...") produces repeated false turn-ends. The agent starts responding to an incomplete list</p>
+          </div>
+          <div class="bullet">
+            <div class="num">→</div>
+            <p class="body-md" style="color: var(--aws-gray-650);">Questions with rising intonation followed by a long pause ("Have you ever tried... going to the gym at 6am?") confuse fixed-threshold detectors</p>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 28px;">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="rule"></div>
+          <p class="body-md" style="font-weight: 500;">What the research says</p>
+        </div>
+        <div class="bullets" style="gap: 20px;">
+          <div class="bullet">
+            <div class="num">01</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Turn-GPT (2022)</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">LLM-based turn completion predictor trained on dialog corpora. Predicts whether a transcript is a complete utterance. ~120ms inference on GPU</p>
+            </div>
+          </div>
+          <div class="bullet">
+            <div class="num">02</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Smart Turn (Daily, 2024)</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">Production model trained on voice agent conversations. Combines audio features and partial transcript. Shipped in Daily's SDK as a drop-in replacement for Silero</p>
+            </div>
+          </div>
+          <div class="bullet">
+            <div class="num">03</div>
+            <div>
+              <p class="body-md" style="font-weight: 500;">Pipecat's SmartTurnAnalyzer</p>
+              <p class="body-md" style="color: var(--aws-gray-650); margin-top: 4px;">Same interface as SileroVADAnalyzer — swap <span style="font-family: var(--aws-font-mono); font-size: 18px; background: var(--aws-gray-150); padding: 1px 6px; border-radius: 4px;">SmartTurnAnalyzer()</span> in the DailyParams and get semantic turn detection with no pipeline changes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">14 / 15</div>
+  </section>
+
+  <!-- ============================================================
+       14. CLOSING (was 11)
+       ============================================================ -->
+  <section class="slide" data-screen-label="15 Closing" style="background: var(--aws-teal-900);">
+    <img class="logo-tl" src="assets/aws-logo-white.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 73px; right: 80px; bottom: 73px; display: flex; flex-direction: column; justify-content: center;">
+      <div class="caption" style="color: var(--aws-teal-300); margin-bottom: 40px;">Key takeaways</div>
+      <h1 class="h-title" style="color: var(--aws-white); max-width: 1500px;">
+        200ms. Interruption. Silence.<br>These are engineering problems.
+      </h1>
+      <div style="margin-top: 72px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 64px; max-width: 1600px;">
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="width: 56px; height: 4px; background: var(--aws-teal-400);"></div>
+          <p class="body-md" style="color: var(--aws-teal-100);">Everything must stream in parallel. STT into LLM into TTS. Sequential calls will never hit the latency budget.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="width: 56px; height: 4px; background: var(--aws-teal-400);"></div>
+          <p class="body-md" style="color: var(--aws-teal-100);">Let Daily handle WebRTC and echo cancellation. The audio transport layer is not where you want to spend your debugging time.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="width: 56px; height: 4px; background: var(--aws-teal-400);"></div>
+          <p class="body-md" style="color: var(--aws-teal-100);">Let Pipecat handle pipeline orchestration and backpressure. Write the interruption logic and the silence model — not the plumbing.</p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no" style="color: var(--aws-teal-600);">15 / 15</div>
+  </section>
+
+</deck-stage>
+
+</body>
+</html>
