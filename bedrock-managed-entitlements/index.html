@@ -493,10 +493,14 @@ document.addEventListener('fullscreenchange', () => {
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
       <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 1 — CREATE GRANT</div>
-      <h1 class="h-title" style="max-width: 1500px;">Create grant from License Manager</h1>
-      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Open the license in License Manager → click <strong>Create grant</strong> → fill in a name and your Organization ID.</p>
+      <h1 class="h-title" style="max-width: 1500px;">Navigate to your license & create a grant</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">License Manager → Granted Licenses → select your license → click <strong>Create grant</strong>.</p>
     </div>
     <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 73px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: center;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Granted Licenses list</p>
+        <img src="assets/screenshots/Granted-licenses-AWS-License-Manager-us-east-1-2026-06-26_03_49_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Granted Licenses list">
+      </div>
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">License overview → Create grant</p>
         <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_04_33_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="License overview with Create grant button">
@@ -505,41 +509,41 @@ document.addEventListener('fullscreenchange', () => {
         <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Create grant form</p>
         <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_53_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant form">
       </div>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Fill in grant name + Org ID</p>
-        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_56_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant filled">
-      </div>
     </div>
     <div class="slide-no">10 / 16</div>
   </section>
 
-  <!-- 11. STEP 1: LINK ORGS & GRANT CREATED -->
-  <section class="slide" data-screen-label="11 Console: Link orgs and grant created">
+  <!-- 11. STEP 1: FILL FORM, LINK ORGS & GRANT CREATED -->
+  <section class="slide" data-screen-label="11 Console: Fill form and grant created">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
       <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 1 — CREATE GRANT (CONT.)</div>
-      <h1 class="h-title" style="max-width: 1500px;">Link Organizations & grant created</h1>
-      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">After entering the Org ID and clicking Create, you'll be prompted to link Organizations (first time only). Then the grant is created.</p>
+      <h1 class="h-title" style="max-width: 1500px;">Fill in the Org ID & create</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Enter your Organization ID (find it in AWS Organizations), click Create. First time, you'll see a prompt to link your Organizations accounts.</p>
     </div>
-    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 160px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; align-items: center;">
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 160px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; align-items: center;">
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Find your Org ID in Organizations</p>
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Find Org ID in Organizations</p>
         <img src="assets/screenshots/AWS-accounts-AWS-Organizations-Global-2026-06-26_03_55_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="AWS Organizations Org ID">
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Link Organizations prompt</p>
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Fill in grant name + Org ID</p>
+        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_56_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant filled">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Link Organizations (first time)</p>
         <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_56_PM-x.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Link Organizations dialog">
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px;">
-        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Grant created successfully ✓</p>
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Grant created ✓</p>
         <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_57_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant created successfully">
       </div>
     </div>
     <div style="position: absolute; left: 80px; right: 80px; bottom: 73px;">
       <div class="gotcha-box">
-        <div class="gotcha-icon">⚠️</div>
-        <div class="gotcha-text"><strong>Gotcha:</strong> The "Link Organizations" popup only appears the first time. It's a one-time, irreversible action — click "Link" to enable cross-account grant distribution.</div>
+        <div class="gotcha-icon">💡</div>
+        <div class="gotcha-text"><strong>Tip:</strong> Find your Organization ID in AWS Organizations → AWS accounts (left sidebar). The "Link Organizations" prompt only appears once — it enables cross-account grant distribution.</div>
       </div>
     </div>
     <div class="slide-no">11 / 16</div>
@@ -553,16 +557,12 @@ document.addEventListener('fullscreenchange', () => {
       <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 2 — CHECK GRANT STATUS</div>
       <h1 class="h-title" style="max-width: 1500px;">Are grants Active, not just Disabled?</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px; max-width: 1100px;">
-        After creating a grant, check the status. It transitions from Processing → <strong>Disabled</strong>. This is expected — grants auto-accept but still need manual activation.
+        After creating a grant, it transitions from Processing → <strong>Disabled</strong>. This is expected — grants auto-accept but still need manual activation.
       </p>
     </div>
-    <div style="position: absolute; left: 80px; right: 80px; top: 460px; bottom: 160px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Granted Licenses — overview</p>
-        <img src="assets/screenshots/Granted-licenses-AWS-License-Manager-us-east-1-2026-06-26_03_49_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Granted Licenses list">
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
-        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Grant status: Disabled ⚠️</p>
+    <div style="position: absolute; left: 180px; right: 180px; top: 460px; bottom: 160px; display: flex; align-items: center; justify-content: center;">
+      <div style="display: flex; flex-direction: column; gap: 12px; max-width: 900px; width: 100%;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">License details showing grant in Disabled state</p>
         <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_03_58_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-rose-200); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant in Disabled state">
       </div>
     </div>
