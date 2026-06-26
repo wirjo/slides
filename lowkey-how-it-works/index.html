@@ -253,6 +253,8 @@ h1, h2, h3, p { margin: 0; }
 .arch-box.bedrock { background: rgba(0,153,255,0.12); border: 1px solid var(--aws-blue-500); color: var(--aws-blue-500); }
 .arch-box.agent { background: rgba(122,229,0,0.12); border: 1px solid var(--aws-lime-400); color: var(--aws-lime-400); }
 .arch-box.ssm { background: rgba(204,132,0,0.12); border: 1px solid var(--aws-amber-500); color: var(--aws-amber-500); }
+.arch-box.security { background: rgba(219,0,0,0.10); border: 1px solid var(--aws-red-600); color: #ff6b6b; }
+.arch-box.channel { background: rgba(0,164,189,0.12); border: 1px solid var(--aws-cyan-500); color: var(--aws-cyan-500); }
 .arch-connector {
   font-size: 20px; opacity: 0.3; color: white;
 }
@@ -264,6 +266,125 @@ h1, h2, h3, p { margin: 0; }
   text-align: center;
   margin-bottom: 12px;
 }
+
+/* Comparison table */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.compare-col {
+  padding: 32px;
+}
+.compare-col.plugin { background: rgba(219,0,0,0.04); }
+.compare-col.wrap { background: rgba(43,181,52,0.04); }
+.compare-header {
+  font-family: var(--font-mono);
+  font-size: 13px; text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.compare-header.bad { color: var(--aws-red-600); }
+.compare-header.good { color: var(--aws-green-500); }
+.compare-item {
+  margin-bottom: 20px;
+}
+.compare-item .label {
+  font-size: 13px; font-weight: 500;
+  opacity: 0.5; margin-bottom: 4px;
+}
+.compare-item .value {
+  font-size: 15px; line-height: 1.4;
+  opacity: 0.85;
+}
+.light .compare-grid { border-color: var(--aws-gray-250); }
+.light .compare-col.plugin { background: rgba(219,0,0,0.03); }
+.light .compare-col.wrap { background: rgba(43,181,52,0.03); }
+.light .compare-header { border-bottom-color: var(--aws-gray-250); }
+@media (max-width: 768px) {
+  .compare-grid { grid-template-columns: 1fr; }
+}
+
+/* Security layers */
+.security-layers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.security-layer {
+  padding: 24px 28px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-left: 3px solid;
+}
+.security-layer .layer-num {
+  font-family: var(--font-mono);
+  font-size: 12px; opacity: 0.4;
+  margin-bottom: 8px;
+}
+.security-layer h3 { font-size: 18px; margin-bottom: 8px; font-weight: 500; }
+.security-layer p { font-size: 14px; opacity: 0.65; line-height: 1.5; }
+.security-layer.l1 { border-left-color: var(--aws-red-600); }
+.security-layer.l2 { border-left-color: var(--aws-orange-500); }
+.security-layer.l3 { border-left-color: var(--aws-amber-500); }
+.security-layer.l4 { border-left-color: var(--aws-lime-400); }
+.security-layer.l5 { border-left-color: var(--aws-teal-500); }
+.security-layer.l6 { border-left-color: var(--aws-blue-500); }
+.security-layer.l7 { border-left-color: var(--aws-violet-500); }
+
+/* Callout */
+.callout {
+  margin-top: 48px;
+  padding: 28px 36px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 18px;
+  line-height: 1.5;
+  font-style: italic;
+  opacity: 0.8;
+}
+.light .callout {
+  background: var(--aws-gray-50);
+  border-color: var(--aws-gray-250);
+  color: var(--aws-gray-700);
+}
+
+/* Layer cake */
+.layer-cake {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 800px;
+}
+.cake-layer {
+  padding: 16px 28px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cake-layer .cake-detail {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  opacity: 0.6;
+}
+.cake-l1 { background: rgba(0,173,162,0.12); border: 1px solid var(--aws-teal-500); color: var(--aws-teal-500); }
+.cake-l2 { background: rgba(255,75,20,0.10); border: 1px solid var(--aws-orange-500); color: var(--aws-orange-500); margin-left: 24px; }
+.cake-l3 { background: rgba(204,132,0,0.10); border: 1px solid var(--aws-amber-500); color: var(--aws-amber-500); margin-left: 48px; }
+.cake-l4 { background: rgba(0,153,255,0.10); border: 1px solid var(--aws-blue-500); color: var(--aws-blue-500); margin-left: 72px; }
+.cake-l5 { background: rgba(122,229,0,0.10); border: 1px solid var(--aws-lime-400); color: var(--aws-lime-400); margin-left: 96px; }
 
 /* CTA */
 .cta-box {
@@ -411,33 +532,189 @@ h1, h2, h3, p { margin: 0; }
 </section>
 
 <!-- ================================================================
-     SLIDE 4: ARCHITECTURE
+     SLIDE 4: ARCHITECTURE — Layer Cake
      ================================================================ -->
 <section class="slide alt">
   <div class="slide-inner">
     <div class="eyebrow" style="color: var(--aws-cyan-500);">Architecture</div>
-    <h2 class="h-title" style="margin-bottom: 8px;">What gets deployed</h2>
-    <p class="body-lg" style="opacity: 0.55; max-width: 600px;">
-      A single EC2 instance in an isolated VPC with least-privilege IAM and Bedrock access.
+    <h2 class="h-title" style="margin-bottom: 8px;">The full stack, layer by layer</h2>
+    <p class="body-lg" style="opacity: 0.55; max-width: 700px;">
+      Each layer narrows what the agent can reach. The account is the outermost wall; the agent runtime is the innermost process.
+    </p>
+    <div class="layer-cake">
+      <div class="cake-layer cake-l1">AWS Account (Sandbox) <span class="cake-detail">Isolated from production — nuke-able boundary</span></div>
+      <div class="cake-layer cake-l2">VPC + Security Groups <span class="cake-detail">10.0.0.0/16 · No inbound ports · SSM only</span></div>
+      <div class="cake-layer cake-l3">EC2 Instance (Graviton ARM64) <span class="cake-detail">t4g.xlarge · systemd managed · EBS volumes</span></div>
+      <div class="cake-layer cake-l4">Bedrockify Proxy <span class="cake-detail">localhost:8090 · OpenAI → Bedrock translation</span></div>
+      <div class="cake-layer cake-l5">Agent Runtime <span class="cake-detail">OpenClaw gateway:3001 / Claude Code / Hermes / etc.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 4b: ARCHITECTURE — Data Flow
+     ================================================================ -->
+<section class="slide dark">
+  <div class="pattern-bg"></div>
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-cyan-500);">Data flow</div>
+    <h2 class="h-title" style="margin-bottom: 8px;">How requests move through the system</h2>
+    <p class="body-lg" style="opacity: 0.55; max-width: 700px; margin-bottom: 16px;">
+      Users reach the agent via messaging channels or SSM. The agent reaches AWS via its instance role — no keys ever leave the machine.
     </p>
     <div class="arch-diagram">
-      <div class="arch-label">Your AWS Account (Sandbox)</div>
+      <div class="arch-label">User Access</div>
       <div class="arch-row">
-        <div class="arch-box vpc">VPC 10.0.0.0/16</div>
+        <div class="arch-box channel">Discord / Telegram<br><span style="font-size:11px;opacity:0.7;">Outbound webhook</span></div>
+        <div class="arch-connector">→</div>
+        <div class="arch-box agent">OpenClaw Gateway<br><span style="font-size:11px;opacity:0.7;">port 3001</span></div>
+        <div class="arch-connector">←</div>
+        <div class="arch-box ssm">SSM Session<br><span style="font-size:11px;opacity:0.7;">Console / CLI</span></div>
+      </div>
+      <div class="arch-label" style="margin-top: 24px;">Agent → AWS Services</div>
+      <div class="arch-row">
+        <div class="arch-box agent">Agent Runtime</div>
+        <div class="arch-connector">→</div>
+        <div class="arch-box bedrock">Bedrock<br><span style="font-size:11px;opacity:0.7;">Claude inference</span></div>
       </div>
       <div class="arch-row">
-        <div class="arch-box ec2">EC2 Graviton<br><span style="font-size:11px;opacity:0.7;">t4g.xlarge</span></div>
-        <div class="arch-connector">↔</div>
-        <div class="arch-box ssm">SSM<br><span style="font-size:11px;opacity:0.7;">Session Manager</span></div>
+        <div class="arch-box agent">Agent Runtime</div>
+        <div class="arch-connector">→</div>
+        <div class="arch-box iam">AWS APIs<br><span style="font-size:11px;opacity:0.7;">Via instance role (no keys)</span></div>
       </div>
       <div class="arch-row">
-        <div class="arch-box agent">Agent Pack<br><span style="font-size:11px;opacity:0.7;">OpenClaw / Claude Code / etc.</span></div>
-        <div class="arch-connector">↔</div>
-        <div class="arch-box bedrock">Amazon Bedrock<br><span style="font-size:11px;opacity:0.7;">Claude Opus 4.6</span></div>
+        <div class="arch-box security">Security Services<br><span style="font-size:11px;opacity:0.7;">GuardDuty · Security Hub · Inspector</span></div>
+        <div class="arch-connector">← watches</div>
+        <div class="arch-box ec2">Everything</div>
       </div>
-      <div class="arch-row">
-        <div class="arch-box iam">IAM Role<br><span style="font-size:11px;opacity:0.7;">Profile-based permissions</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 4c: WHY WRAP vs PLUGIN
+     ================================================================ -->
+<section class="slide light">
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-orange-500);">Design philosophy</div>
+    <h2 class="h-section" style="margin-bottom: 16px;">Why wrap, not plugin?</h2>
+    <p class="body-lg" style="color: var(--aws-gray-600); max-width: 800px;">
+      You could add an AWS plugin to an existing agent on your laptop. Lowkey takes the opposite approach: deploy the agent <em>inside</em> AWS. Here's why that's better.
+    </p>
+    <div class="compare-grid">
+      <div class="compare-col plugin">
+        <div class="compare-header bad">✗ Plugin approach</div>
+        <div class="compare-item">
+          <div class="label">Identity</div>
+          <div class="value">Agent lives on your laptop/VPS, reaches into AWS via access keys. Keys can leak. Identity is split.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Network</div>
+          <div class="value">Outside the VPC. Can't access private subnets, internal ALBs, or VPC endpoints. Every API call crosses the internet.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Blast Radius</div>
+          <div class="value">Single IAM role — hard to scope. Too broad or too narrow. Shared with other tools on the same machine.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Observability</div>
+          <div class="value">Agent creates resources but can't easily tail logs, port-forward, or SSM into what it built. Debugging loops are slow.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Security</div>
+          <div class="value">GuardDuty, Security Hub configured separately. No co-deployed watchdog layer. Alerts go somewhere else.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Teardown</div>
+          <div class="value">Resources accumulate across accounts. No clean "undo." State scattered.</div>
+        </div>
       </div>
+      <div class="compare-col wrap">
+        <div class="compare-header good">✓ Wrap approach (Lowkey)</div>
+        <div class="compare-item">
+          <div class="label">Identity</div>
+          <div class="value">Agent <em>is</em> an AWS identity — EC2 instance role via IMDS. No keys to leak. No credentials in environment variables.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Network</div>
+          <div class="value">Inside the VPC. Can deploy a service and immediately curl it on private DNS. Sees what it builds.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Blast Radius</div>
+          <div class="value">The account <em>itself</em> is the boundary. Profile-based IAM + deny policies + account isolation = three layers of defense.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Observability</div>
+          <div class="value">Runs where the infra is. Tail CloudWatch logs, SSM into containers, check health endpoints — all on localhost or private network.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Security</div>
+          <div class="value">Security services deploy in the same CloudFormation stack. Agent is watched from minute one. Alerts stay local.</div>
+        </div>
+        <div class="compare-item">
+          <div class="label">Teardown</div>
+          <div class="value">One account = one agent. <code>uninstall.lowkey.run</code> destroys the stack. Fresh deploy in 10 minutes.</div>
+        </div>
+      </div>
+    </div>
+    <div class="callout">
+      "It's not an agent with AWS access bolted on.<br>
+      It's an AWS environment with an agent living inside it."
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 4d: SECURITY MODEL
+     ================================================================ -->
+<section class="slide dark">
+  <div class="pattern-bg"></div>
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-red-600);">Security model</div>
+    <h2 class="h-section" style="margin-bottom: 16px;">Secure despite autonomy</h2>
+    <p class="body-lg" style="opacity: 0.55; max-width: 800px; margin-bottom: 8px;">
+      How is an autonomous agent with AdministratorAccess secure?<br>
+      <strong style="opacity: 1; color: var(--aws-white);">You don't secure the agent — you contain it.</strong>
+    </p>
+    <div class="security-layers">
+      <div class="security-layer l1">
+        <div class="layer-num">Layer 1</div>
+        <h3>Account Isolation</h3>
+        <p>Dedicated sandbox account. AWS account boundaries are the hardest security boundary in cloud. If everything goes wrong: close the account.</p>
+      </div>
+      <div class="security-layer l2">
+        <div class="layer-num">Layer 2</div>
+        <h3>Profile-Based IAM</h3>
+        <p>Three graduated profiles. personal_assistant can only call Bedrock. account_assistant is read-only with explicit denies. builder gets admin — but only in its sandbox.</p>
+      </div>
+      <div class="security-layer l3">
+        <div class="layer-num">Layer 3</div>
+        <h3>Deny Policies</h3>
+        <p>Explicit Deny statements on secrets, S3 objects, and Lambda code — even for read-only profiles. Deny overrides all Allows in IAM. Non-bypassable.</p>
+      </div>
+      <div class="security-layer l4">
+        <div class="layer-num">Layer 4</div>
+        <h3>Security Services</h3>
+        <p>GuardDuty, Security Hub, Inspector, IAM Access Analyzer, Config Recorder — all ON by default in the CFN template. The agent is watched from deploy minute one.</p>
+      </div>
+      <div class="security-layer l5">
+        <div class="layer-num">Layer 5</div>
+        <h3>Network Containment</h3>
+        <p>Single VPC. SSH disabled (127.0.0.1/32). No inbound ports. SSM is the only access path — and SSM logs every session to CloudTrail.</p>
+      </div>
+      <div class="security-layer l6">
+        <div class="layer-num">Layer 6</div>
+        <h3>Full Audit Trail</h3>
+        <p>No SSH keys = no unlogged access. Every API call via CloudTrail. Every SSM session recorded. Every resource change tracked by Config.</p>
+      </div>
+      <div class="security-layer l7">
+        <div class="layer-num">Layer 7</div>
+        <h3>Disposability</h3>
+        <p>Agent is cattle, not pets. Suspect compromise? Don't investigate — destroy and redeploy in 10 minutes. <code style="color: var(--aws-lime-400);">curl uninstall.lowkey.run | bash</code></p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top: 40px;">
+      "Like giving an intern their own AWS sandbox — they can break things, but only <em>their</em> things. And you have cameras everywhere."
     </div>
   </div>
 </section>
@@ -445,11 +722,11 @@ h1, h2, h3, p { margin: 0; }
 <!-- ================================================================
      SLIDE 5: PERMISSION PROFILES
      ================================================================ -->
-<section class="slide light">
+<section class="slide alt">
   <div class="slide-inner">
-    <div class="eyebrow" style="color: var(--aws-gray-550);">Permission profiles</div>
+    <div class="eyebrow" style="color: var(--aws-gray-400);">Permission profiles</div>
     <h2 class="h-section" style="margin-bottom: 16px;">Graduated trust</h2>
-    <p class="body-lg" style="color: var(--aws-gray-600); max-width: 700px;">
+    <p class="body-lg" style="opacity: 0.6; max-width: 700px;">
       Three profiles control what the agent can do. Start narrow, widen as you build confidence.
     </p>
     <div class="profile-grid">
