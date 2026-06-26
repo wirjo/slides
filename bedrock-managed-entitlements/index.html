@@ -443,19 +443,27 @@ document.addEventListener('fullscreenchange', () => {
       <div class="eyebrow" style="color: var(--aws-purple-700); margin-bottom: 32px;">CONSOLE WALKTHROUGH</div>
       <h1 class="h-cover" style="max-width: 1400px; font-size: 96px;">Step-by-step in the AWS Console</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 48px; max-width: 1000px;">
-        Three steps to verify your managed entitlements are working: create the grant, activate it, and confirm the discount is flowing.
+        Five steps to get your managed entitlements working end-to-end.
       </p>
-      <div style="margin-top: 56px; display: flex; gap: 48px;">
+      <div style="margin-top: 56px; display: flex; gap: 36px; flex-wrap: wrap;">
         <div style="display: flex; align-items: center; gap: 12px;">
           <div class="console-step-num" style="width: 36px; height: 36px; font-size: 16px;">1</div>
-          <span class="body-md">Create grant</span>
+          <span class="body-md">Enable Marketplace SLR</span>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
           <div class="console-step-num" style="width: 36px; height: 36px; font-size: 16px;">2</div>
-          <span class="body-md">Activate</span>
+          <span class="body-md">Create grant</span>
         </div>
         <div style="display: flex; align-items: center; gap: 12px;">
           <div class="console-step-num" style="width: 36px; height: 36px; font-size: 16px;">3</div>
+          <span class="body-md">Check grant status</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="console-step-num" style="width: 36px; height: 36px; font-size: 16px;">4</div>
+          <span class="body-md">Activate</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="console-step-num" style="width: 36px; height: 36px; font-size: 16px;">5</div>
           <span class="body-md">Confirm discount</span>
         </div>
       </div>
@@ -463,12 +471,12 @@ document.addEventListener('fullscreenchange', () => {
     <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
   </section>
 
-  <!-- 9. STEP 1: MARKETPLACE SLR SETUP -->
+  <!-- 9. STEP 1: ENABLE MARKETPLACE SLR -->
   <section class="slide" data-screen-label="09 Console: Marketplace SLR setup">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 1 — PREREQUISITES</div>
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 1 — ENABLE MARKETPLACE SLR</div>
       <h1 class="h-title" style="max-width: 1500px;">Enable Marketplace License Manager integration</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">
         In AWS Marketplace → Settings, create the service-linked role for License Manager integration.
@@ -487,12 +495,12 @@ document.addEventListener('fullscreenchange', () => {
     <div class="slide-no">09 / 16</div>
   </section>
 
-  <!-- 10. STEP 1: CREATE GRANT -->
+  <!-- 10. STEP 2: CREATE GRANT -->
   <section class="slide" data-screen-label="10 Console: Create grant">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 1 — CREATE GRANT</div>
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 2 — CREATE GRANT</div>
       <h1 class="h-title" style="max-width: 1500px;">Navigate to your license & create a grant</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">License Manager → Granted Licenses → select your license → click <strong>Create grant</strong>.</p>
     </div>
@@ -513,12 +521,12 @@ document.addEventListener('fullscreenchange', () => {
     <div class="slide-no">10 / 16</div>
   </section>
 
-  <!-- 11. STEP 1: FILL FORM, LINK ORGS & GRANT CREATED -->
+  <!-- 11. STEP 2: FILL FORM, LINK ORGS & GRANT CREATED -->
   <section class="slide" data-screen-label="11 Console: Fill form and grant created">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 1 — CREATE GRANT (CONT.)</div>
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 2 — CREATE GRANT (CONT.)</div>
       <h1 class="h-title" style="max-width: 1500px;">Fill in the Org ID & create</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Enter your Organization ID (find it in AWS Organizations), click Create. First time, you'll see a prompt to link your Organizations accounts.</p>
     </div>
@@ -549,12 +557,12 @@ document.addEventListener('fullscreenchange', () => {
     <div class="slide-no">11 / 16</div>
   </section>
 
-  <!-- 12. STEP 2: CHECK GRANT STATUS -->
+  <!-- 12. STEP 3: CHECK GRANT STATUS -->
   <section class="slide" data-screen-label="12 Console: Check grant status">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 2 — CHECK GRANT STATUS</div>
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 3 — CHECK GRANT STATUS</div>
       <h1 class="h-title" style="max-width: 1500px;">Are grants Active, not just Disabled?</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px; max-width: 1100px;">
         After creating a grant, it transitions from Processing → <strong>Disabled</strong>. This is expected — grants auto-accept but still need manual activation.
@@ -575,12 +583,12 @@ document.addEventListener('fullscreenchange', () => {
     <div class="slide-no">12 / 16</div>
   </section>
 
-  <!-- 13. STEP 2: ACTIVATE THE GRANT -->
+  <!-- 13. STEP 4: ACTIVATE THE GRANT -->
   <section class="slide" data-screen-label="13 Console: Activate grant">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 2 — ACTIVATE</div>
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 4 — ACTIVATE</div>
       <h1 class="h-title" style="max-width: 1500px;">Activate the grant</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Click into the grant → hit the <strong>Activate</strong> button. Confirm in the dialog.</p>
     </div>
@@ -603,12 +611,12 @@ document.addEventListener('fullscreenchange', () => {
     <div class="slide-no">13 / 16</div>
   </section>
 
-  <!-- 14. STEP 2: WORKFLOW COMPLETED -->
+  <!-- 14. STEP 4: WORKFLOW COMPLETED -->
   <section class="slide" data-screen-label="14 Console: Workflow completed">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 2 — RESULT</div>
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 4 — ACTIVATE (RESULT)</div>
       <h1 class="h-title" style="max-width: 1500px;">Grant activation complete</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">After clicking Activate, the grant transitions through Processing → <strong>Workflow completed</strong>. The entitlement is now live.</p>
     </div>
@@ -625,12 +633,12 @@ document.addEventListener('fullscreenchange', () => {
     <div class="slide-no">14 / 16</div>
   </section>
 
-  <!-- 15. STEP 3: CONFIRM DISCOUNT FLOWING -->
+  <!-- 15. STEP 5: CONFIRM DISCOUNT FLOWING -->
   <section class="slide" data-screen-label="15 Console: Confirm discount">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 3 — CONFIRM DISCOUNT</div>
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 5 — CONFIRM DISCOUNT</div>
       <h1 class="h-title" style="max-width: 1500px;">Confirm discount is flowing</h1>
       <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px; max-width: 1200px;">
         The ultimate confirmation — check that actual billing reflects the negotiated rate.
