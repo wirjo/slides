@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lowkey — How It Works</title>
+<style>
+/* ============================================================
+   AWS Design Tokens (subset)
+   ============================================================ */
+:root {
+  --aws-gray-850: #161D26;
+  --aws-white: #FFFFFF;
+  --aws-gray-50: #FCFCFD;
+  --aws-gray-100: #F9F9FB;
+  --aws-gray-200: #F3F3F7;
+  --aws-gray-250: #EBEBF0;
+  --aws-gray-300: #DEDEE3;
+  --aws-gray-400: #B4B4BB;
+  --aws-gray-450: #A4A4AD;
+  --aws-gray-500: #8C8C94;
+  --aws-gray-550: #72747E;
+  --aws-gray-600: #656871;
+  --aws-gray-650: #424650;
+  --aws-gray-700: #333843;
+  --aws-gray-750: #232B37;
+  --aws-gray-800: #1B232D;
+  --aws-gray-900: #131920;
+  --aws-orange-500: #FF4B14;
+  --aws-orange-600: #DB3300;
+  --aws-teal-500: #00ADA2;
+  --aws-teal-600: #008077;
+  --aws-blue-500: #0099FF;
+  --aws-blue-600: #006CE0;
+  --aws-lime-400: #7AE500;
+  --aws-lime-500: #31B800;
+  --aws-violet-500: #8575FF;
+  --aws-violet-600: #6842FF;
+  --aws-cyan-500: #00A4BD;
+  --aws-green-500: #2BB534;
+  --aws-red-600: #DB0000;
+  --aws-amber-500: #CC8400;
+
+  --font-display: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Cascadia Code", "Fira Code", "JetBrains Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--aws-gray-900); font-family: var(--font-display); }
+
+/* ============================================================
+   Scroll-based slide deck
+   ============================================================ */
+.slide {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 80px 40px;
+}
+.slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+.slide.light { background: var(--aws-white); color: var(--aws-gray-850); }
+.slide.alt { background: var(--aws-gray-750); color: var(--aws-white); }
+
+.slide-inner {
+  max-width: 1200px;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* Typography */
+h1, h2, h3, p { margin: 0; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 14px; font-weight: 400;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-bottom: 20px;
+}
+.h-cover { font-size: clamp(48px, 8vw, 120px); line-height: 1.0; font-weight: 300; letter-spacing: -0.01em; }
+.h-section { font-size: clamp(36px, 5vw, 80px); line-height: 1.05; font-weight: 300; }
+.h-title { font-size: clamp(28px, 4vw, 56px); line-height: 1.1; font-weight: 400; }
+.h-content { font-size: clamp(24px, 3vw, 44px); line-height: 1.15; font-weight: 400; }
+.body-lg { font-size: clamp(16px, 2vw, 22px); line-height: 1.5; }
+.body-md { font-size: clamp(14px, 1.5vw, 18px); line-height: 1.5; }
+.body-sm { font-size: 14px; line-height: 1.5; }
+
+/* Pattern */
+.pattern-bg {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 40px,
+    rgba(255,255,255,0.015) 40px,
+    rgba(255,255,255,0.015) 41px
+  );
+  pointer-events: none;
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  margin-top: 48px;
+}
+.card {
+  padding: 32px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.light .card {
+  background: var(--aws-gray-50);
+  border: 1px solid var(--aws-gray-250);
+}
+.card-tag {
+  font-family: var(--font-mono);
+  font-size: 12px; text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+.card h3 { font-size: 24px; margin-bottom: 12px; font-weight: 500; }
+.card p { opacity: 0.7; font-size: 15px; line-height: 1.5; }
+
+/* Flow diagram */
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 48px;
+}
+.flow-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 24px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.flow-arrow {
+  font-size: 24px; opacity: 0.3;
+}
+.light .flow-step {
+  background: var(--aws-gray-50);
+  border-color: var(--aws-gray-300);
+}
+.light .flow-arrow { opacity: 0.4; }
+
+/* Profile badges */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+.profile-card {
+  padding: 28px 32px;
+  border-radius: 8px;
+  border-left: 4px solid;
+}
+.profile-card.red { border-color: var(--aws-red-600); background: rgba(219,0,0,0.06); }
+.profile-card.amber { border-color: var(--aws-amber-500); background: rgba(204,132,0,0.06); }
+.profile-card.green { border-color: var(--aws-green-500); background: rgba(43,181,52,0.06); }
+.profile-card h3 { font-size: 20px; margin-bottom: 8px; font-weight: 500; }
+.profile-card .tag { font-family: var(--font-mono); font-size: 13px; opacity: 0.6; margin-bottom: 8px; }
+.profile-card p { font-size: 14px; opacity: 0.7; line-height: 1.5; }
+
+/* Code block */
+.code-block {
+  background: var(--aws-gray-900);
+  color: var(--aws-lime-400);
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.5vw, 16px);
+  padding: 32px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-top: 32px;
+  line-height: 1.7;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.code-comment { color: var(--aws-gray-500); }
+.code-cmd { color: var(--aws-white); }
+
+/* Pack grid */
+.pack-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 48px;
+}
+.pack-card {
+  padding: 24px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: border-color 0.2s;
+}
+.pack-card:hover { border-color: rgba(255,255,255,0.2); }
+.pack-card .pack-name {
+  font-size: 18px; font-weight: 500;
+  margin-bottom: 6px;
+}
+.pack-card .pack-desc {
+  font-size: 13px; opacity: 0.6; line-height: 1.4;
+}
+.pack-card .pack-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px; border-radius: 4px;
+  margin-top: 10px;
+}
+.badge-default { background: var(--aws-teal-600); color: white; }
+.badge-experimental { background: var(--aws-gray-650); color: var(--aws-gray-300); }
+.badge-agent { background: var(--aws-violet-600); color: white; }
+
+/* Architecture diagram */
+.arch-diagram {
+  margin-top: 48px;
+  padding: 40px;
+  background: var(--aws-gray-900);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+}
+.arch-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.arch-box {
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  min-width: 120px;
+}
+.arch-box.vpc { background: rgba(0,173,162,0.15); border: 1px solid var(--aws-teal-500); color: var(--aws-teal-500); }
+.arch-box.ec2 { background: rgba(255,75,20,0.12); border: 1px solid var(--aws-orange-500); color: var(--aws-orange-500); }
+.arch-box.iam { background: rgba(133,117,255,0.12); border: 1px solid var(--aws-violet-500); color: var(--aws-violet-500); }
+.arch-box.bedrock { background: rgba(0,153,255,0.12); border: 1px solid var(--aws-blue-500); color: var(--aws-blue-500); }
+.arch-box.agent { background: rgba(122,229,0,0.12); border: 1px solid var(--aws-lime-400); color: var(--aws-lime-400); }
+.arch-box.ssm { background: rgba(204,132,0,0.12); border: 1px solid var(--aws-amber-500); color: var(--aws-amber-500); }
+.arch-connector {
+  font-size: 20px; opacity: 0.3; color: white;
+}
+.arch-label {
+  font-family: var(--font-mono);
+  font-size: 11px; text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--aws-gray-450);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* CTA */
+.cta-box {
+  margin-top: 48px;
+  padding: 32px 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--aws-gray-800), var(--aws-gray-750));
+  border: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+}
+.cta-box code {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(14px, 2vw, 20px);
+  color: var(--aws-lime-400);
+  margin: 16px 0;
+}
+.cta-box a {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 32px;
+  background: var(--aws-orange-500);
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+.cta-box a:hover { background: var(--aws-orange-600); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .slide { padding: 60px 24px; }
+  .card-grid, .profile-grid, .pack-grid { grid-template-columns: 1fr; }
+  .flow { flex-direction: column; align-items: stretch; }
+  .flow-arrow { transform: rotate(90deg); text-align: center; }
+  .arch-row { flex-direction: column; }
+}
+
+/* Scroll animations */
+.slide-inner { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.slide-inner.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     SLIDE 1: COVER
+     ================================================================ -->
+<section class="slide dark">
+  <div class="pattern-bg"></div>
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-orange-500);">inceptionstack / lowkey</div>
+    <h1 class="h-cover" style="margin-bottom: 24px;">
+      Your Agent's<br>AWS Account
+    </h1>
+    <p class="body-lg" style="opacity: 0.55; max-width: 700px;">
+      Deploy a full-stack coding agent onto AWS in under 10 minutes.<br>
+      One command. Opinionated security. Multiple agent runtimes.
+    </p>
+    <div class="code-block" style="max-width: 600px;">
+      <span class="code-cmd">curl -sfL install.lowkey.run | bash</span>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 2: THE PROBLEM
+     ================================================================ -->
+<section class="slide light">
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-gray-550);">The problem</div>
+    <h2 class="h-section" style="max-width: 900px; margin-bottom: 24px;">
+      Prototypes are fast.<br>Production AWS is not.
+    </h2>
+    <p class="body-lg" style="color: var(--aws-gray-600); max-width: 750px;">
+      Lovable and Bolt get you a demo in minutes. But the moment you need real AWS infrastructure — IAM, VPCs, CI/CD, monitoring — you're looking at days of setup before writing business logic.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">Option A</div>
+        <h3>Stay on rapid platforms</h3>
+        <p>Black box. No real AWS services. Technical debt accumulates until migration is forced.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Option B</div>
+        <h3>Set up AWS manually</h3>
+        <p>Days of IAM, VPC, and CI/CD plumbing before a single line of application code.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag" style="color: var(--aws-orange-500);">Option C — Lowkey</div>
+        <h3>Give your agent its own account</h3>
+        <p>Production-grade AWS infra in 10 minutes. Agent builds, deploys, and debugs for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 3: HOW IT WORKS (Flow)
+     ================================================================ -->
+<section class="slide dark">
+  <div class="pattern-bg"></div>
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-teal-500);">How it works</div>
+    <h2 class="h-section" style="margin-bottom: 16px;">One command, four phases</h2>
+    <p class="body-lg" style="opacity: 0.55; max-width: 700px; margin-bottom: 32px;">
+      The installer orchestrates everything — from infrastructure provisioning to agent startup.
+    </p>
+    <div class="flow">
+      <div class="flow-step">🖥️ <strong>install.sh</strong></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">📦 Pick Pack + Profile</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">☁️ CFN / Terraform</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🔧 bootstrap.sh</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color: var(--aws-lime-400);">✅ Agent Running</div>
+    </div>
+    <div class="card-grid" style="margin-top: 48px;">
+      <div class="card">
+        <div class="card-tag">Phase 1</div>
+        <h3>Interactive Installer</h3>
+        <p>Choose your agent pack, permission profile, instance size, and deploy method. Works from local terminal or AWS CloudShell.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Phase 2</div>
+        <h3>Infrastructure</h3>
+        <p>CloudFormation or Terraform provisions a VPC, EC2 instance (Graviton ARM64), IAM role, data volume, and security groups.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Phase 3</div>
+        <h3>Bootstrap</h3>
+        <p>On-instance script installs Node.js, bedrockify proxy, agent pack, and writes config. Dependencies resolved from registry.yaml.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Phase 4</div>
+        <h3>Agent Startup</h3>
+        <p>Agent launches as a systemd service. Connect via SSM Session Manager — no SSH keys needed. Start building immediately.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 4: ARCHITECTURE
+     ================================================================ -->
+<section class="slide alt">
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-cyan-500);">Architecture</div>
+    <h2 class="h-title" style="margin-bottom: 8px;">What gets deployed</h2>
+    <p class="body-lg" style="opacity: 0.55; max-width: 600px;">
+      A single EC2 instance in an isolated VPC with least-privilege IAM and Bedrock access.
+    </p>
+    <div class="arch-diagram">
+      <div class="arch-label">Your AWS Account (Sandbox)</div>
+      <div class="arch-row">
+        <div class="arch-box vpc">VPC 10.0.0.0/16</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box ec2">EC2 Graviton<br><span style="font-size:11px;opacity:0.7;">t4g.xlarge</span></div>
+        <div class="arch-connector">↔</div>
+        <div class="arch-box ssm">SSM<br><span style="font-size:11px;opacity:0.7;">Session Manager</span></div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box agent">Agent Pack<br><span style="font-size:11px;opacity:0.7;">OpenClaw / Claude Code / etc.</span></div>
+        <div class="arch-connector">↔</div>
+        <div class="arch-box bedrock">Amazon Bedrock<br><span style="font-size:11px;opacity:0.7;">Claude Opus 4.6</span></div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box iam">IAM Role<br><span style="font-size:11px;opacity:0.7;">Profile-based permissions</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 5: PERMISSION PROFILES
+     ================================================================ -->
+<section class="slide light">
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-gray-550);">Permission profiles</div>
+    <h2 class="h-section" style="margin-bottom: 16px;">Graduated trust</h2>
+    <p class="body-lg" style="color: var(--aws-gray-600); max-width: 700px;">
+      Three profiles control what the agent can do. Start narrow, widen as you build confidence.
+    </p>
+    <div class="profile-grid">
+      <div class="profile-card red">
+        <div class="tag">🔴 builder</div>
+        <h3>Full Builder</h3>
+        <p>AdministratorAccess — build apps, deploy infra, manage pipelines. Use in a dedicated sandbox account.</p>
+      </div>
+      <div class="profile-card amber">
+        <div class="tag">🟡 account_assistant</div>
+        <h3>Read-Only Advisor</h3>
+        <p>ReadOnlyAccess + Bedrock — cost analysis, architecture review, debugging. Can see everything, change nothing.</p>
+      </div>
+      <div class="profile-card green">
+        <div class="tag">🟢 personal_assistant</div>
+        <h3>Personal Assistant</h3>
+        <p>Bedrock only — writing, research, coding help, daily tasks. No AWS infrastructure access whatsoever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 6: AGENT PACKS
+     ================================================================ -->
+<section class="slide dark">
+  <div class="pattern-bg"></div>
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-violet-500);">Agent packs</div>
+    <h2 class="h-section" style="margin-bottom: 16px;">Choose your runtime</h2>
+    <p class="body-lg" style="opacity: 0.55; max-width: 700px;">
+      Packs are self-contained agent runtimes. The installer discovers them dynamically from the registry.
+    </p>
+    <div class="pack-grid">
+      <div class="pack-card">
+        <div class="pack-name">OpenClaw</div>
+        <div class="pack-desc">Stateful AI agent with 24/7 gateway, persistent memory, Discord/Telegram/Slack</div>
+        <span class="pack-badge badge-default">Default</span>
+      </div>
+      <div class="pack-card">
+        <div class="pack-name">Claude Code</div>
+        <div class="pack-desc">Anthropic's coding agent — native Bedrock support, auto-updates, full tool access</div>
+        <span class="pack-badge badge-agent">Agent</span>
+      </div>
+      <div class="pack-card">
+        <div class="pack-name">Kiro CLI</div>
+        <div class="pack-desc">AWS agentic IDE terminal client with MCP server support</div>
+        <span class="pack-badge badge-experimental">Experimental</span>
+      </div>
+      <div class="pack-card">
+        <div class="pack-name">Codex CLI</div>
+        <div class="pack-desc">OpenAI's coding agent — direct API, builder profile</div>
+        <span class="pack-badge badge-experimental">Experimental</span>
+      </div>
+      <div class="pack-card">
+        <div class="pack-name">NemoClaw</div>
+        <div class="pack-desc">OpenClaw in NVIDIA OpenShell sandbox — Landlock + seccomp isolation</div>
+        <span class="pack-badge badge-experimental">Experimental</span>
+      </div>
+      <div class="pack-card">
+        <div class="pack-name">Hermes</div>
+        <div class="pack-desc">NousResearch CLI agent — self-improving skills, lightweight</div>
+        <span class="pack-badge badge-experimental">Experimental</span>
+      </div>
+      <div class="pack-card">
+        <div class="pack-name">IronClaw</div>
+        <div class="pack-desc">Rust-based AI agent by NEAR AI — static binary, fast startup</div>
+        <span class="pack-badge badge-experimental">Experimental</span>
+      </div>
+      <div class="pack-card">
+        <div class="pack-name">Roundhouse</div>
+        <div class="pack-desc">Pi-based agent with Telegram channel — native Bedrock SDK</div>
+        <span class="pack-badge badge-agent">Agent</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 7: BEDROCKIFY
+     ================================================================ -->
+<section class="slide light">
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-blue-600);">Key component</div>
+    <h2 class="h-title" style="margin-bottom: 16px;">Bedrockify — the universal adapter</h2>
+    <p class="body-lg" style="color: var(--aws-gray-600); max-width: 750px; margin-bottom: 32px;">
+      A local systemd daemon that exposes an OpenAI-compatible API on localhost:8090, proxying requests to Amazon Bedrock. Any agent that speaks the OpenAI protocol works on AWS without code changes.
+    </p>
+    <div class="flow">
+      <div class="flow-step">Agent (any runtime)</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color: var(--aws-blue-500);">Bedrockify<br><span style="font-size:12px;opacity:0.6;">localhost:8090</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">Amazon Bedrock<br><span style="font-size:12px;opacity:0.6;">IAM auth</span></div>
+    </div>
+    <p class="body-md" style="color: var(--aws-gray-550); margin-top: 24px;">
+      Claude Code and Kiro bypass bedrockify — they have native Bedrock support built in.
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 8: OPENCLAW ORCHESTRATION
+     ================================================================ -->
+<section class="slide dark">
+  <div class="pattern-bg"></div>
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-lime-400);">OpenClaw integration</div>
+    <h2 class="h-section" style="margin-bottom: 16px;">How Lowkey deploys OpenClaw</h2>
+    <p class="body-lg" style="opacity: 0.55; max-width: 750px; margin-bottom: 32px;">
+      The OpenClaw pack installs a persistent AI gateway with memory, cron scheduling, multi-channel messaging, and Claude Code as a sub-agent.
+    </p>
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-tag">Gateway</div>
+        <h3>24/7 Daemon</h3>
+        <p>Runs as systemd on port 3001. Always on, always reachable via SSM or messaging channels.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Memory</div>
+        <h3>Persistent State</h3>
+        <p>80GB data volume stores workspace, memory files, and session history across restarts.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Channels</div>
+        <h3>Multi-Surface</h3>
+        <p>Connect Discord, Telegram, or Slack. Agent responds to messages, runs cron jobs, posts updates.</p>
+      </div>
+      <div class="card">
+        <div class="card-tag">Skills</div>
+        <h3>Bootstraps</h3>
+        <p>Post-deploy bootstraps configure alarms, coding standards, security protocols, and disk management.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 9: QUICK START
+     ================================================================ -->
+<section class="slide alt">
+  <div class="slide-inner">
+    <div class="eyebrow" style="color: var(--aws-orange-500);">Quick start</div>
+    <h2 class="h-section" style="margin-bottom: 24px;">Three commands to try</h2>
+    <div class="code-block">
+<span class="code-comment"># Full builder agent (OpenClaw — can create/modify/delete AWS resources)</span>
+<span class="code-cmd">curl -sfL install.lowkey.run | bash -s -- -y --pack openclaw --profile builder</span>
+
+<span class="code-comment"># Read-only advisor (can see everything, change nothing)</span>
+<span class="code-cmd">curl -sfL install.lowkey.run | bash -s -- -y --pack openclaw --profile account_assistant</span>
+
+<span class="code-comment"># Sandboxed personal assistant (NemoClaw — isolated in OpenShell sandbox)</span>
+<span class="code-cmd">curl -sfL install.lowkey.run | bash -s -- -y --pack nemoclaw --profile personal_assistant</span>
+    </div>
+    <p class="body-md" style="opacity: 0.55; margin-top: 24px;">
+      Requires: AWS CLI with admin access on a dedicated sandbox account. Works from CloudShell too.
+    </p>
+  </div>
+</section>
+
+<!-- ================================================================
+     SLIDE 10: CTA
+     ================================================================ -->
+<section class="slide dark" style="min-height: 70vh;">
+  <div class="slide-inner" style="text-align: center;">
+    <h2 class="h-section" style="margin-bottom: 16px;">Get started</h2>
+    <p class="body-lg" style="opacity: 0.55; margin-bottom: 32px;">
+      Deploy your first agent in under 10 minutes.
+    </p>
+    <div class="cta-box">
+      <p class="body-md" style="opacity: 0.5;">One command:</p>
+      <code>curl -sfL install.lowkey.run | bash</code>
+      <br>
+      <a href="https://github.com/inceptionstack/lowkey" target="_blank">View on GitHub →</a>
+    </div>
+    <p class="body-sm" style="opacity: 0.3; margin-top: 48px;">
+      Built by <a href="https://github.com/inceptionstack" style="color: var(--aws-gray-400); text-decoration: none;">InceptionStack</a>
+      · Powered by <a href="https://github.com/openclaw/openclaw" style="color: var(--aws-gray-400); text-decoration: none;">OpenClaw</a>
+      + <a href="https://aws.amazon.com/bedrock/" style="color: var(--aws-gray-400); text-decoration: none;">Amazon Bedrock</a>
+    </p>
+  </div>
+</section>
+
+<script>
+// Scroll-triggered fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.slide-inner').forEach(el => observer.observe(el));
+
+// Trigger first slide immediately
+setTimeout(() => {
+  const first = document.querySelector('.slide-inner');
+  if (first) first.classList.add('visible');
+}, 100);
+</script>
+</body>
+</html>
