@@ -100,6 +100,49 @@ document.addEventListener('fullscreenchange', () => {
   .state-deleted { background: var(--aws-rose-100); color: var(--aws-rose-700); }
   .state-arrow { color: var(--aws-gray-400); font-size: 24px; }
 
+  .gotcha-box {
+    padding: 24px 32px; border-radius: 12px; background: var(--aws-amber-50);
+    border: 2px solid var(--aws-amber-300); display: flex; gap: 16px; align-items: start;
+  }
+  .gotcha-icon { font-size: 28px; flex-shrink: 0; }
+  .gotcha-text { font-size: 22px; color: var(--aws-gray-750); line-height: 1.5; }
+
+  .console-step {
+    display: grid; grid-template-columns: 56px 1fr; gap: 20px; align-items: start;
+    padding: 28px 32px; border-radius: 12px; background: var(--aws-gray-50);
+    border: 1px solid var(--aws-gray-250);
+  }
+  .console-step-num {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--aws-purple-600);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--aws-font-mono); font-size: 20px; font-weight: 700; color: var(--aws-white);
+  }
+  .console-step-title { font-size: 24px; font-weight: 500; margin-bottom: 6px; }
+  .console-step-detail { font-size: 20px; color: var(--aws-gray-600); line-height: 1.4; }
+  .console-path {
+    font-family: var(--aws-font-mono); font-size: 18px; color: var(--aws-purple-700);
+    background: var(--aws-purple-50); padding: 4px 12px; border-radius: 6px;
+    display: inline-block; margin-top: 8px;
+  }
+
+  .vs-divider {
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--aws-font-mono); font-size: 20px; font-weight: 700;
+    color: var(--aws-gray-400); padding: 0 24px;
+  }
+  .option-card {
+    flex: 1; padding: 36px; border-radius: 16px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .option-card.option-a { background: var(--aws-purple-50); border: 2px solid var(--aws-purple-200); }
+  .option-card.option-b { background: var(--aws-cyan-50); border: 2px solid var(--aws-cyan-200); }
+  .option-label {
+    font-family: var(--aws-font-mono); font-size: 16px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .option-title { font-size: 26px; font-weight: 500; }
+  .option-detail { font-size: 20px; color: var(--aws-gray-650); line-height: 1.4; }
+
   .checklist { display: flex; flex-direction: column; gap: 32px; }
   .check-item { display: grid; grid-template-columns: 48px 1fr; gap: 20px; align-items: start; }
   .check-icon {
@@ -139,6 +182,14 @@ document.addEventListener('fullscreenchange', () => {
   "Two paths for distribution: org-wide is automatic and covers new accounts; individual grants give targeted control. Pick what fits your governance model.",
   "Three prerequisites before you start: all-features org, License Manager SLR, and Marketplace trusted access. Console setup takes about 5 minutes.",
   "Grant lifecycle is simple: Pending to Active (or Rejected/Deleted). Grants must be Active before anyone can invoke the model.",
+  "Step 1: Check grant status. Go to License Manager in us-east-1, Granted Licenses. Key gotcha: grants can auto-accept but remain Disabled — they need explicit activation.",
+  "Step 2: Two activation paths. Bulk activate from the grantor selects the parent grant and activates all children. Or each member account can activate individually. Either way, Disabled means no discount.",
+  "Here's what it looks like in the console — the grant details page shows the Activate button top-right. The confirmation dialog warns about replacing active grants.",
+  "After activation, the grant transitions from Processing to Workflow completed. This confirms the entitlement is live and the negotiated rate should now apply.",
+  "Step 3: Confirm the discount is actually flowing. Check Cost Explorer or billing for the member accounts. Compare billed rate against list price vs. MPPO rate. Billing data can take 24-48 hours.",
+  "Creating a grant: go to License Manager, select your license, Create Grant. Fill in a descriptive name and your Organization ID or specific account ID. The home region is locked to us-east-1.",
+  "First time you create an org-level grant, you'll be prompted to Link AWS Organizations. This is a one-time, irreversible step that adds SLRs to all member accounts and enables auto-acceptance.",
+  "One-time prerequisites setup: find your Org ID in Organizations, create the Marketplace SLR in Settings, and link your Organizations accounts when prompted during first grant creation.",
   "Common questions answered. Key points: subscriptions are per model, org grants auto-cover new accounts, and you can revoke anytime."
 ]
 </script>
@@ -195,7 +246,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">02 / 08</div>
+    <div class="slide-no">02 / 16</div>
   </section>
 
   <!-- 3. THE SOLUTION -->
@@ -229,7 +280,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">03 / 08</div>
+    <div class="slide-no">03 / 16</div>
   </section>
 
   <!-- 4. HOW IT WORKS -->
@@ -271,7 +322,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">04 / 08</div>
+    <div class="slide-no">04 / 16</div>
   </section>
 
   <!-- 5. TWO PATHS -->
@@ -304,7 +355,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">05 / 08</div>
+    <div class="slide-no">05 / 16</div>
   </section>
 
   <!-- 6. SETUP CHECKLIST -->
@@ -340,7 +391,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">06 / 08</div>
+    <div class="slide-no">06 / 16</div>
   </section>
 
   <!-- 7. GRANT LIFECYCLE -->
@@ -382,11 +433,243 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">07 / 08</div>
+    <div class="slide-no">07 / 16</div>
   </section>
 
-  <!-- 8. FAQ -->
-  <section class="slide" data-screen-label="08 FAQ">
+  <!-- 8. CONSOLE WALKTHROUGH: CHECK GRANT STATUS -->
+  <section class="slide" data-screen-label="08 Console: Check grant status">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — STEP 1</div>
+      <h1 class="h-title" style="max-width: 1500px;">Check grant status</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px; max-width: 1100px;">
+        In AWS License Manager (us-east-1), navigate to <strong>Granted Licenses</strong> and verify each grant shows as <strong>Active</strong>.
+      </p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 160px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Granted Licenses list view</p>
+        <img src="assets/screenshots/Granted-licenses-AWS-License-Manager-us-east-1-2026-06-26_03_49_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Granted Licenses list">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Grant showing "Disabled" status ⚠️</p>
+        <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_03_58_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-rose-200); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant in Disabled state">
+      </div>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 73px;">
+      <div class="gotcha-box">
+        <div class="gotcha-icon">⚠️</div>
+        <div class="gotcha-text"><strong>Gotcha:</strong> Grants with "All Features" enabled auto-accept but still appear as <strong>Disabled</strong> — they must be explicitly activated before the negotiated rate applies.</div>
+      </div>
+    </div>
+    <div class="slide-no">08 / 16</div>
+  </section>
+
+  <!-- 9. CONSOLE WALKTHROUGH: ACTIVATE GRANTS (OPTIONS) -->
+  <section class="slide" data-screen-label="09 Console: Activate grants">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — STEP 2</div>
+      <h1 class="h-title" style="max-width: 1500px;">Activate the grants</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Two options — bulk from the grantor account, or individually in each member account.</p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 480px; bottom: 200px; display: flex; align-items: stretch;">
+      <div class="option-card option-a">
+        <div class="option-label" style="color: var(--aws-purple-700);">Option A — Bulk activate</div>
+        <div class="option-title">Grantor (management account)</div>
+        <div class="option-detail">Select the parent grant in License Manager → click <strong>Activate</strong>. All child grants across the org activate at once.</div>
+        <div class="console-path">License Manager → Granted Licenses → Select grant → Activate</div>
+      </div>
+      <div class="vs-divider">OR</div>
+      <div class="option-card option-b">
+        <div class="option-label" style="color: var(--aws-cyan-700);">Option B — Individual activate</div>
+        <div class="option-title">Each member account</div>
+        <div class="option-detail">Log into the member account → License Manager (us-east-1) → Granted Licenses → <strong>Activate</strong>.</div>
+        <div class="console-path">Member acct → License Manager → Granted Licenses → Activate</div>
+      </div>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 73px;">
+      <div class="gotcha-box">
+        <div class="gotcha-icon">⚠️</div>
+        <div class="gotcha-text"><strong>Gotcha:</strong> Grants in "Disabled" state do NOT apply the negotiated rate — the account will be billed at public list pricing until you explicitly activate.</div>
+      </div>
+    </div>
+    <div class="slide-no">09 / 16</div>
+  </section>
+
+  <!-- 10. CONSOLE WALKTHROUGH: GRANT DETAILS & ACTIVATE -->
+  <section class="slide" data-screen-label="10 Console: Grant details activate">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — STEP 2 (CONT.)</div>
+      <h1 class="h-title" style="max-width: 1500px;">Activating a grant</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Click into the grant → hit the <strong>Activate</strong> button in the top right.</p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 73px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+      <div>
+        <p class="body-sm" style="color: var(--aws-gray-550); margin-bottom: 12px; text-align: center;">Grant details — Disabled state</p>
+        <img src="assets/screenshots/Grant-details-AWS-License-Manager-us-east-1-2026-06-26_03_58_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant details with Activate button">
+      </div>
+      <div>
+        <p class="body-sm" style="color: var(--aws-gray-550); margin-bottom: 12px; text-align: center;">Activation confirmation dialog</p>
+        <img src="assets/screenshots/Grant-details-AWS-License-Manager-us-east-1-2026-06-26_03_59_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Activate grant confirmation">
+      </div>
+    </div>
+    <div class="slide-no">10 / 16</div>
+  </section>
+
+  <!-- 11. CONSOLE WALKTHROUGH: GRANT PROCESSING TO COMPLETED -->
+  <section class="slide" data-screen-label="11 Console: Grant workflow completed">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — STEP 2 (RESULT)</div>
+      <h1 class="h-title" style="max-width: 1500px;">Grant activation lifecycle</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">After clicking Activate, the grant transitions through Processing → <strong>Workflow completed</strong>.</p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 73px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+      <div>
+        <p class="body-sm" style="color: var(--aws-gray-550); margin-bottom: 12px; text-align: center;">Status: Processing</p>
+        <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_03_57_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant processing">
+      </div>
+      <div>
+        <p class="body-sm" style="color: var(--aws-gray-550); margin-bottom: 12px; text-align: center;">Status: Workflow completed ✓</p>
+        <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_04_02_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant workflow completed">
+      </div>
+    </div>
+    <div class="slide-no">11 / 16</div>
+  </section>
+
+  <!-- 12. CONSOLE WALKTHROUGH: CONFIRM DISCOUNT IN BILLING -->
+  <section class="slide" data-screen-label="12 Console: Confirm discount flowing">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — STEP 3</div>
+      <h1 class="h-title" style="max-width: 1500px;">Confirm discount is flowing</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px; max-width: 1200px;">
+        The ultimate confirmation that the negotiated rate is active — check actual billing.
+      </p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 480px; bottom: 200px;">
+      <div class="checklist">
+        <div class="check-item">
+          <div class="check-icon">1</div>
+          <div>
+            <div class="body-lg" style="font-weight: 500;">Open AWS Cost Explorer or Billing Console</div>
+            <div class="body-md" style="color: var(--aws-gray-600); margin-top: 8px;">Filter to the member accounts making Bedrock API calls</div>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon">2</div>
+          <div>
+            <div class="body-lg" style="font-weight: 500;">Compare billed rate vs. public list rate</div>
+            <div class="body-md" style="color: var(--aws-gray-600); margin-top: 8px;">The per-token rate should match the negotiated MPPO rate, not the standard published price</div>
+          </div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon">3</div>
+          <div>
+            <div class="body-lg" style="font-weight: 500;">Check usage type and line items</div>
+            <div class="body-md" style="color: var(--aws-gray-600); margin-top: 8px;">Look for Marketplace line items vs. standard Bedrock usage — confirms the entitlement path is active</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 73px;">
+      <div class="gotcha-box">
+        <div class="gotcha-icon">💡</div>
+        <div class="gotcha-text"><strong>Tip:</strong> Billing data may take 24–48 hours to reflect. Make a test API call and check the next day's Cost Explorer for confirmation.</div>
+      </div>
+    </div>
+    <div class="slide-no">12 / 16</div>
+  </section>
+
+  <!-- 13. CONSOLE WALKTHROUGH: CREATING A GRANT -->
+  <section class="slide" data-screen-label="13 Console: Creating a grant">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — CREATING A GRANT</div>
+      <h1 class="h-title" style="max-width: 1500px;">Create grant from License Manager</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Navigate to your license → <strong>Create grant</strong>. Enter a name and your Org ID (or account ID).</p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 73px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Create grant form (empty)</p>
+        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_53_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant form">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Filled in with grant name + Org ID</p>
+        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_56_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant filled">
+      </div>
+    </div>
+    <div class="slide-no">13 / 16</div>
+  </section>
+
+  <!-- 14. CONSOLE WALKTHROUGH: LINK ORGS & SUCCESS -->
+  <section class="slide" data-screen-label="14 Console: Link orgs and success">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — CREATING A GRANT (CONT.)</div>
+      <h1 class="h-title" style="max-width: 1500px;">Link Organizations & grant created</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">First time only: you'll be prompted to link your AWS Organizations accounts. Then the grant is created successfully.</p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 120px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Link Organizations prompt (one-time)</p>
+        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_56_PM-x.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Link Organizations dialog">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">Success — orgs linked, grant ready</p>
+        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_57_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant created successfully">
+      </div>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 73px;">
+      <div class="gotcha-box">
+        <div class="gotcha-icon">⚠️</div>
+        <div class="gotcha-text"><strong>Gotcha:</strong> The "Link AWS Organizations accounts" step is irreversible and one-time. It adds a service-linked role to all member accounts and enables auto-acceptance of distributed grants.</div>
+      </div>
+    </div>
+    <div class="slide-no">14 / 16</div>
+  </section>
+
+  <!-- 15. CONSOLE WALKTHROUGH: SETUP PREREQUISITES -->
+  <section class="slide" data-screen-label="15 Console: Prerequisites setup">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">CONSOLE WALKTHROUGH — PREREQUISITES</div>
+      <h1 class="h-title" style="max-width: 1500px;">Initial setup (one-time)</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">Before creating grants, ensure these are configured from the management account.</p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 73px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">1. Find your Organization ID</p>
+        <img src="assets/screenshots/AWS-accounts-AWS-Organizations-Global-2026-06-26_03_55_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="AWS Organizations showing Org ID">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">2. Marketplace Settings (before SLR)</p>
+        <img src="assets/screenshots/Settings-AWS-Marketplace-Global-2026-06-26_03_51_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Marketplace settings before SLR">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">3. After SLR created ✓</p>
+        <img src="assets/screenshots/Settings-AWS-Marketplace-Global-2026-06-26_03_52_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Marketplace settings SLR created">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <p class="body-sm" style="color: var(--aws-gray-550); text-align: center;">4. Link Organizations (one-time)</p>
+        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_56_PM-x.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Link Organizations dialog">
+      </div>
+    </div>
+    <div class="slide-no">15 / 16</div>
+  </section>
+
+  <!-- 16. FAQ -->
+  <section class="slide" data-screen-label="16 FAQ">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -421,7 +704,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">08 / 08</div>
+    <div class="slide-no">14 / 16</div>
   </section>
 
 </deck-stage>
