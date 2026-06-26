@@ -185,6 +185,7 @@ document.addEventListener('fullscreenchange', () => {
   "Now let's walk through the exact console steps. Three parts: create the grant, activate it, and confirm the discount is actually flowing to your accounts.",
   "First prerequisite: in AWS Marketplace Settings, create the License Manager service-linked role. This enables cross-account license distribution via Organizations.",
   "Create the grant: find your Org ID in Organizations, then go to License Manager, select your license, and fill in the Create Grant form with a name and the Org ID.",
+  "The grant target field accepts three options: a specific account ID for targeted access, an Organization ID for org-wide coverage, or an OU ID for scoped rollouts. Most customers use org-wide.",
   "First time you create an org-level grant, you'll be prompted to Link AWS Organizations. This is a one-time, irreversible step that adds SLRs to all member accounts.",
   "Key gotcha: after creation, grants land in Disabled state — they auto-accept but do NOT auto-activate. Disabled means no negotiated rate is applied yet.",
   "Click into the grant, hit the Activate button top-right, and confirm. The dialog warns about replacing existing active grants for the same product.",
@@ -246,7 +247,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">02 / 16</div>
+    <div class="slide-no">02 / 17</div>
   </section>
 
   <!-- 3. THE SOLUTION -->
@@ -280,7 +281,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">03 / 16</div>
+    <div class="slide-no">03 / 17</div>
   </section>
 
   <!-- 4. HOW IT WORKS -->
@@ -322,7 +323,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">04 / 16</div>
+    <div class="slide-no">04 / 17</div>
   </section>
 
   <!-- 5. TWO PATHS -->
@@ -355,7 +356,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">05 / 16</div>
+    <div class="slide-no">05 / 17</div>
   </section>
 
   <!-- 6. SETUP CHECKLIST -->
@@ -391,7 +392,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">06 / 16</div>
+    <div class="slide-no">06 / 17</div>
   </section>
 
   <!-- 7. GRANT LIFECYCLE -->
@@ -433,7 +434,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">07 / 16</div>
+    <div class="slide-no">07 / 17</div>
   </section>
 
   <!-- 8. SECTION COVER: CONSOLE WALKTHROUGH -->
@@ -492,7 +493,7 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Settings-AWS-Marketplace-Global-2026-06-26_03_52_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Marketplace settings SLR created">
       </div>
     </div>
-    <div class="slide-no">09 / 16</div>
+    <div class="slide-no">09 / 17</div>
   </section>
 
   <!-- 10. STEP 2: CREATE GRANT -->
@@ -518,10 +519,56 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_53_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant form">
       </div>
     </div>
-    <div class="slide-no">10 / 16</div>
+    <div class="slide-no">10 / 17</div>
   </section>
 
-  <!-- 11. STEP 2: FILL FORM, LINK ORGS & GRANT CREATED -->
+  <!-- 11. STEP 2: GRANT TARGET OPTIONS -->
+  <section class="slide" data-screen-label="11 Console: Grant target options">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 22px;">STEP 2 — CREATE GRANT (TARGET)</div>
+      <h1 class="h-title" style="max-width: 1500px;">Three grant target options</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 20px;">The grant form accepts an AWS account ID, Organization ID, <em>or</em> Organizational Unit ID — giving you flexibility in scope.</p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 440px; bottom: 200px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_53_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-purple-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant form highlighting target field">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 28px; padding-top: 16px;">
+        <div style="display: flex; gap: 16px; align-items: start;">
+          <div class="console-step-num" style="width: 36px; height: 36px; font-size: 14px; flex-shrink: 0;">A</div>
+          <div>
+            <div class="body-md" style="font-weight: 500;">AWS Account ID</div>
+            <div class="body-sm" style="color: var(--aws-gray-600);">Target a single account — recipient must accept + activate</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: start;">
+          <div class="console-step-num" style="width: 36px; height: 36px; font-size: 14px; flex-shrink: 0;">B</div>
+          <div>
+            <div class="body-md" style="font-weight: 500;">AWS Organization ID</div>
+            <div class="body-sm" style="color: var(--aws-gray-600);">Covers all member accounts — new accounts auto-inherit</div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 16px; align-items: start;">
+          <div class="console-step-num" style="width: 36px; height: 36px; font-size: 14px; flex-shrink: 0;">C</div>
+          <div>
+            <div class="body-md" style="font-weight: 500;">AWS Organizational Unit ID</div>
+            <div class="body-sm" style="color: var(--aws-gray-600);">Scope to a specific OU — balances broad coverage with control</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 73px;">
+      <div class="gotcha-box">
+        <div class="gotcha-icon">💡</div>
+        <div class="gotcha-text"><strong>Tip:</strong> Org-wide grants are simplest for most customers — new accounts automatically get access. Use OU-level grants for segmented rollouts (e.g. production OU only).</div>
+      </div>
+    </div>
+    <div class="slide-no">11 / 17</div>
+  </section>
+
+  <!-- 12. STEP 2: FILL FORM, LINK ORGS & GRANT CREATED -->
   <section class="slide" data-screen-label="11 Console: Fill form and grant created">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
@@ -554,7 +601,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Find your Organization ID in AWS Organizations → AWS accounts (left sidebar). The "Link Organizations" prompt only appears once — it enables cross-account grant distribution.</div>
       </div>
     </div>
-    <div class="slide-no">11 / 16</div>
+    <div class="slide-no">12 / 17</div>
   </section>
 
   <!-- 12. STEP 3: CHECK GRANT STATUS -->
@@ -580,10 +627,10 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Gotcha:</strong> Grants with "All Features" enabled auto-accept but land in <strong>Disabled</strong> state — they must be explicitly activated before the negotiated rate kicks in.</div>
       </div>
     </div>
-    <div class="slide-no">12 / 16</div>
+    <div class="slide-no">13 / 17</div>
   </section>
 
-  <!-- 13. STEP 4: ACTIVATE THE GRANT -->
+  <!-- 14. STEP 4: ACTIVATE THE GRANT -->
   <section class="slide" data-screen-label="13 Console: Activate grant">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
@@ -608,10 +655,10 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Gotcha:</strong> Until activated, the account is billed at <strong>public list pricing</strong> — not the negotiated MPPO rate. Disabled ≠ Active.</div>
       </div>
     </div>
-    <div class="slide-no">13 / 16</div>
+    <div class="slide-no">14 / 17</div>
   </section>
 
-  <!-- 14. STEP 4: WORKFLOW COMPLETED -->
+  <!-- 15. STEP 4: WORKFLOW COMPLETED -->
   <section class="slide" data-screen-label="14 Console: Workflow completed">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
@@ -630,10 +677,10 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_04_02_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant workflow completed">
       </div>
     </div>
-    <div class="slide-no">14 / 16</div>
+    <div class="slide-no">15 / 17</div>
   </section>
 
-  <!-- 15. STEP 5: CONFIRM DISCOUNT FLOWING -->
+  <!-- 16. STEP 5: CONFIRM DISCOUNT FLOWING -->
   <section class="slide" data-screen-label="15 Console: Confirm discount">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
@@ -675,11 +722,11 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Billing data may take 24–48 hours to reflect. Make a test API call and check the next day's Cost Explorer for confirmation.</div>
       </div>
     </div>
-    <div class="slide-no">15 / 16</div>
+    <div class="slide-no">16 / 17</div>
   </section>
 
-  <!-- 16. FAQ -->
-  <section class="slide" data-screen-label="16 FAQ">
+  <!-- 17. FAQ -->
+  <section class="slide" data-screen-label="17 FAQ">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -714,7 +761,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">16 / 16</div>
+    <div class="slide-no">16 / 17</div>
   </section>
 
 </deck-stage>
