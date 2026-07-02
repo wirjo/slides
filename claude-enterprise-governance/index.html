@@ -185,23 +185,23 @@ document.addEventListener('fullscreenchange', () => {
        ============================================================ -->
   <section class="slide" data-screen-label="03 Admin overview">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
-    <div class="safe" style="top: 180px;">
+    <div class="safe" style="top: 160px;">
       <div class="eyebrow" style="color: var(--aws-purple-600);">Admin console · Libraries</div>
-      <h2 class="h-title">Three governance areas</h2>
-      <div class="grid-3" style="margin-top: 56px; flex: 1; align-items: start;">
-        <div class="access-card" style="background: var(--aws-purple-50); padding: 36px 36px;">
+      <h2 class="h-section">Three governance areas</h2>
+      <div class="grid-3" style="margin-top: 72px; flex: 1; align-items: start;">
+        <div class="access-card" style="background: var(--aws-purple-50); padding: 40px 36px; gap: 20px;">
           <div class="icon-circle" style="background: var(--aws-purple-600);">P</div>
-          <p class="label" style="font-size: 28px;">Plugins</p>
-          <p class="desc" style="font-size: 22px; line-height: 1.5;">Third-party integrations that connect Claude to external tools and services (e.g. Jira, GitHub, Confluence). Admins control which plugins are visible, installable, or mandatory — with per-team overrides.</p>
+          <p class="label" style="font-size: 32px;">Plugins</p>
+          <p class="desc" style="font-size: 22px; line-height: 1.5;">Extensions that add capabilities to Claude — including integrations and connectors to external services (Jira, GitHub, Slack) as well as packaged skills and tools. Admins control visibility, installation, and access per team.</p>
         </div>
-        <div class="access-card" style="background: var(--aws-teal-50); padding: 36px 36px;">
+        <div class="access-card" style="background: var(--aws-teal-50); padding: 40px 36px; gap: 20px;">
           <div class="icon-circle" style="background: var(--aws-teal-600);">S</div>
-          <p class="label" style="font-size: 28px;">Skills</p>
+          <p class="label" style="font-size: 32px;">Skills</p>
           <p class="desc" style="font-size: 22px; line-height: 1.5;">Reusable prompt instructions that teach Claude how to perform specific tasks (e.g. "Write a PRD", "Review code in our style"). Admins control who can create, share, and deploy skills organization-wide.</p>
         </div>
-        <div class="access-card" style="background: var(--aws-blue-50); padding: 36px 36px;">
+        <div class="access-card" style="background: var(--aws-blue-50); padding: 40px 36px; gap: 20px;">
           <div class="icon-circle" style="background: var(--aws-blue-600);">C</div>
-          <p class="label" style="font-size: 28px;">Claude Code</p>
+          <p class="label" style="font-size: 32px;">Claude Code</p>
           <p class="desc" style="font-size: 22px; line-height: 1.5;">The agentic coding tool for terminal and IDE. Admins control desktop access, web access, session sharing, and feature capabilities like fast mode and routines.</p>
         </div>
       </div>
@@ -212,14 +212,14 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        SECTION: PLUGIN GOVERNANCE
        ============================================================ -->
-  <section class="slide dark" data-screen-label="Section — Plugin governance">
-    <div class="section-bg"></div>
+  <section class="slide" data-screen-label="Section — Plugin governance">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-purple-50) 0%, var(--aws-white) 100%);"></div>
     <div class="safe" style="justify-content: center;">
-      <div class="eyebrow" style="color: var(--aws-purple-300);">Section 01</div>
+      <div class="eyebrow" style="color: var(--aws-purple-600);">Section 01</div>
       <h2 class="h-section" style="max-width: 1200px;">Plugin governance</h2>
-      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-400);">Control which integrations are available, who can install them, and enforce compliance requirements across your organization</p>
+      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-600);">Control which integrations are available, who can install them, and enforce compliance requirements across your organization</p>
     </div>
-    <img class="logo-br" src="assets/aws-logo-white.svg" alt="AWS">
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
   </section>
 
   <!-- ============================================================
@@ -309,14 +309,14 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        SECTION: SKILLS GOVERNANCE
        ============================================================ -->
-  <section class="slide dark" data-screen-label="Section — Skills governance">
-    <div class="section-bg"></div>
+  <section class="slide" data-screen-label="Section — Skills governance">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-teal-50) 0%, var(--aws-white) 100%);"></div>
     <div class="safe" style="justify-content: center;">
-      <div class="eyebrow" style="color: var(--aws-teal-300);">Section 02</div>
+      <div class="eyebrow" style="color: var(--aws-teal-600);">Section 02</div>
       <h2 class="h-section" style="max-width: 1200px;">Skills governance</h2>
-      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-400);">Manage how skills are created, shared, and deployed — from individual user skills to organization-wide approved skill libraries</p>
+      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-600);">Manage how skills are created, shared, and deployed — from individual user skills to organization-wide approved skill libraries</p>
     </div>
-    <img class="logo-br" src="assets/aws-logo-white.svg" alt="AWS">
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
   </section>
 
   <!-- ============================================================
@@ -408,38 +408,87 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
   <!-- ============================================================
-       8b. USER SKILL CREATION + SHARING EXPERIENCE
+       8b. USER SKILL CREATION — STEP 1
        ============================================================ -->
-  <section class="slide" data-screen-label="08b User skill creation and sharing">
+  <section class="slide" data-screen-label="08b User skills — Create">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
-        <div class="eyebrow" style="color: var(--aws-teal-600);">Skills governance · User experience</div>
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Skills governance · User experience · Step 1 of 3</div>
         <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
-          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Customize → Skills</span>
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Chat</span>
         </div>
       </div>
-      <h2 class="h-content">How end-users create and share skills</h2>
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 24px; flex: 1;">
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <img src="assets/screenshots/claude-admin-10-skill-creation.png" alt="User creating a skill in Claude chat" class="screenshot" style="max-width: 100%; max-height: 240px; object-fit: contain;">
-          <p class="body-sm" style="text-align: center;">1. Users build skills in chat</p>
+      <h2 class="h-content">Users build skills directly in chat</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <p class="body-lg" style="color: var(--aws-gray-600);">End-users can create skills by describing what they want Claude to do. Claude generates the skill instructions automatically from the conversation.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Admin control</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">Disable "User-created skills" in the admin console to prevent users from creating skills entirely.</p>
+          </div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <img src="assets/screenshots/claude-admin-11-skill-sharing.png" alt="Skills panel showing personal skills and share toggle" class="screenshot" style="max-width: 100%; max-height: 240px; object-fit: contain;">
-          <p class="body-sm" style="text-align: center;">2. Skills appear under Personal skills</p>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <img src="assets/screenshots/claude-admin-10-skill-creation.png" alt="User creating a skill in Claude chat" class="screenshot" style="max-width: 100%; max-height: 580px; object-fit: contain;">
         </div>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <img src="assets/screenshots/claude-admin-12-skill-share-options.png" alt="Share modal with access options" class="screenshot" style="max-width: 100%; max-height: 240px; object-fit: contain;">
-          <p class="body-sm" style="text-align: center;">3. Share with individuals or entire org</p>
-        </div>
-      </div>
-      <div class="callout-box" style="margin-top: 20px;">
-        <p class="body-md" style="font-weight: 500;">What admins control</p>
-        <p class="body-md" style="color: var(--aws-gray-600);">Disable "User-created skills" to block step 1. Disable "Skill sharing" to hide the Share toggle and Copy link in step 3. Disable "Share with organization" to remove the "Everyone at [org]" option. Users will only see admin-approved organization skills.</p>
       </div>
     </div>
-    <span class="slide-no">08b</span>
+  </section>
+
+  <!-- ============================================================
+       8c. USER SKILL CREATION — STEP 2
+       ============================================================ -->
+  <section class="slide" data-screen-label="08c User skills — Personal">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Skills governance · User experience · Step 2 of 3</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Customize → Skills → Personal skills</span>
+        </div>
+      </div>
+      <h2 class="h-content">Skills appear under Personal skills</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <p class="body-lg" style="color: var(--aws-gray-600);">Created skills are saved to the user's personal skills library. From here, users can enable/disable skills, edit instructions, and share with others.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Admin control</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">Disable "Skill sharing" to hide the Share toggle entirely — skills stay private to the individual user.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <img src="assets/screenshots/claude-admin-11-skill-sharing.png" alt="Skills panel showing personal skills and share toggle" class="screenshot" style="max-width: 100%; max-height: 580px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       8d. USER SKILL CREATION — STEP 3
+       ============================================================ -->
+  <section class="slide" data-screen-label="08d User skills — Share">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Skills governance · User experience · Step 3 of 3</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Skills → Share → Access options</span>
+        </div>
+      </div>
+      <h2 class="h-content">Share with individuals or the entire org</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <p class="body-lg" style="color: var(--aws-gray-600);">Users can share skills via a link to specific people, or make them available to everyone in the organization.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Admin control</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">Disable "Share with organization" to remove the "Everyone at [org]" option — users can only share via direct link. Disable "Skill sharing" entirely to block all sharing.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <img src="assets/screenshots/claude-admin-12-skill-share-options.png" alt="Share modal with access options" class="screenshot" style="max-width: 100%; max-height: 580px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- ============================================================
