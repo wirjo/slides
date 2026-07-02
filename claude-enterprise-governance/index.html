@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claude Enterprise — Admin governance for skills, plugins, and integrations</title>
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<script src="assets/deck-stage.js"></script>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P') {
+    const deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    if (!document.fullscreenElement) {
+      deck.setAttribute('no-rail', '');
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+      deck.removeAttribute('no-rail');
+    }
+    e.preventDefault();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.removeAttribute('no-rail');
+  }
+});
+</script>
+<style>
+  html, body { margin: 0; background: #000; }
+  deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
+
+  .slide {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    font-family: var(--aws-font-display);
+    background: var(--aws-white); color: var(--aws-gray-850);
+  }
+  .slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+  .slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+  .logo-tl { position: absolute; top: 73px; left: 80px; height: 76px; width: auto; }
+  .logo-br { position: absolute; bottom: 73px; right: 80px; height: 76px; width: auto; }
+
+  .eyebrow {
+    font-family: var(--aws-font-mono); font-size: 22px; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .h-cover  { font-size: 120px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-section{ font-size: 96px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-title  { font-size: 72px; line-height: 1.1; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-content{ font-size: 56px; line-height: 1.15; font-weight: 400; text-wrap: pretty; }
+  .body-lg  { font-size: 32px; line-height: 1.35; font-weight: 400; }
+  .body-md  { font-size: 24px; line-height: 1.4; font-weight: 400; }
+  .body-sm  { font-size: 20px; line-height: 1.4; font-weight: 400; color: var(--aws-gray-550); }
+
+  .safe { position: absolute; left: 80px; right: 80px; top: 200px; bottom: 120px; display: flex; flex-direction: column; gap: 32px; }
+  .safe-top { position: absolute; left: 80px; right: 80px; top: 73px; }
+
+  .slide-no { position: absolute; right: 80px; bottom: 73px; font-family: var(--aws-font-mono); font-size: 16px; letter-spacing: 0.08em; color: var(--aws-gray-500); }
+  .dark .slide-no { color: var(--aws-gray-400); }
+
+  .cover-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--aws-purple-100) 0%, var(--aws-blue-100) 50%, var(--aws-teal-100) 100%);
+  }
+  .cover-body { position: absolute; left: 80px; top: 73px; right: 80px; bottom: 73px; display: flex; flex-direction: column; justify-content: center; gap: 32px; }
+
+  .screenshot {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    border: 1px solid var(--aws-gray-200);
+  }
+  .screenshot-dark {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    border: 1px solid var(--aws-gray-700);
+  }
+
+  .callout-box {
+    background: var(--aws-gray-100);
+    border-radius: 8px;
+    padding: 32px 40px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .dark .callout-box { background: rgba(255,255,255,0.06); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+
+  .access-card {
+    background: var(--aws-gray-100); border-radius: 8px; padding: 28px 32px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .access-card .label { font-size: 24px; font-weight: 500; }
+  .access-card .desc { font-size: 20px; line-height: 1.4; color: var(--aws-gray-600); }
+
+  .icon-circle {
+    width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 500; color: var(--aws-white); flex-shrink: 0;
+  }
+
+  .toggle-row {
+    display: flex; align-items: center; gap: 20px; padding: 20px 0;
+    border-bottom: 1px solid var(--aws-gray-200);
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-pill {
+    width: 52px; height: 28px; border-radius: 14px; flex-shrink: 0;
+  }
+  .toggle-on { background: var(--aws-teal-600); }
+  .toggle-off { background: var(--aws-gray-300); }
+
+  .rec-card {
+    background: var(--aws-purple-50); border-radius: 8px; padding: 32px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .rec-card .num {
+    font-family: var(--aws-font-mono); font-size: 18px; color: var(--aws-purple-600);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .rec-card .title { font-size: 28px; font-weight: 500; }
+  .rec-card .desc { font-size: 20px; line-height: 1.4; color: var(--aws-gray-600); }
+
+  .section-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--aws-gray-850) 0%, #1a2940 100%);
+  }
+</style>
+<script type="application/json" id="speaker-notes">
+[
+  "Cover slide — Claude Enterprise admin governance for managing skill and plugin distribution across your organization.",
+  "Context setting — the core question: how do we maintain control while enabling productivity at scale?",
+  "Overview of the admin console — the three key governance areas: Plugins, Skills, and Claude Code product settings.",
+  "Deep dive into Plugin governance — the four access levels that give admins granular per-plugin control.",
+  "Screenshot showing the plugin access dropdown with all four options and custom group access.",
+  "Skills governance — the master toggles that control whether users can create, share, or use skills at all.",
+  "Claude Code specific settings — product-level toggles for the coding assistant features.",
+  "Best practices for enterprise rollout — a phased approach to governance.",
+  "Summary and next steps."
+]
+</script>
+</head>
+<body>
+
+<deck-stage>
+
+  <!-- ============================================================
+       1. COVER
+       ============================================================ -->
+  <section class="slide" data-screen-label="01 Cover">
+    <div class="cover-bg"></div>
+    <div class="cover-body">
+      <div class="eyebrow">Claude Enterprise · Admin governance</div>
+      <h1 class="h-cover" style="max-width: 1400px;">Controlling skill and plugin distribution</h1>
+      <p class="body-lg" style="max-width: 900px; margin-top: 16px; color: var(--aws-gray-600);">Role-based access with fine-grained permissioning to manage what gets installed, by whom, and enforce organizational standards</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       2. THE C4E CHALLENGE
+       ============================================================ -->
+  <section class="slide" data-screen-label="02 The challenge">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-purple-600);">The enterprise challenge</div>
+      <h2 class="h-title" style="max-width: 1200px;">How do we enable teams without losing control?</h2>
+      <div class="grid-2" style="margin-top: 48px;">
+        <div class="callout-box">
+          <p class="body-lg" style="font-weight: 500;">What teams want</p>
+          <p class="body-md" style="color: var(--aws-gray-600);">Discover and connect integrations to Claude — gaining deep context about their work across project histories, task statuses, and organizational knowledge</p>
+        </div>
+        <div class="callout-box">
+          <p class="body-lg" style="font-weight: 500;">What admins need</p>
+          <p class="body-md" style="color: var(--aws-gray-600);">Admin controls for remote and local connectors, audit logs for compliance monitoring, and the ability to prevent unapproved third-party installs</p>
+        </div>
+      </div>
+      <p class="body-md" style="margin-top: 32px; color: var(--aws-teal-700); font-weight: 500;">Claude Enterprise delivers both — role-based access with fine-grained permissioning at the organization level</p>
+    </div>
+    <span class="slide-no">02</span>
+  </section>
+
+  <!-- ============================================================
+       3. ADMIN CONSOLE OVERVIEW
+       ============================================================ -->
+  <section class="slide" data-screen-label="03 Admin overview">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-purple-600);">Admin console</div>
+      <h2 class="h-content">Three governance areas</h2>
+      <div class="grid-3" style="margin-top: 40px; flex: 1;">
+        <div class="access-card" style="background: var(--aws-purple-50);">
+          <div class="icon-circle" style="background: var(--aws-purple-600);">P</div>
+          <p class="label">Plugins</p>
+          <p class="desc">Manage marketplaces of plugins that members can browse, install, and customize — with per-plugin access policies and group-level overrides</p>
+        </div>
+        <div class="access-card" style="background: var(--aws-teal-50);">
+          <div class="icon-circle" style="background: var(--aws-teal-600);">S</div>
+          <p class="label">Skills</p>
+          <p class="desc">Skills are folders with instructions, scripts, and resources that Claude loads when needed — admins control creation, sharing, and organization-wide deployment</p>
+        </div>
+        <div class="access-card" style="background: var(--aws-blue-50);">
+          <div class="icon-circle" style="background: var(--aws-blue-600);">C</div>
+          <p class="label">Claude Code</p>
+          <p class="desc">Enterprise deployment controls for Claude Code desktop, web access, capabilities, and usage analytics</p>
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">03</span>
+  </section>
+
+  <!-- ============================================================
+       4. PLUGIN GOVERNANCE — 4 ACCESS LEVELS
+       ============================================================ -->
+  <section class="slide" data-screen-label="04 Plugin access levels">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-purple-600);">Plugin governance</div>
+      <h2 class="h-content">Four access levels per plugin</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px;">
+        <div class="access-card" style="border-left: 4px solid var(--aws-red-600);">
+          <p class="label">Not available</p>
+          <p class="desc">Hidden from the plugin marketplace. Users won't see or be able to install it. Use this to block unapproved third-party plugins.</p>
+        </div>
+        <div class="access-card" style="border-left: 4px solid var(--aws-amber-500);">
+          <p class="label">Available to install</p>
+          <p class="desc">Appears in the plugin marketplace. Users can install or uninstall it at any time. Good for approved-but-optional tools.</p>
+        </div>
+        <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+          <p class="label">Installed by default</p>
+          <p class="desc">Pre-installed for all users. Users can disable or uninstall it. Ideal for recommended productivity tools.</p>
+        </div>
+        <div class="access-card" style="border-left: 4px solid var(--aws-purple-600);">
+          <p class="label">Required</p>
+          <p class="desc">Pre-installed and always on. Users can't disable or uninstall it. Use for compliance and security plugins.</p>
+        </div>
+      </div>
+      <p class="body-md" style="margin-top: 32px; color: var(--aws-gray-600);">Plus: custom group access lets you assign different policies per team or department</p>
+    </div>
+    <span class="slide-no">04</span>
+  </section>
+
+  <!-- ============================================================
+       5. ADD PLUGINS — SOURCES
+       ============================================================ -->
+  <section class="slide" data-screen-label="05 Add plugins">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-purple-600);">Plugin governance · Adding plugins</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Libraries → Plugins → Add plugins</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <p class="body-lg" style="font-weight: 500;">Three ways to add plugins to your organization</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-purple-600);">
+            <p class="label">Browse Anthropic sources</p>
+            <p class="desc">Curated marketplaces of plugins built by Anthropic and partners</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-blue-600);">
+            <p class="label">Sync from GitHub</p>
+            <p class="desc">Plugins synced automatically from a GitHub repository — admins control which repos are allowed</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">Upload a file</p>
+            <p class="desc">Import a .zip file for custom internal plugins</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/claude-admin-07-add-plugins.png" alt="Add plugins modal showing three source options" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">05</span>
+  </section>
+
+  <!-- ============================================================
+       6. SCREENSHOT — PLUGIN DROPDOWN
+       ============================================================ -->
+  <section class="slide" data-screen-label="06 Plugin screenshot">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-purple-600);">Plugin governance · Access controls</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Libraries → Plugins → Default access dropdown</span>
+        </div>
+      </div>
+      <img src="assets/screenshots/claude-admin-03-plugin-access-dropdown.png" alt="Plugin access dropdown showing four levels: Available to install, Installed by default, Not available, Required" class="screenshot" style="max-height: 680px; max-width: 1600px; object-fit: contain; align-self: center;">
+    </div>
+    <span class="slide-no">06</span>
+  </section>
+
+  <!-- ============================================================
+       6. SKILLS GOVERNANCE
+       ============================================================ -->
+  <section class="slide" data-screen-label="06 Skills governance">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Skills governance</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Libraries → Skills</span>
+        </div>
+      </div>
+      <h2 class="h-content">Organization-wide skills deployment controls</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 40px;">
+        <div>
+          <div class="toggle-row">
+            <div class="toggle-pill toggle-on"></div>
+            <div>
+              <p class="body-lg" style="font-weight: 500;">Code execution and file creation</p>
+              <p class="body-sm">Allow skills to run code and create files</p>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-pill toggle-off"></div>
+            <div>
+              <p class="body-lg" style="font-weight: 500;">Skills</p>
+              <p class="body-sm">Master toggle — admins must enable before users can access skills</p>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-pill toggle-off"></div>
+            <div>
+              <p class="body-lg" style="font-weight: 500;">User-created skills</p>
+              <p class="body-sm">Whether users can package their own expertise into custom skills</p>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-pill toggle-off"></div>
+            <div>
+              <p class="body-lg" style="font-weight: 500;">Skill sharing</p>
+              <p class="body-sm">Whether skills can be shared between individual users</p>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div class="toggle-pill toggle-off"></div>
+            <div>
+              <p class="body-lg" style="font-weight: 500;">Share with organization</p>
+              <p class="body-sm">Whether skills can be deployed organization-wide</p>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/claude-admin-04-skills.png" alt="Skills admin settings" class="screenshot" style="max-width: 100%; max-height: 560px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">07</span>
+  </section>
+
+  <!-- ============================================================
+       8. ORGANIZATION SKILLS + USER SKILL CREATION
+       ============================================================ -->
+  <section class="slide" data-screen-label="08 Organization skills">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Skills governance · Organization skills</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Libraries → Skills → Organization skills → Add</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <p class="body-lg" style="font-weight: 500;">Deploy curated skills across your organization</p>
+          <p class="body-md" style="color: var(--aws-gray-600);">Admins can upload approved skills that are available to all organization members — packaging expertise so Claude becomes a specialist on what matters most to your teams.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Key control</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">Only admins can add organization skills. With "User-created skills" disabled, users cannot create or install their own — they can only use what the admin has approved.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/claude-admin-09-upload-skill.png" alt="Upload skill modal for organization skills" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">08</span>
+  </section>
+
+  <!-- ============================================================
+       8b. USER SKILL CREATION + SHARING EXPERIENCE
+       ============================================================ -->
+  <section class="slide" data-screen-label="08b User skill creation and sharing">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Skills governance · User experience</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Customize → Skills</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <img src="assets/screenshots/claude-admin-10-skill-creation.png" alt="User creating a skill in Claude chat" class="screenshot" style="max-width: 100%; max-height: 240px; object-fit: contain;">
+          <p class="body-sm" style="text-align: center;">1. Users build skills in chat</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <img src="assets/screenshots/claude-admin-11-skill-sharing.png" alt="Skills panel showing personal skills and share toggle" class="screenshot" style="max-width: 100%; max-height: 240px; object-fit: contain;">
+          <p class="body-sm" style="text-align: center;">2. Skills appear under Personal skills</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <img src="assets/screenshots/claude-admin-12-skill-share-options.png" alt="Share modal with access options" class="screenshot" style="max-width: 100%; max-height: 240px; object-fit: contain;">
+          <p class="body-sm" style="text-align: center;">3. Share with individuals or entire org</p>
+        </div>
+      </div>
+      <div class="callout-box" style="margin-top: 20px;">
+        <p class="body-md" style="font-weight: 500;">What admins control</p>
+        <p class="body-md" style="color: var(--aws-gray-600);">Disable "User-created skills" to block step 1. Disable "Skill sharing" to hide the Share toggle and Copy link in step 3. Disable "Share with organization" to remove the "Everyone at [org]" option. Users will only see admin-approved organization skills.</p>
+      </div>
+    </div>
+    <span class="slide-no">08b</span>
+  </section>
+
+  <!-- ============================================================
+       9. CLAUDE CODE SETTINGS
+       ============================================================ -->
+  <section class="slide" data-screen-label="09 Claude Code settings">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-blue-600);">Claude Code</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Products → Claude Code</span>
+        </div>
+      </div>
+      <h2 class="h-content">Product-level controls</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 40px;">
+        <div>
+          <div class="callout-box" style="gap: 24px;">
+            <p class="body-lg" style="font-weight: 500;">Access controls</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">Enable or disable Claude Code Desktop, web access, session sharing, and quick web setup per organization</p>
+          </div>
+          <div class="callout-box" style="gap: 24px; margin-top: 24px;">
+            <p class="body-lg" style="font-weight: 500;">Capability toggles</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">Fast mode, routines, artifacts, dynamic workflows, and channels — each independently controllable</p>
+          </div>
+          <div class="callout-box" style="gap: 24px; margin-top: 24px;">
+            <p class="body-lg" style="font-weight: 500;">Analytics and oversight</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">Claude Code analytics and GitHub analytics for visibility into usage patterns</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/claude-admin-05-claude-code.png" alt="Claude Code admin settings" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">09</span>
+  </section>
+
+  <!-- ============================================================
+       10. BEST PRACTICES
+       ============================================================ -->
+  <section class="slide" data-screen-label="10 Best practices">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-purple-600);">Recommendations</div>
+      <h2 class="h-content">Enterprise governance best practices</h2>
+      <div class="grid-2" style="margin-top: 40px;">
+        <div class="rec-card">
+          <p class="num">01</p>
+          <p class="title">Start restrictive, open gradually</p>
+          <p class="desc">Begin with Skills disabled and plugins set to "Not available." Whitelist approved integrations after security review.</p>
+        </div>
+        <div class="rec-card">
+          <p class="num">02</p>
+          <p class="title">Use group-based access</p>
+          <p class="desc">Assign custom access per team with fine-grained permissioning — engineering gets Buildkite, design gets Canva.</p>
+        </div>
+        <div class="rec-card">
+          <p class="num">03</p>
+          <p class="title">Enforce compliance plugins as "Required"</p>
+          <p class="desc">For security and compliance tools your organization mandates, use "Required" so users cannot disable or uninstall them.</p>
+        </div>
+        <div class="rec-card">
+          <p class="num">04</p>
+          <p class="title">Disable user-created skills initially</p>
+          <p class="desc">Prevent users from installing arbitrary third-party skills from GitHub. Enable only once you have established a review and approval process.</p>
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">10</span>
+  </section>
+
+  <!-- ============================================================
+       11. CLOSING
+       ============================================================ -->
+  <section class="slide" data-screen-label="11 Summary">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-purple-50) 0%, var(--aws-blue-50) 50%, var(--aws-teal-50) 100%);"></div>
+    <div class="safe" style="top: 200px; justify-content: center;">
+      <div class="eyebrow" style="color: var(--aws-purple-600);">Summary</div>
+      <h2 class="h-section" style="max-width: 1400px;">Full admin control over skills and plugins</h2>
+      <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 24px; max-width: 1100px;">
+        <p class="body-lg" style="color: var(--aws-gray-700);">Plugins — manage marketplaces with four access levels and per-group overrides</p>
+        <p class="body-lg" style="color: var(--aws-gray-700);">Skills — control creation, sharing, and organization-wide deployment with master toggles</p>
+        <p class="body-lg" style="color: var(--aws-gray-700);">Claude Code — enterprise deployment controls for access, capabilities, and analytics</p>
+      </div>
+      <p class="body-md" style="margin-top: 48px; color: var(--aws-gray-550);">Claude Enterprise admin console: claude.ai/admin-settings</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <span class="slide-no">11</span>
+  </section>
+
+</deck-stage>
+
+</body>
+</html>
