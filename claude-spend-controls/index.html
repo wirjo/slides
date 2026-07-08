@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Claude Enterprise — Spend controls and usage governance</title>
+<link rel="stylesheet" href="assets/colors_and_type.css">
+<script src="assets/deck-stage.js"></script>
+<script>
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'p' || e.key === 'P') {
+    const deck = document.querySelector('deck-stage');
+    if (!deck) return;
+    if (!document.fullscreenElement) {
+      deck.setAttribute('no-rail', '');
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+      deck.removeAttribute('no-rail');
+    }
+    e.preventDefault();
+  }
+});
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) {
+    const deck = document.querySelector('deck-stage');
+    if (deck) deck.removeAttribute('no-rail');
+  }
+});
+</script>
+<style>
+  html, body { margin: 0; background: #000; }
+  deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
+
+  .slide {
+    position: relative; width: 1920px; height: 1080px; overflow: hidden;
+    font-family: var(--aws-font-display);
+    background: var(--aws-white); color: var(--aws-gray-850);
+  }
+  .slide.dark { background: var(--aws-gray-850); color: var(--aws-white); }
+  .slide h1, .slide h2, .slide h3, .slide p { margin: 0; }
+  .logo-tl { position: absolute; top: 73px; left: 80px; height: 76px; width: auto; }
+  .logo-br { position: absolute; bottom: 73px; right: 80px; height: 76px; width: auto; }
+
+  .eyebrow {
+    font-family: var(--aws-font-mono); font-size: 22px; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .h-cover  { font-size: 120px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-section{ font-size: 96px; line-height: 1.05; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-title  { font-size: 72px; line-height: 1.1; font-weight: 400; letter-spacing: -0.005em; text-wrap: pretty; }
+  .h-content{ font-size: 56px; line-height: 1.15; font-weight: 400; text-wrap: pretty; }
+  .body-lg  { font-size: 32px; line-height: 1.35; font-weight: 400; }
+  .body-md  { font-size: 24px; line-height: 1.4; font-weight: 400; }
+  .body-sm  { font-size: 20px; line-height: 1.4; font-weight: 400; color: var(--aws-gray-550); }
+
+  .safe { position: absolute; left: 80px; right: 80px; top: 200px; bottom: 120px; display: flex; flex-direction: column; gap: 32px; }
+  .safe-top { position: absolute; left: 80px; right: 80px; top: 73px; }
+
+  .slide-no { position: absolute; right: 80px; bottom: 73px; font-family: var(--aws-font-mono); font-size: 16px; letter-spacing: 0.08em; color: var(--aws-gray-500); }
+  .dark .slide-no { color: var(--aws-gray-400); }
+
+  .cover-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--aws-teal-100) 0%, var(--aws-blue-100) 50%, var(--aws-purple-100) 100%);
+  }
+  .cover-body { position: absolute; left: 80px; top: 73px; right: 80px; bottom: 73px; display: flex; flex-direction: column; justify-content: center; gap: 32px; }
+
+  .screenshot {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    border: 1px solid var(--aws-gray-200);
+  }
+
+  .callout-box {
+    background: var(--aws-gray-100);
+    border-radius: 8px;
+    padding: 32px 40px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .dark .callout-box { background: rgba(255,255,255,0.06); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; }
+
+  .access-card {
+    background: var(--aws-gray-100); border-radius: 8px; padding: 28px 32px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .access-card .label { font-size: 24px; font-weight: 500; }
+  .access-card .desc { font-size: 20px; line-height: 1.4; color: var(--aws-gray-600); }
+
+  .icon-circle {
+    width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 500; color: var(--aws-white); flex-shrink: 0;
+  }
+
+  .rec-card {
+    background: var(--aws-teal-50); border-radius: 8px; padding: 32px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .rec-card .num {
+    font-family: var(--aws-font-mono); font-size: 18px; color: var(--aws-teal-600);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .rec-card .title { font-size: 28px; font-weight: 500; }
+  .rec-card .desc { font-size: 20px; line-height: 1.4; color: var(--aws-gray-600); }
+
+  .layer-card {
+    background: var(--aws-gray-100); border-radius: 8px; padding: 40px 36px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  .code-block {
+    background: var(--aws-gray-850); color: var(--aws-gray-100); border-radius: 8px;
+    padding: 28px 32px; font-family: var(--aws-font-mono); font-size: 18px;
+    line-height: 1.6; white-space: pre-wrap; overflow: hidden;
+  }
+</style>
+<script type="application/json" id="speaker-notes">
+[
+  "Cover — Claude Enterprise spend controls for managing usage budgets across your organization.",
+  "Context — the core question: how do you give teams access to Claude without risking runaway costs?",
+  "Three layers of spend control: organization-wide cap, group-based limits, and per-member overrides.",
+  "Organization spend limit — set a monthly cap that applies across the entire org. Screenshot shows the Usage settings page.",
+  "The Adjust limit modal — set a dollar amount that goes into effect immediately.",
+  "Group-based controls — create groups like Basic Users and Power Users, then assign different spend ceilings to each.",
+  "Add group spend limit modal — set a per-member ceiling for an entire group at once.",
+  "Multi-group resolution — when a member belongs to multiple groups, choose whether the higher or lower limit applies.",
+  "Per-member view — see each member's group limit and MTD spend at a glance. Custom overrides take precedence.",
+  "Individual override — set a custom limit for any single member that supersedes their group limit.",
+  "Claude Apps Gateway — programmatic spend controls via API for self-hosted deployments. Org, group, and user scopes with daily/weekly/monthly periods.",
+  "Best practices for enterprise rollout.",
+  "Summary and next steps."
+]
+</script>
+</head>
+<body>
+
+<deck-stage>
+
+  <!-- ============================================================
+       1. COVER
+       ============================================================ -->
+  <section class="slide" data-screen-label="01 Cover">
+    <div class="cover-bg"></div>
+    <div class="cover-body">
+      <div class="eyebrow">Claude Enterprise · Admin governance</div>
+      <h1 class="h-cover" style="max-width: 1400px;">Spend controls and usage governance</h1>
+      <p class="body-lg" style="max-width: 900px; margin-top: 16px; color: var(--aws-gray-600);">Organization-wide caps, group-based tiers, and per-member overrides to manage Claude usage costs with precision</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       2. THE CHALLENGE
+       ============================================================ -->
+  <section class="slide" data-screen-label="02 The challenge">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">The enterprise challenge</div>
+      <h2 class="h-title" style="max-width: 1200px;">How do you scale Claude access without runaway costs?</h2>
+      <div class="grid-2" style="margin-top: 48px;">
+        <div class="callout-box">
+          <p class="body-lg" style="font-weight: 500;">What teams want</p>
+          <p class="body-md" style="color: var(--aws-gray-600);">Unrestricted access to Claude for coding, research, and daily work — without waiting for approvals or hitting hard walls mid-task</p>
+        </div>
+        <div class="callout-box">
+          <p class="body-lg" style="font-weight: 500;">What finance needs</p>
+          <p class="body-md" style="color: var(--aws-gray-600);">Predictable monthly costs, per-team budgets that map to cost centres, and guardrails that prevent one runaway agent from consuming the entire commitment</p>
+        </div>
+      </div>
+      <p class="body-md" style="margin-top: 32px; color: var(--aws-teal-700); font-weight: 500;">Claude Enterprise delivers both — layered spend controls that give every team the right ceiling</p>
+    </div>
+    <span class="slide-no">02</span>
+  </section>
+
+  <!-- ============================================================
+       3. THREE LAYERS OVERVIEW
+       ============================================================ -->
+  <section class="slide" data-screen-label="03 Three layers">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">Spend controls · Overview</div>
+      <h2 class="h-section">Three layers of control</h2>
+      <div class="grid-3" style="margin-top: 72px; flex: 1; align-items: start;">
+        <div class="layer-card" style="background: var(--aws-teal-50);">
+          <div class="icon-circle" style="background: var(--aws-teal-600);">O</div>
+          <p class="label" style="font-size: 32px; font-weight: 500;">Organization</p>
+          <p class="desc" style="font-size: 22px; line-height: 1.5; color: var(--aws-gray-600);">A single monthly cap for the entire org. Hard ceiling that prevents total spend from exceeding budget. Set to unlimited or a fixed dollar amount.</p>
+        </div>
+        <div class="layer-card" style="background: var(--aws-blue-50);">
+          <div class="icon-circle" style="background: var(--aws-blue-600);">G</div>
+          <p class="label" style="font-size: 32px; font-weight: 500;">Group / tier</p>
+          <p class="desc" style="font-size: 22px; line-height: 1.5; color: var(--aws-gray-600);">Per-member defaults inherited by group membership. Different ceilings for power users vs. casual users. Each member gets their own allocation, not a shared pool.</p>
+        </div>
+        <div class="layer-card" style="background: var(--aws-purple-50);">
+          <div class="icon-circle" style="background: var(--aws-purple-600);">M</div>
+          <p class="label" style="font-size: 32px; font-weight: 500;">Member</p>
+          <p class="desc" style="font-size: 22px; line-height: 1.5; color: var(--aws-gray-600);">Custom override for any individual. Takes precedence over group limits. Use for contractors, heavy users, or temporary project budgets.</p>
+        </div>
+      </div>
+      <p class="body-md" style="margin-top: 40px; color: var(--aws-gray-600);">Resolution order: custom member limit → group limit → organization default → unlimited</p>
+    </div>
+    <span class="slide-no">03</span>
+  </section>
+
+  <!-- ============================================================
+       SECTION: ORG-LEVEL CONTROLS
+       ============================================================ -->
+  <section class="slide" data-screen-label="Section — Org controls">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-teal-50) 0%, var(--aws-white) 100%);"></div>
+    <div class="safe" style="justify-content: center;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">Section 01</div>
+      <h2 class="h-section" style="max-width: 1200px;">Organization-level controls</h2>
+      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-600);">Set the overall monthly budget, enable member analytics, and control whether users can request limit increases</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       4. ORG USAGE SETTINGS
+       ============================================================ -->
+  <section class="slide" data-screen-label="04 Org usage settings">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Organization controls · Usage settings</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Usage</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <p class="body-lg" style="font-weight: 500;">The Usage page is your spending command centre</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">Monthly spend limit</p>
+            <p class="desc">Set a hard cap or leave unlimited. Shows current MTD spend at a glance.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-blue-600);">
+            <p class="label">Limit increase requests</p>
+            <p class="desc">Allow members to request a higher limit when they reach their ceiling — keeps work flowing without bypassing controls.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-purple-600);">
+            <p class="label">Member analytics</p>
+            <p class="desc">Let members see their own spend broken down by product, model, and skill. Drives cost-awareness without admin intervention.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_08_PM.png" alt="Usage and spend limits settings page" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">04</span>
+  </section>
+
+  <!-- ============================================================
+       5. SET MONTHLY LIMIT MODAL
+       ============================================================ -->
+  <section class="slide" data-screen-label="05 Set monthly limit">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-teal-600);">Organization controls · Setting the cap</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Usage → Adjust limit</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Set a monthly spending cap</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">Enter a dollar amount that takes effect immediately. When the org reaches this limit, all members are blocked from further usage until the next billing cycle or until an admin raises the cap.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Options</p>
+            <p class="body-md" style="color: var(--aws-gray-600);"><span style="font-weight: 500;">Set spend limit</span> — hard cap at a specific dollar amount</p>
+            <p class="body-md" style="color: var(--aws-gray-600);"><span style="font-weight: 500;">Set to unlimited</span> — no org-wide ceiling (rely on group/member limits instead)</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_08_PM-2.png" alt="Set monthly spend limit modal showing $2,000" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">05</span>
+  </section>
+
+  <!-- ============================================================
+       SECTION: GROUP-BASED CONTROLS
+       ============================================================ -->
+  <section class="slide" data-screen-label="Section — Group controls">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-blue-50) 0%, var(--aws-white) 100%);"></div>
+    <div class="safe" style="justify-content: center;">
+      <div class="eyebrow" style="color: var(--aws-blue-600);">Section 02</div>
+      <h2 class="h-section" style="max-width: 1200px;">Group-based controls</h2>
+      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-600);">Create user groups that map to teams or tiers, then assign per-member spend ceilings to each group</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       6. GROUPS PAGE
+       ============================================================ -->
+  <section class="slide" data-screen-label="06 Groups">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-blue-600);">Group controls · Setup</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Groups</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Define groups that match your org structure</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">Groups are collections of members that share roles and spend limits. Map them to your cost centres, departments, or usage tiers.</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-blue-600);">
+            <p class="label">Example tiers</p>
+            <p class="desc"><span style="font-weight: 500;">Basic Users</span> — casual users with lower monthly ceilings<br><span style="font-weight: 500;">Power Users</span> — developers and agents with higher allocations</p>
+          </div>
+          <p class="body-sm">Each group's spend limit is per-member, not a shared pool. A group of 10 at $500/month means each member gets $500, not $50.</p>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_10_PM.png" alt="Groups page showing Basic Users and Power Users" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">06</span>
+  </section>
+
+  <!-- ============================================================
+       7. ADD GROUP SPEND LIMIT
+       ============================================================ -->
+  <section class="slide" data-screen-label="07 Group spend limit">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-blue-600);">Group controls · Assigning limits</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Usage → By group/tier → Add</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Set a per-member ceiling for the group</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">Select a group, then set the monthly limit each member of that group inherits. Use the infinity button to set unlimited, or remove a custom limit to fall back to the org default.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Controls available</p>
+            <p class="body-md" style="color: var(--aws-gray-600);"><span style="font-weight: 500;">Group limit</span> — the default each member inherits</p>
+            <p class="body-md" style="color: var(--aws-gray-600);"><span style="font-weight: 500;">Remove custom limit</span> — reverts to org-wide default</p>
+            <p class="body-md" style="color: var(--aws-gray-600);"><span style="font-weight: 500;">∞ button</span> — sets unlimited for this group</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_27_PM.png" alt="Add group spend limit modal for Power Users at $10,000" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">07</span>
+  </section>
+
+  <!-- ============================================================
+       8. MULTI-GROUP RESOLUTION
+       ============================================================ -->
+  <section class="slide" data-screen-label="08 Multi-group resolution">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-blue-600);">Group controls · Multi-group resolution</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Usage → Spending defaults</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 32px; justify-content: center;">
+          <h2 class="h-content">What happens when a member is in multiple groups?</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">The "Multi-group spend limit" setting controls which group limit takes precedence.</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">Lower group limit (default)</p>
+            <p class="desc">The most restrictive group limit applies. Safer — prevents a high-limit group from overriding a deliberately constrained one.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-amber-500);">
+            <p class="label">Higher group limit</p>
+            <p class="desc">The most permissive group limit applies. Useful when groups represent entitlements — membership in a power-user group upgrades the ceiling.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_09_PM.png" alt="Multi-group spend limit dropdown showing Higher/Lower options" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">08</span>
+  </section>
+
+  <!-- ============================================================
+       SECTION: PER-MEMBER CONTROLS
+       ============================================================ -->
+  <section class="slide" data-screen-label="Section — Member controls">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-purple-50) 0%, var(--aws-white) 100%);"></div>
+    <div class="safe" style="justify-content: center;">
+      <div class="eyebrow" style="color: var(--aws-purple-600);">Section 03</div>
+      <h2 class="h-section" style="max-width: 1200px;">Per-member controls</h2>
+      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-600);">View spend at a glance and override limits for individual members when group defaults are not enough</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       9. MEMBER SPEND TABLE
+       ============================================================ -->
+  <section class="slide" data-screen-label="09 Member spend table">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-purple-600);">Per-member controls · Spend visibility</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Usage → Spend limits → By member</span>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 24px; margin-top: 24px; flex: 1;">
+        <p class="body-lg" style="font-weight: 500;">See every member's limits and month-to-date spend in one view</p>
+        <p class="body-md" style="color: var(--aws-gray-600);">The table shows custom spend limits (per-member overrides), group spend limits (inherited from group membership), and MTD spend. Filter by member or switch to the group/tier view.</p>
+        <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_28_PM.png" alt="Spend limits table showing members with group limit and MTD spend" class="screenshot" style="max-width: 100%; max-height: 520px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">09</span>
+  </section>
+
+  <!-- ============================================================
+       10. INDIVIDUAL MEMBER OVERRIDE
+       ============================================================ -->
+  <section class="slide" data-screen-label="10 Member override">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-purple-600);">Per-member controls · Custom override</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Usage → Member → ⋮ → Set custom limit</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Override any member's limit</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">Set a custom spend limit for a specific member. This takes precedence over their group limit — useful for contractors, heavy users during a sprint, or temporary project budgets.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Options</p>
+            <p class="body-md" style="color: var(--aws-gray-600);"><span style="font-weight: 500;">Unlimited</span> — remove all caps for this member</p>
+            <p class="body-md" style="color: var(--aws-gray-600);"><span style="font-weight: 500;">Set amount</span> — specify an exact dollar limit</p>
+          </div>
+          <p class="body-sm">Custom limits override group limits. Remove the custom limit to revert to the group default.</p>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_28_PM-custom.png" alt="Specify spend limit modal for individual member" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">10</span>
+  </section>
+
+  <!-- ============================================================
+       11. CLAUDE APPS GATEWAY — PROGRAMMATIC CONTROLS
+       ============================================================ -->
+  <section class="slide dark" data-screen-label="11 Gateway API">
+    <div class="safe-top"><img src="assets/aws-logo-white.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-teal-400);">Claude Apps Gateway · Programmatic controls</div>
+      <h2 class="h-content" style="max-width: 1400px;">Self-hosted spend controls via Admin API</h2>
+      <p class="body-md" style="color: var(--aws-gray-300); margin-top: 8px;">For organizations running Claude Apps Gateway, the same three-layer model is available programmatically with daily, weekly, and monthly periods.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 32px;">
+        <div class="code-block">curl -sS https://gateway.internal/v1/organizations/spend_limits \
+  -H "x-api-key: $ADMIN_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scope": {"type": "organization"},
+    "amount": "50000",
+    "period": "monthly"
+  }'</div>
+        <div class="code-block">curl -sS https://gateway.internal/v1/organizations/spend_limits \
+  -H "x-api-key: $ADMIN_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "scope": {"type": "rbac_group",
+              "rbac_group_id": "contractors"},
+    "amount": "10000",
+    "period": "daily"
+  }'</div>
+      </div>
+      <div style="display: flex; gap: 32px; margin-top: 32px;">
+        <div class="callout-box" style="flex: 1;">
+          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">Scopes</p>
+          <p class="body-sm" style="color: var(--aws-gray-300);">organization · rbac_group · user</p>
+        </div>
+        <div class="callout-box" style="flex: 1;">
+          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">Periods</p>
+          <p class="body-sm" style="color: var(--aws-gray-300);">daily · weekly · monthly</p>
+        </div>
+        <div class="callout-box" style="flex: 1;">
+          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">Enforcement</p>
+          <p class="body-sm" style="color: var(--aws-gray-300);">Real-time 429 on every request when over cap</p>
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">11</span>
+  </section>
+
+  <!-- ============================================================
+       12. BEST PRACTICES
+       ============================================================ -->
+  <section class="slide" data-screen-label="12 Best practices">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 200px;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">Recommendations</div>
+      <h2 class="h-content">Spend governance best practices</h2>
+      <div class="grid-2" style="margin-top: 40px;">
+        <div class="rec-card">
+          <p class="num">01</p>
+          <p class="title">Start with an org cap, then layer groups</p>
+          <p class="desc">Set a monthly org limit first as a safety net. Add group limits as you understand usage patterns across teams.</p>
+        </div>
+        <div class="rec-card">
+          <p class="num">02</p>
+          <p class="title">Enable member analytics</p>
+          <p class="desc">Let members see their own spend by product, model, and skill. Self-awareness reduces the need for admin intervention.</p>
+        </div>
+        <div class="rec-card">
+          <p class="num">03</p>
+          <p class="title">Use "lower group limit" for safety</p>
+          <p class="desc">When members belong to multiple groups, the lower limit prevents a high-privilege group from accidentally overriding a deliberate constraint.</p>
+        </div>
+        <div class="rec-card">
+          <p class="num">04</p>
+          <p class="title">Allow limit increase requests</p>
+          <p class="desc">Rather than setting generous defaults, start conservative and let members request increases. Creates an approval trail and surfaces usage needs.</p>
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">12</span>
+  </section>
+
+  <!-- ============================================================
+       13. CLOSING
+       ============================================================ -->
+  <section class="slide" data-screen-label="13 Summary">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-teal-50) 0%, var(--aws-blue-50) 50%, var(--aws-purple-50) 100%);"></div>
+    <div class="safe" style="top: 200px; justify-content: center;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">Recap and key takeaways</div>
+      <h2 class="h-section" style="max-width: 1400px;">Predictable costs without slowing teams down</h2>
+      <div style="margin-top: 48px; display: flex; flex-direction: column; gap: 24px; max-width: 1100px;">
+        <p class="body-lg" style="color: var(--aws-gray-700);">Organization — a single monthly cap as the ultimate safety net</p>
+        <p class="body-lg" style="color: var(--aws-gray-700);">Groups — tiered per-member limits that map to your cost centres and usage patterns</p>
+        <p class="body-lg" style="color: var(--aws-gray-700);">Members — custom overrides for individual exceptions, with full MTD visibility</p>
+        <p class="body-lg" style="color: var(--aws-gray-700);">Gateway API — the same three-layer model, programmable via Admin API for self-hosted deployments</p>
+      </div>
+      <p class="body-md" style="margin-top: 48px; color: var(--aws-gray-550);">Claude Enterprise admin console: claude.ai/admin-settings → Usage</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <span class="slide-no">13</span>
+  </section>
+
+</deck-stage>
+
+</body>
+</html>
