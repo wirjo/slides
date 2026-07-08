@@ -128,7 +128,6 @@ document.addEventListener('fullscreenchange', () => {
   "Multi-group resolution — when a member belongs to multiple groups, choose whether the higher or lower limit applies.",
   "Per-member view — see each member's group limit and MTD spend at a glance. Custom overrides take precedence.",
   "Individual override — set a custom limit for any single member that supersedes their group limit.",
-  "Claude Apps Gateway — programmatic spend controls via API for self-hosted deployments. Org, group, and user scopes with daily/weekly/monthly periods.",
   "Best practices for enterprise rollout.",
   "Summary and next steps."
 ]
@@ -175,9 +174,73 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
   <!-- ============================================================
-       3. THREE LAYERS OVERVIEW
+       3. WHAT DRIVES SPEND
        ============================================================ -->
-  <section class="slide" data-screen-label="03 Three layers">
+  <section class="slide" data-screen-label="03 What drives spend">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div class="eyebrow" style="color: var(--aws-teal-600);">Understanding consumption</div>
+      <h2 class="h-content">What drives spend</h2>
+      <p class="body-md" style="color: var(--aws-gray-600); margin-top: 8px;">Usage is measured in tokens. Different surfaces and models consume at very different rates.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 32px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <p class="body-lg" style="font-weight: 500;">Monthly planning estimates per member</p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 22px; line-height: 1.6;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--aws-gray-300);">
+                <th style="text-align: left; padding: 12px 16px; font-weight: 500;">User tier</th>
+                <th style="text-align: right; padding: 12px 16px; font-weight: 500;">Chat</th>
+                <th style="text-align: right; padding: 12px 16px; font-weight: 500;">Code</th>
+                <th style="text-align: right; padding: 12px 16px; font-weight: 500;">Cowork</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+                <td style="padding: 12px 16px;">Power (top 10%)</td>
+                <td style="text-align: right; padding: 12px 16px;">$90</td>
+                <td style="text-align: right; padding: 12px 16px; font-weight: 500;">$500</td>
+                <td style="text-align: right; padding: 12px 16px;">$100</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--aws-gray-200);">
+                <td style="padding: 12px 16px;">Typical (mean)</td>
+                <td style="text-align: right; padding: 12px 16px;">$30</td>
+                <td style="text-align: right; padding: 12px 16px; font-weight: 500;">$215</td>
+                <td style="text-align: right; padding: 12px 16px;">$40</td>
+              </tr>
+              <tr>
+                <td style="padding: 12px 16px;">Light (median)</td>
+                <td style="text-align: right; padding: 12px 16px;">$5</td>
+                <td style="text-align: right; padding: 12px 16px; font-weight: 500;">$40</td>
+                <td style="text-align: right; padding: 12px 16px;">$10</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="body-sm">Source: Anthropic consumption guide. Rough planning estimates — actual usage varies by workflow.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <p class="body-lg" style="font-weight: 500;">Key cost drivers</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">Surface</p>
+            <p class="desc">Code and Cowork consume far more tokens than chat — system prompts, file context, tool calls, and multi-turn reasoning add up fast.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-blue-600);">
+            <p class="label">Model choice</p>
+            <p class="desc">Opus consumes several times more than Sonnet for the same task. Recommend Sonnet as the org default; reserve Opus for complex reasoning.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-purple-600);">
+            <p class="label">Effort level</p>
+            <p class="desc">Higher effort = more thorough responses but higher token consumption. Let users self-select, but set expectations.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">03</span>
+  </section>
+
+  <!-- ============================================================
+       4. THREE LAYERS OVERVIEW
+       ============================================================ -->
+  <section class="slide" data-screen-label="04 Three layers">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div class="eyebrow" style="color: var(--aws-teal-600);">Spend controls · Overview</div>
@@ -201,7 +264,7 @@ document.addEventListener('fullscreenchange', () => {
       </div>
       <p class="body-md" style="margin-top: 40px; color: var(--aws-gray-600);">Resolution order: custom member limit → group limit → organization default → unlimited</p>
     </div>
-    <span class="slide-no">03</span>
+    <span class="slide-no">04</span>
   </section>
 
   <!-- ============================================================
@@ -220,7 +283,7 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        4. ORG USAGE SETTINGS
        ============================================================ -->
-  <section class="slide" data-screen-label="04 Org usage settings">
+  <section class="slide" data-screen-label="05 Org usage settings">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -250,13 +313,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">04</span>
+    <span class="slide-no">05</span>
   </section>
 
   <!-- ============================================================
-       5. SET MONTHLY LIMIT MODAL
+       6. SET MONTHLY LIMIT MODAL
        ============================================================ -->
-  <section class="slide" data-screen-label="05 Set monthly limit">
+  <section class="slide" data-screen-label="06 Set monthly limit">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -280,7 +343,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">05</span>
+    <span class="slide-no">06</span>
   </section>
 
   <!-- ============================================================
@@ -299,7 +362,7 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        6. GROUPS PAGE
        ============================================================ -->
-  <section class="slide" data-screen-label="06 Groups">
+  <section class="slide" data-screen-label="07 Groups">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -323,13 +386,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">06</span>
+    <span class="slide-no">07</span>
   </section>
 
   <!-- ============================================================
-       7. ADD GROUP SPEND LIMIT
+       8. ADD GROUP SPEND LIMIT
        ============================================================ -->
-  <section class="slide" data-screen-label="07 Group spend limit">
+  <section class="slide" data-screen-label="08 Group spend limit">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -354,13 +417,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">07</span>
+    <span class="slide-no">08</span>
   </section>
 
   <!-- ============================================================
-       8. MULTI-GROUP RESOLUTION
+       9. MULTI-GROUP RESOLUTION
        ============================================================ -->
-  <section class="slide" data-screen-label="08 Multi-group resolution">
+  <section class="slide" data-screen-label="09 Multi-group resolution">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -387,7 +450,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">08</span>
+    <span class="slide-no">09</span>
   </section>
 
   <!-- ============================================================
@@ -406,7 +469,7 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        9. MEMBER SPEND TABLE
        ============================================================ -->
-  <section class="slide" data-screen-label="09 Member spend table">
+  <section class="slide" data-screen-label="10 Member spend table">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -423,13 +486,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">09</span>
+    <span class="slide-no">10</span>
   </section>
 
   <!-- ============================================================
-       10. INDIVIDUAL MEMBER OVERRIDE
+       11. INDIVIDUAL MEMBER OVERRIDE
        ============================================================ -->
-  <section class="slide" data-screen-label="10 Member override">
+  <section class="slide" data-screen-label="11 Member override">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -451,52 +514,6 @@ document.addEventListener('fullscreenchange', () => {
         </div>
         <div style="display: flex; align-items: center;">
           <img src="assets/screenshots/Admin-settings-Claude-2026-07-08_02_28_PM-custom.png" alt="Specify spend limit modal for individual member" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
-        </div>
-      </div>
-    </div>
-    <span class="slide-no">10</span>
-  </section>
-
-  <!-- ============================================================
-       11. CLAUDE APPS GATEWAY — PROGRAMMATIC CONTROLS
-       ============================================================ -->
-  <section class="slide dark" data-screen-label="11 Gateway API">
-    <div class="safe-top"><img src="assets/aws-logo-white.svg" alt="AWS" style="position:static;height:48px;"></div>
-    <div class="safe" style="top: 200px;">
-      <div class="eyebrow" style="color: var(--aws-teal-400);">Claude Apps Gateway · Programmatic controls</div>
-      <h2 class="h-content" style="max-width: 1400px;">Self-hosted spend controls via Admin API</h2>
-      <p class="body-md" style="color: var(--aws-gray-300); margin-top: 8px;">For organizations running Claude Apps Gateway, the same three-layer model is available programmatically with daily, weekly, and monthly periods.</p>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 32px;">
-        <div class="code-block">curl -sS https://gateway.internal/v1/organizations/spend_limits \
-  -H "x-api-key: $ADMIN_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "scope": {"type": "organization"},
-    "amount": "50000",
-    "period": "monthly"
-  }'</div>
-        <div class="code-block">curl -sS https://gateway.internal/v1/organizations/spend_limits \
-  -H "x-api-key: $ADMIN_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "scope": {"type": "rbac_group",
-              "rbac_group_id": "contractors"},
-    "amount": "10000",
-    "period": "daily"
-  }'</div>
-      </div>
-      <div style="display: flex; gap: 32px; margin-top: 32px;">
-        <div class="callout-box" style="flex: 1;">
-          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">Scopes</p>
-          <p class="body-sm" style="color: var(--aws-gray-300);">organization · rbac_group · user</p>
-        </div>
-        <div class="callout-box" style="flex: 1;">
-          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">Periods</p>
-          <p class="body-sm" style="color: var(--aws-gray-300);">daily · weekly · monthly</p>
-        </div>
-        <div class="callout-box" style="flex: 1;">
-          <p class="body-md" style="font-weight: 500; color: var(--aws-white);">Enforcement</p>
-          <p class="body-sm" style="color: var(--aws-gray-300);">Real-time 429 on every request when over cap</p>
         </div>
       </div>
     </div>
@@ -549,7 +566,6 @@ document.addEventListener('fullscreenchange', () => {
         <p class="body-lg" style="color: var(--aws-gray-700);">Organization — a single monthly cap as the ultimate safety net</p>
         <p class="body-lg" style="color: var(--aws-gray-700);">Groups — tiered per-member limits that map to your cost centres and usage patterns</p>
         <p class="body-lg" style="color: var(--aws-gray-700);">Members — custom overrides for individual exceptions, with full MTD visibility</p>
-        <p class="body-lg" style="color: var(--aws-gray-700);">Gateway API — the same three-layer model, programmable via Admin API for self-hosted deployments</p>
       </div>
       <p class="body-md" style="margin-top: 48px; color: var(--aws-gray-550);">Claude Enterprise admin console: claude.ai/admin-settings → Usage</p>
     </div>
