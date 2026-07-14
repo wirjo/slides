@@ -124,6 +124,7 @@ document.addEventListener('fullscreenchange', () => {
   "Organization spend limit — set a monthly cap that applies across the entire org. Screenshot shows the Usage settings page.",
   "The Adjust limit modal — set a dollar amount that goes into effect immediately.",
   "Group-based controls — create groups like Basic Users and Power Users, then assign different spend ceilings to each.",
+  "SCIM sync — groups can be derived automatically from your corporate IdP via SCIM. No manual creation needed — membership stays in sync with Okta, Entra ID, or Google Workspace.",
   "Add group spend limit modal — set a per-member ceiling for an entire group at once.",
   "Multi-group resolution — when a member belongs to multiple groups, choose whether the higher or lower limit applies.",
   "Per-member view — see each member's group limit and MTD spend at a glance. Custom overrides take precedence.",
@@ -390,9 +391,43 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
   <!-- ============================================================
-       8. ADD GROUP SPEND LIMIT
+       8. SCIM GROUP SYNC
        ============================================================ -->
-  <section class="slide" data-screen-label="08 Group spend limit">
+  <section class="slide" data-screen-label="08 SCIM group sync">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-blue-600);">Group controls · Identity provider sync</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Admin settings → Groups → SCIM Sync</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Sync groups automatically from your corporate IdP</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">Groups don't have to be manually created. Push them from your identity provider via SCIM and membership stays in sync — when someone joins a team in your IdP, they inherit the right spend tier in Claude automatically.</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-blue-600);">
+            <p class="label">Manual groups</p>
+            <p class="desc">Created in the Claude admin console. Membership managed directly. Full control over naming and members.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">SCIM-synced groups</p>
+            <p class="desc">Pushed from your IdP (Okta, Microsoft Entra ID, Google Workspace). Read-only in Claude — can't be renamed, deleted, or have members edited. Source of truth stays in your IdP.</p>
+          </div>
+          <p class="body-sm">Up to 100 groups per org. Both manual and SCIM-synced groups can have spend limits assigned. Docs: <a href="https://support.claude.com/en/articles/14499648-how-scim-sync-works-for-enterprise-organizations" style="color: var(--aws-blue-600);">How SCIM sync works for Enterprise organizations</a></p>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/scim-group-sync.png" alt="SCIM group sync settings showing synced groups from identity provider" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">08</span>
+  </section>
+
+  <!-- ============================================================
+       9. ADD GROUP SPEND LIMIT
+       ============================================================ -->
+  <section class="slide" data-screen-label="09 Group spend limit">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -417,13 +452,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">08</span>
+    <span class="slide-no">09</span>
   </section>
 
   <!-- ============================================================
-       9. MULTI-GROUP RESOLUTION
+       10. MULTI-GROUP RESOLUTION
        ============================================================ -->
-  <section class="slide" data-screen-label="09 Multi-group resolution">
+  <section class="slide" data-screen-label="10 Multi-group resolution">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -450,7 +485,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">09</span>
+    <span class="slide-no">10</span>
   </section>
 
   <!-- ============================================================
@@ -469,7 +504,7 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        9. MEMBER SPEND TABLE
        ============================================================ -->
-  <section class="slide" data-screen-label="10 Member spend table">
+  <section class="slide" data-screen-label="11 Member spend table">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -486,13 +521,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">10</span>
+    <span class="slide-no">11</span>
   </section>
 
   <!-- ============================================================
-       11. INDIVIDUAL MEMBER OVERRIDE
+       12. INDIVIDUAL MEMBER OVERRIDE
        ============================================================ -->
-  <section class="slide" data-screen-label="11 Member override">
+  <section class="slide" data-screen-label="12 Member override">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 160px;">
       <div style="display: flex; justify-content: space-between; align-items: baseline;">
@@ -517,13 +552,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">11</span>
+    <span class="slide-no">12</span>
   </section>
 
   <!-- ============================================================
-       12. BEST PRACTICES
+       13. BEST PRACTICES
        ============================================================ -->
-  <section class="slide" data-screen-label="12 Best practices">
+  <section class="slide" data-screen-label="13 Best practices">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 200px;">
       <div class="eyebrow" style="color: var(--aws-teal-600);">Recommendations</div>
@@ -551,13 +586,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">12</span>
+    <span class="slide-no">13</span>
   </section>
 
   <!-- ============================================================
-       13. CLOSING
+       14. CLOSING
        ============================================================ -->
-  <section class="slide" data-screen-label="13 Summary">
+  <section class="slide" data-screen-label="14 Summary">
     <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-teal-50) 0%, var(--aws-blue-50) 50%, var(--aws-purple-50) 100%);"></div>
     <div class="safe" style="top: 200px; justify-content: center;">
       <div class="eyebrow" style="color: var(--aws-teal-600);">Recap and key takeaways</div>
@@ -570,7 +605,7 @@ document.addEventListener('fullscreenchange', () => {
       <p class="body-md" style="margin-top: 48px; color: var(--aws-gray-550);">Claude Enterprise admin console: claude.ai/admin-settings → Usage</p>
     </div>
     <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
-    <span class="slide-no">13</span>
+    <span class="slide-no">14</span>
   </section>
 
 </deck-stage>
