@@ -207,9 +207,17 @@ document.addEventListener('fullscreenchange', () => {
     <div style="position: absolute; inset: 80px; display: flex; flex-direction: column; justify-content: center;">
       <div class="eyebrow" style="color: var(--aws-gray-650); margin-bottom: 32px;">ANTHROPIC AWS AGENTIC AI ACCELERATOR · SESSION 04</div>
       <h1 class="h-cover" style="max-width: 1400px;">See your agents think</h1>
-      <div style="margin-top: 64px; display: flex; flex-direction: column; gap: 4px;">
-        <p class="body-lg" style="color: var(--aws-gray-650);">Ishaan Sutaria + Daniel Wirjo</p>
-        <p class="body-md" style="color: var(--aws-gray-500);">Solutions Architect, Amazon Web Services</p>
+      <div style="margin-top: 64px; display: flex; gap: 64px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <p class="body-lg" style="color: var(--aws-gray-650);">Daniel Wirjo</p>
+          <p class="body-md" style="color: var(--aws-gray-500);">Solutions Architect, Frontier AI</p>
+          <p class="body-md" style="color: var(--aws-gray-500);">Amazon Web Services</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <p class="body-lg" style="color: var(--aws-gray-650);">Ishaan Sutaria</p>
+          <p class="body-md" style="color: var(--aws-gray-500);">Senior AI Specialist Solutions Architect</p>
+          <p class="body-md" style="color: var(--aws-gray-500);">Amazon Web Services</p>
+        </div>
       </div>
     </div>
     <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
@@ -245,7 +253,18 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
   <!-- ============================================================
-       03. PULL QUOTE — The problem
+       03. SECTION DIVIDER — Why evals matter
+       ============================================================ -->
+  <section class="slide warm" data-screen-label="03 Section divider">
+    <div style="position: absolute; left: 80px; top: 50%; transform: translateY(-50%);">
+      <div class="caption" style="color: var(--aws-gray-400); margin-bottom: 32px;">CHAPTER 01</div>
+      <h1 class="h-section" style="max-width: 1100px;">Why evals matter</h1>
+    </div>
+    <img class="logo-tr" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       04. PULL QUOTE — The problem
        ============================================================ -->
   <section class="slide warm" data-screen-label="03 Pull quote">
     <div style="position: absolute; left: 80px; right: 80px; top: 50%; transform: translateY(-50%);">
@@ -260,7 +279,11 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        04. THE REACTIVE LOOP
        ============================================================ -->
-  <section class="slide dark" data-screen-label="04 Reactive loop">
+  <section class="slide dark" data-screen-label="05 Reactive loop">
+    <div style="position: absolute; left: 80px; top: 220px;">
+      <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 24px;">THE PROBLEM</div>
+      <p style="font-size: 28px; color: var(--aws-gray-300); max-width: 600px;">Without evals, this is how every model change feels</p>
+    </div>
     <div class="loop-container">
       <div class="loop-circle">
         <div class="loop-node" style="top: -20px; left: 50%; transform: translateX(-50%);">Fix it</div>
@@ -275,21 +298,33 @@ document.addEventListener('fullscreenchange', () => {
   <!-- ============================================================
        05. HOW DO WE ESCAPE?
        ============================================================ -->
-  <section class="slide warm" data-screen-label="05 Escape the loop">
-    <div style="position: absolute; left: 80px; right: 80px; top: 50%; transform: translateY(-50%);">
-      <h1 class="h-title">How do we <span class="accent">escape</span> this loop?</h1>
-    </div>
-  </section>
-
-  <!-- ============================================================
-       06. EVALS.
-       ============================================================ -->
   <section class="slide warm" data-screen-label="06 Evals">
-    <div style="position: absolute; left: 80px; right: 80px; top: 320px;">
-      <h1 style="font-size: 200px; line-height: 0.95; font-weight: 400;">Evals<span class="accent">.</span></h1>
-      <p class="body-lg" style="margin-top: 48px; color: var(--aws-gray-650); max-width: 700px;">
-        Evals make problems visible <strong>before</strong> they affect users
-      </p>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; right: 80px; top: 240px;">
+      <p class="body-lg" style="color: var(--aws-gray-550); margin-bottom: 40px;">How do we escape this loop?</p>
+      <h1 style="font-size: 180px; line-height: 0.95; font-weight: 400;">Evals<span class="accent">.</span></h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 160px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 28px; max-width: 1400px;">
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="width: 48px; height: 4px; background: var(--aws-orange-400);"></div>
+        <h3 style="font-size: 26px; font-weight: 400;">Discover problems</h3>
+        <p class="body-md" style="color: var(--aws-gray-550);">Find failures before users do</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="width: 48px; height: 4px; background: var(--aws-orange-400);"></div>
+        <h3 style="font-size: 26px; font-weight: 400;">Measure progress</h3>
+        <p class="body-md" style="color: var(--aws-gray-550);">Track quality with every change</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="width: 48px; height: 4px; background: var(--aws-orange-400);"></div>
+        <h3 style="font-size: 26px; font-weight: 400;">Build your moat</h3>
+        <p class="body-md" style="color: var(--aws-gray-550);">Everyone has the same models — evals are your IP</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="width: 48px; height: 4px; background: var(--aws-orange-400);"></div>
+        <h3 style="font-size: 26px; font-weight: 400;">Complete the pyramid</h3>
+        <p class="body-md" style="color: var(--aws-gray-550);">Unit tests → integration tests → evals. The top layer for non-deterministic systems.</p>
+      </div>
     </div>
   </section>
 
@@ -311,59 +346,64 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
   <!-- ============================================================
-       08. WHY EVALUATE?
+       EVALS 101 — Types of graders
        ============================================================ -->
-  <section class="slide warm" data-screen-label="08 Why evaluate">
+  <section class="slide warm" data-screen-label="Evals 101 graders">
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
-    <div style="position: absolute; left: 80px; top: 200px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 24px;">THE FUNDAMENTALS</div>
-      <h1 class="h-content">Why evaluate at all?</h1>
+    <div style="position: absolute; left: 80px; top: 220px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 24px;">EVALS 101</div>
+      <h1 class="h-content">Start simple, layer up</h1>
+      <p class="body-lg" style="margin-top: 16px; color: var(--aws-gray-550); max-width: 900px;">Three types of graders — use code-based first, add model-based for nuance, reserve human for calibration</p>
     </div>
-    <div style="position: absolute; left: 80px; right: 80px; top: 480px; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 40px;">
-      <div style="display: flex; flex-direction: column; gap: 20px;">
-        <div style="width: 56px; height: 4px; background: var(--aws-orange-400);"></div>
-        <h3 style="font-size: 32px; font-weight: 400;">Discover problems</h3>
-        <p class="body-md" style="color: var(--aws-gray-650);">Find failure patterns before users do</p>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 120px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px;">
+      <div style="padding: 28px 32px; background: var(--aws-white); border-radius: 12px; border-top: 4px solid var(--aws-teal-400);">
+        <div class="eyebrow" style="color: var(--aws-teal-400); margin-bottom: 16px;">CODE-BASED</div>
+        <p style="font-size: 18px; color: var(--aws-gray-650); line-height: 1.5; margin-bottom: 16px;">String match, regex, binary tests, static analysis, tool call verification, transcript analysis</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-teal-100); border-radius: 4px; color: var(--aws-teal-600);">Fast</span>
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-teal-100); border-radius: 4px; color: var(--aws-teal-600);">Cheap</span>
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-teal-100); border-radius: 4px; color: var(--aws-teal-600);">Reproducible</span>
+        </div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 20px;">
-        <div style="width: 56px; height: 4px; background: var(--aws-orange-400);"></div>
-        <h3 style="font-size: 32px; font-weight: 400;">Suggest solutions</h3>
-        <p class="body-md" style="color: var(--aws-gray-650);">Pinpoint what to fix and where</p>
+      <div style="padding: 28px 32px; background: var(--aws-white); border-radius: 12px; border-top: 4px solid var(--aws-purple-400);">
+        <div class="eyebrow" style="color: var(--aws-purple-400); margin-bottom: 16px;">MODEL-BASED</div>
+        <p style="font-size: 18px; color: var(--aws-gray-650); line-height: 1.5; margin-bottom: 16px;">Rubric scoring, natural language assertions, pairwise comparison, multi-judge consensus</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-purple-100); border-radius: 4px; color: var(--aws-purple-600);">Flexible</span>
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-purple-100); border-radius: 4px; color: var(--aws-purple-600);">Nuanced</span>
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-purple-100); border-radius: 4px; color: var(--aws-purple-600);">Scalable</span>
+        </div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 20px;">
-        <div style="width: 56px; height: 4px; background: var(--aws-orange-400);"></div>
-        <h3 style="font-size: 32px; font-weight: 400;">Measure quality</h3>
-        <p class="body-md" style="color: var(--aws-gray-650);">Track progress over time with confidence</p>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 20px;">
-        <div style="width: 56px; height: 4px; background: var(--aws-orange-400);"></div>
-        <h3 style="font-size: 32px; font-weight: 400;">Your moat</h3>
-        <p class="body-md" style="color: var(--aws-gray-650);">Competitive IP and differentiation — everyone has the same models</p>
+      <div style="padding: 28px 32px; background: var(--aws-white); border-radius: 12px; border-top: 4px solid var(--aws-orange-400);">
+        <div class="eyebrow" style="color: var(--aws-orange-400); margin-bottom: 16px;">HUMAN</div>
+        <p style="font-size: 18px; color: var(--aws-gray-650); line-height: 1.5; margin-bottom: 16px;">SME review, spot-check sampling, A/B testing, inter-annotator agreement, crowdsourced judgment</p>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-orange-100); border-radius: 4px; color: var(--aws-orange-600);">Gold standard</span>
+          <span style="font-size: 14px; padding: 4px 10px; background: var(--aws-orange-100); border-radius: 4px; color: var(--aws-orange-600);">Calibration</span>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============================================================
-       09. EVALUATE REASONING
+       08. EVALUATE REASONING
        ============================================================ -->
-  <section class="slide warm" data-screen-label="09 Evaluate reasoning">
-    <div style="position: absolute; left: 80px; right: 80px; top: 280px; max-width: 1400px;">
-      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 32px;">KEY INSIGHT</div>
+  <section class="slide warm" data-screen-label="08 Evaluate reasoning">
+    <div style="position: absolute; left: 80px; right: 80px; top: 220px; max-width: 1400px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 32px;">TIP</div>
       <h1 class="h-title">Evaluate the result <span class="accent">and</span> the reasoning</h1>
-      <p class="body-lg" style="margin-top: 56px; color: var(--aws-gray-650); max-width: 900px;">
-        Traditional ML produces a score. Generative AI produces reasoning.<br>
+      <p class="body-lg" style="margin-top: 40px; color: var(--aws-gray-650); max-width: 900px;">
         How it got there matters as much as where it arrived.
       </p>
     </div>
-    <div style="position: absolute; left: 80px; bottom: 200px;">
-      <div class="flow">
-        <div class="chip">Traditional ML</div>
-        <div class="flow-arrow">→</div>
-        <div class="chip">Score</div>
-        <div style="width: 64px;"></div>
-        <div class="chip">Gen AI</div>
-        <div class="flow-arrow">→</div>
-        <div class="chip highlight">Reasoning + Output</div>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 140px; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 1200px;">
+      <div style="padding: 32px 40px; background: var(--aws-white); border-radius: 12px; border-top: 4px solid var(--aws-teal-400);">
+        <div class="eyebrow" style="color: var(--aws-teal-400); margin-bottom: 12px;">RESULT: PASS</div>
+        <p class="body-md" style="color: var(--aws-gray-650);">Agent books the cheapest direct flight to Tokyo. Correct answer.</p>
+      </div>
+      <div style="padding: 32px 40px; background: var(--aws-white); border-radius: 12px; border-top: 4px solid var(--aws-orange-400);">
+        <div class="eyebrow" style="color: var(--aws-orange-400); margin-bottom: 12px;">REASONING: FAIL</div>
+        <p class="body-md" style="color: var(--aws-gray-650);">Agent ignored the "direct flights only" constraint. It picked the cheapest option overall — which <em>happened</em> to be direct. Next time it won't be.</p>
       </div>
     </div>
   </section>
@@ -383,33 +423,39 @@ document.addEventListener('fullscreenchange', () => {
        11. SINGLE-TURN vs AGENT
        ============================================================ -->
   <section class="slide warm" data-screen-label="11 Single-turn vs agent">
-    <div style="position: absolute; left: 80px; right: 80px; top: 200px;">
-      <div style="display: flex; align-items: center; gap: 48px; margin-bottom: 48px;">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <div style="width: 14px; height: 14px; border-radius: 50%; background: var(--aws-gray-500);"></div>
-          <span class="body-md" style="color: var(--aws-gray-500);">single turn</span>
-        </div>
-        <div style="width: 80px; height: 2px; background: var(--aws-gray-300);"></div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--aws-gray-500);"></div>
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--aws-gray-500);"></div>
-          <div style="width: 12px; height: 12px; border-radius: 50%; background: var(--aws-gray-500);"></div>
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: var(--aws-gray-500);"></div>
-          <div style="width: 14px; height: 14px; border-radius: 50%; background: var(--aws-orange-400);"></div>
-          <span class="body-md" style="color: var(--aws-gray-500); margin-left: 4px;">agent</span>
-        </div>
-      </div>
-      <h1 class="h-title" style="max-width: 1400px;">Agents are different: many turns,<br>many tools, <span class="accent">changing state</span></h1>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; right: 80px; top: 220px;">
+      <h1 class="h-content">Agents are different</h1>
+      <p class="body-lg" style="margin-top: 16px; color: var(--aws-gray-550);">Many turns, many tools, changing state</p>
     </div>
-    <div style="position: absolute; left: 80px; bottom: 200px;">
-      <div class="flow">
-        <div class="chip">Question</div>
-        <div class="flow-arrow">→</div>
-        <div class="chip">Answer</div>
-        <div class="flow-arrow">→</div>
-        <div class="chip highlight">Compare</div>
-        <div style="width: 32px;"></div>
-        <span class="body-md" style="color: var(--aws-gray-500);">Single-turn is simple. Agents are not.</span>
+    <div style="position: absolute; left: 80px; right: 80px; bottom: 160px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 1200px;">
+      <div style="padding: 32px 40px; background: var(--aws-white); border-radius: 12px; border-top: 4px solid var(--aws-gray-300);">
+        <div class="eyebrow" style="color: var(--aws-gray-400); margin-bottom: 16px;">SINGLE-TURN EVAL</div>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <div class="chip">Question</div>
+          <span style="color: var(--aws-gray-400);">→</span>
+          <div class="chip">Answer</div>
+          <span style="color: var(--aws-gray-400);">→</span>
+          <div class="chip">Compare</div>
+        </div>
+        <p class="body-md" style="color: var(--aws-gray-550);">One input, one output, one check. Straightforward.</p>
+      </div>
+      <div style="padding: 32px 40px; background: var(--aws-white); border-radius: 12px; border-top: 4px solid var(--aws-orange-400);">
+        <div class="eyebrow" style="color: var(--aws-orange-400); margin-bottom: 16px;">AGENT EVAL</div>
+        <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+          <div class="chip">Task</div>
+          <span style="color: var(--aws-gray-400);">→</span>
+          <div class="chip">Think</div>
+          <span style="color: var(--aws-gray-400);">→</span>
+          <div class="chip">Tool call</div>
+          <span style="color: var(--aws-gray-400);">→</span>
+          <div class="chip">Think</div>
+          <span style="color: var(--aws-gray-400);">→</span>
+          <div class="chip">Tool call</div>
+          <span style="color: var(--aws-gray-400);">→</span>
+          <div class="chip highlight">Result</div>
+        </div>
+        <p class="body-md" style="color: var(--aws-gray-550);">Multiple steps, side effects, non-deterministic paths. What do you even check?</p>
       </div>
     </div>
   </section>
@@ -876,6 +922,62 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
 </deck-stage>
+
+<script type="application/json" id="speaker-notes">
+[
+  "Welcome everyone to Session 4. Introduce yourself and Ishaan. This session is about making agent reasoning visible and measurable.",
+  "Four chapters today. We'll build from why evals matter, through what makes agents different, into the 7 habits framework, then Ishaan demos the workshop.",
+  "Chapter 1 opener — set the scene for why this matters.",
+  "Read the quote dramatically. Pause. Ask: how many of you have heard something like this from a customer? This is the universal agent pain point.",
+  "Walk through the loop. Every fix creates a new break. Without measurement, you're flying blind. This is whack-a-mole engineering.",
+  "The answer is evals. Emphasise 'before they affect users' — evals shift discovery left. Walk through the three pillars: discover, measure, moat. The moat point lands well — everyone has the same foundation models, your eval suite is your competitive IP.",
+  "Real customer story. IDP workload went from CTO planning to shut it down, to production-ready. 180 test cases running multiple times a day. Evals turned the product around.",
+  "Start simple with code-based graders — they're fast, cheap, reproducible. Layer model-based for nuance (rubric scoring, pairwise). Reserve human graders for calibration and gold-standard benchmarking. Most teams over-invest in human review and under-invest in automation.",
+  "The travel booking example. Result looks correct — agent booked the cheapest direct flight. But reasoning shows it IGNORED the constraint and got lucky. Next time the cheapest won't be direct. This is why you evaluate trajectory, not just outcome.",
+  "Chapter 2 opener — transition into what makes agent evals structurally different from single-turn.",
+  "Two cards comparison. Single-turn: one input, one output, done. Agent: multiple reasoning steps, tool calls, side effects, non-deterministic paths. The question becomes: what do you even grade?",
+  "Key insight: don't grade what the agent SAYS happened — verify what ACTUALLY happened. Check the database, check the API response, check the filesystem. The agent might say 'booking confirmed' while the tool returned an error.",
+  "Change 01: inputs. You're not just giving a question — you're giving a task, tools, and an environment. The environment setup IS part of the eval. Seed data, mock APIs, sandboxed filesystems.",
+  "Change 02: what you check. Two dimensions — outcome (did the right thing happen in the world?) and transcript (was the journey reasonable?). You need both. A correct outcome via a terrible path is a ticking time bomb.",
+  "Change 03: how you read the score. pass@k means it succeeded at least once in k tries — measures capability. pass^k means it succeeded EVERY time — measures reliability. Most production use cases need pass^k. Ask the audience: which does your customer care about?",
+  "Chapter 3 opener — now we know why and what's different, here's how to build your framework. 7 habits from Justin Muller's research.",
+  "Habit 01: Fast. If evals take longer than 60 seconds, they won't get run after every change. They become shelfware. Treat eval speed like test speed. CI integration is the goal.",
+  "Habit 02: Quantifiable. 'Feels better' is not a metric. You need numbers you can track over time, set thresholds on, and alert against. Accuracy, latency, cost per task, tool selection rate.",
+  "Habit 03: Numerous. One eval proves nothing. You need statistical significance. The law of large numbers is your friend — variance decreases with sample size. Aim for at least 50 diverse test cases.",
+  "Habit 04: Explainable. The before/after cards tell the story. A score of 2/5 with no reasoning is useless. A score of 2/5 with 'agent hallucinated a confirmation number' tells you exactly what to fix. Always store the judge's chain-of-thought.",
+  "Habit 05: Segmented. Don't just look at aggregate scores. Break down by task type, difficulty, tool usage pattern. Your overall 85% might hide a 40% on multi-tool tasks. Segment to find the pockets of failure.",
+  "Three evaluation levels from Strands. Session level: did the whole task succeed? Trace level: was each reasoning step sound? Tool level: did it pick the right tools with correct parameters? Problems invisible at one level become obvious at another. QR code links to the Strands Evals blog for deep-dive.",
+  "Habit 06: Diverse. Test happy paths AND edge cases. Test different user phrasings, ambiguous instructions, adversarial inputs. A diverse eval suite catches failure modes that a homogeneous one misses.",
+  "Habit 07: Traditional. Don't throw away what works. Latency, cost, error rates, uptime — these still matter for agents. Layer them alongside your AI-specific metrics. Ops metrics are your early warning system.",
+  "Two common myths. Myth 1: the score is the truth. Actually, suspect the eval first — a bad rubric, biased judge, or flawed test case can give you false confidence. Myth 2: you need hundreds of test cases. 20-50 well-crafted tasks is enough to start. Don't let perfect be the enemy of good.",
+  "Hand off to Ishaan for the demo. He'll walk through the workshop modules live.",
+  "Workshop overview. Four modules building on each other. Point out the QR code — attendees can follow along. Operational metrics first (latency, cost, errors), then quality (LLM-as-Judge), then failure analysis, then agentic-specific metrics.",
+  "Recap the four key takeaways. These are the things to remember when you walk out of this room. Verify what happened (not what the agent said). Understand pass@k vs pass^k. Suspect the eval before suspecting the model. And 20 tasks is enough to start — don't wait for a perfect suite."
+]
+</script>
+
+<script>
+// Presenter notes: press N to open a speaker notes window
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'n' || e.key === 'N') {
+    const notesTag = document.getElementById('speaker-notes');
+    if (!notesTag) return;
+    const notes = JSON.parse(notesTag.textContent || '[]');
+    const deck = document.querySelector('deck-stage');
+    const win = window.open('', 'speaker-notes', 'width=600,height=400');
+    if (!win) return;
+    win.document.title = 'Speaker Notes';
+    win.document.body.style.cssText = 'font-family: system-ui; padding: 32px; font-size: 20px; line-height: 1.6; background: #1a1a1a; color: #eee;';
+    const update = () => {
+      const idx = deck ? parseInt(deck.shadowRoot?.querySelector('[data-count]')?.textContent || '1', 10) - 1 : 0;
+      win.document.body.innerHTML = '<p style="color:#888;margin-bottom:12px;">Slide ' + (idx + 1) + '</p><p>' + (notes[idx] || '<em>No notes</em>') + '</p>';
+    };
+    update();
+    deck?.addEventListener('slidechange', update);
+    e.preventDefault();
+  }
+});
+</script>
 
 </body>
 </html>
