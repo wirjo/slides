@@ -129,6 +129,11 @@ document.addEventListener('fullscreenchange', () => {
   "Multi-group resolution — when a member belongs to multiple groups, choose whether the higher or lower limit applies.",
   "Per-member view — see each member's group limit and MTD spend at a glance. Custom overrides take precedence.",
   "Individual override — set a custom limit for any single member that supersedes their group limit.",
+  "Section — Spend analytics: monitor usage, track adoption, and query data conversationally.",
+  "Analytics dashboard — active members, PRs, sessions, total spend at a glance with natural language query bar.",
+  "Usage insights — adoption levels, product stickiness DAU/MAU, skills cost-per-use, and agentic work metrics.",
+  "Natural language analytics — query org data conversationally, get instant charts and per-member breakdowns.",
+  "Member analytics — members see their own spend by product, limit status, and top skills for self-awareness.",
   "Best practices for enterprise rollout.",
   "Summary and next steps."
 ]
@@ -556,9 +561,161 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
   <!-- ============================================================
-       13. BEST PRACTICES
+       SECTION: SPEND ANALYTICS
        ============================================================ -->
-  <section class="slide" data-screen-label="13 Best practices">
+  <section class="slide" data-screen-label="Section — Spend analytics">
+    <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-amber-50) 0%, var(--aws-white) 100%);"></div>
+    <div class="safe" style="justify-content: center;">
+      <div class="eyebrow" style="color: var(--aws-amber-600);">Section 04</div>
+      <h2 class="h-section" style="max-width: 1200px;">Spend analytics</h2>
+      <p class="body-lg" style="max-width: 900px; margin-top: 24px; color: var(--aws-gray-600);">Monitor usage, track adoption, and query your data conversationally — you can even ask questions in natural language</p>
+    </div>
+    <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
+  </section>
+
+  <!-- ============================================================
+       13. ANALYTICS DASHBOARD
+       ============================================================ -->
+  <section class="slide" data-screen-label="13 Analytics dashboard">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-amber-600);">Spend analytics · Overview</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Analytics → Overview</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Your spending command centre</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">The Analytics dashboard shows active members, PRs created, sessions, and total spend at a glance — with trend indicators showing week-over-week changes.</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-amber-500);">
+            <p class="label">Natural language queries</p>
+            <p class="desc">Ask questions like "Which teams doubled their Claude usage this month?" directly in the analytics chat — no SQL or dashboards needed.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">Quick insights</p>
+            <p class="desc">Pre-built suggestions like "Connector growth", "Multi-product users", and "Cowork adoption trend" surface key patterns in one click.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Analytics-Claude-2026-07-20_11_53_AM.png" alt="Analytics overview showing active members, spend, and natural language query bar" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">13</span>
+  </section>
+
+  <!-- ============================================================
+       14. USAGE INSIGHTS
+       ============================================================ -->
+  <section class="slide" data-screen-label="14 Usage insights">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-amber-600);">Spend analytics · Adoption and stickiness</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Analytics → Overview (scroll)</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Understand how your org uses Claude</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">Go beyond spend to see adoption depth — daily vs. monthly active users, product stickiness (DAU/MAU), and agentic usage metrics.</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-amber-500);">
+            <p class="label">Product stickiness</p>
+            <p class="desc">DAU/MAU by product shows which tools are habit-forming. Code at 100%, Cowork at 33%, Claude.ai at 14% — tells you where value lands.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-blue-600);">
+            <p class="label">Skills and connectors</p>
+            <p class="desc">See top skills by cost-per-use and which connectors are active — understand what workflows your team is automating.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">Actions per prompt</p>
+            <p class="desc">"How agentic is their work?" — higher actions per prompt means teams are delegating more to Claude, not just chatting.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Analytics-Claude-2026-07-20_11_55_AM.png" alt="Usage insights showing adoption levels, product stickiness, skills and connectors" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">14</span>
+  </section>
+
+  <!-- ============================================================
+       15. NATURAL LANGUAGE ANALYTICS
+       ============================================================ -->
+  <section class="slide" data-screen-label="15 Natural language analytics">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-amber-600);">Spend analytics · Conversational queries</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Analytics → Analytics chat</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Query your usage data in plain English</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">No need to export CSVs or build dashboards — ask questions directly and get instant visualisations with per-member breakdowns.</p>
+          <div class="callout-box">
+            <p class="body-md" style="font-weight: 500;">Example queries</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">"Who are the power users using Claude, what models do they use?"</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">"Which teams doubled their Claude usage this month?"</p>
+            <p class="body-md" style="color: var(--aws-gray-600);">"Show me daily spend broken down by product for the past week"</p>
+          </div>
+          <p class="body-sm">Responses include charts, tables, and per-user breakdowns — ready to screenshot and share with leadership.</p>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Power-users-and-Claude-model-adoption-Claude-2026-07-20_11_54_AM.png" alt="Analytics chat showing power user breakdown by session count" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">15</span>
+  </section>
+
+  <!-- ============================================================
+       16. MEMBER ANALYTICS
+       ============================================================ -->
+  <section class="slide" data-screen-label="16 Member analytics">
+    <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
+    <div class="safe" style="top: 160px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline;">
+        <div class="eyebrow" style="color: var(--aws-amber-600);">Spend analytics · Member self-service</div>
+        <div style="background: var(--aws-gray-100); border-radius: 6px; padding: 8px 16px;">
+          <span style="font-family: var(--aws-font-mono); font-size: 16px; color: var(--aws-gray-600);">claude.ai → Settings → Usage</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 24px; flex: 1;">
+        <div style="display: flex; flex-direction: column; gap: 24px; justify-content: center;">
+          <h2 class="h-content">Members see their own spend</h2>
+          <p class="body-md" style="color: var(--aws-gray-600);">When member analytics is enabled, each user sees their personal usage limits, spend by product (daily/weekly), and top skills — driving cost-awareness without admin intervention.</p>
+          <div class="access-card" style="border-left: 4px solid var(--aws-amber-500);">
+            <p class="label">Spend vs. limit</p>
+            <p class="desc">Progress bar shows spend against their monthly limit with reset date. No surprises when they hit the ceiling.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-blue-600);">
+            <p class="label">Spend by product</p>
+            <p class="desc">Weekly or daily breakdown by Chat, Code, and Cowork — helps members understand which workflows drive their usage.</p>
+          </div>
+          <div class="access-card" style="border-left: 4px solid var(--aws-teal-600);">
+            <p class="label">Top skills</p>
+            <p class="desc">See which skills consume the most, with cost-per-use — helps members optimise their workflows.</p>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center;">
+          <img src="assets/screenshots/Admin-settings-Claude-2026-07-20_11_58_AM.png" alt="Member usage view showing personal spend limit, weekly spend by product, and top skills" class="screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;">
+        </div>
+      </div>
+    </div>
+    <span class="slide-no">16</span>
+  </section>
+
+  <!-- ============================================================
+       17. BEST PRACTICES
+       ============================================================ -->
+  <section class="slide" data-screen-label="17 Best practices">
     <div class="safe-top"><img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS" style="position:static;height:48px;"></div>
     <div class="safe" style="top: 200px;">
       <div class="eyebrow" style="color: var(--aws-teal-600);">Recommendations</div>
@@ -586,13 +743,13 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <span class="slide-no">13</span>
+    <span class="slide-no">17</span>
   </section>
 
   <!-- ============================================================
-       14. CLOSING
+       18. CLOSING
        ============================================================ -->
-  <section class="slide" data-screen-label="14 Summary">
+  <section class="slide" data-screen-label="18 Summary">
     <div style="position: absolute; inset: 0; background: linear-gradient(135deg, var(--aws-teal-50) 0%, var(--aws-blue-50) 50%, var(--aws-purple-50) 100%);"></div>
     <div class="safe" style="top: 200px; justify-content: center;">
       <div class="eyebrow" style="color: var(--aws-teal-600);">Recap and key takeaways</div>
@@ -605,7 +762,7 @@ document.addEventListener('fullscreenchange', () => {
       <p class="body-md" style="margin-top: 48px; color: var(--aws-gray-550);">Claude Enterprise admin console: claude.ai/admin-settings → Usage</p>
     </div>
     <img class="logo-br" src="assets/aws-logo-gray850.svg" alt="AWS">
-    <span class="slide-no">14</span>
+    <span class="slide-no">18</span>
   </section>
 
 </deck-stage>
