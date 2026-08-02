@@ -172,6 +172,26 @@ document.addEventListener('fullscreenchange', () => {
   .account-status { font-size: 18px; font-weight: 500; }
   .status-yes { color: var(--aws-lime-600); }
   .status-no { color: var(--aws-rose-600); }
+
+  .qr-panel {
+    padding: 36px; border-radius: 20px; background: var(--aws-white);
+    border: 1px solid var(--aws-gray-250);
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+  .qr-panel img { width: 300px; height: 300px; display: block; }
+  .qr-url {
+    font-family: var(--aws-font-mono); font-size: 17px; letter-spacing: 0.01em;
+    color: var(--aws-gray-650); text-align: center; line-height: 1.4;
+  }
+  .cta-list { display: flex; flex-direction: column; gap: 28px; }
+  .cta-item { display: grid; grid-template-columns: 40px 1fr; gap: 20px; align-items: start; }
+  .cta-dot {
+    width: 32px; height: 32px; border-radius: 50%; background: var(--aws-purple-100);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--aws-font-mono); font-size: 16px; font-weight: 700; color: var(--aws-purple-700);
+  }
+  .cta-item-title { font-size: 26px; font-weight: 500; margin-bottom: 4px; }
+  .cta-item-desc { font-size: 21px; color: var(--aws-gray-650); line-height: 1.4; }
 </style>
 <script type="application/json" id="speaker-notes">
 [
@@ -191,7 +211,8 @@ document.addEventListener('fullscreenchange', () => {
   "Click into the grant, hit the Activate button top-right, and confirm. The dialog warns about replacing existing active grants for the same product.",
   "After activation, the grant transitions from Processing to Workflow completed. This confirms the entitlement is live and the negotiated rate should now apply.",
   "Final confirmation: check Cost Explorer or billing for the member accounts. Compare billed rate against list price vs. MPPO rate. Billing data can take 24-48 hours.",
-  "Common questions answered. Key points: subscriptions are per model, org grants auto-cover new accounts, and you can revoke anytime."
+  "Common questions answered. Key points: subscriptions are per model, org grants auto-cover new accounts, and you can revoke anytime.",
+  "Don't do this by hand every time. Scan the QR for the aws-samples solution — it watches for new Marketplace agreements and creates plus activates the org-wide grant automatically, so the Disabled-by-default trap never costs you money. Serverless, roughly zero dollars a month at rest, interactive setup script, and a seller allow-list so only approved sellers trigger it. Deploy to your Organizations management account in us-east-1."
 ]
 </script>
 </head>
@@ -247,7 +268,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">02 / 17</div>
+    <div class="slide-no">02 / 18</div>
   </section>
 
   <!-- 3. THE SOLUTION -->
@@ -281,7 +302,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">03 / 17</div>
+    <div class="slide-no">03 / 18</div>
   </section>
 
   <!-- 4. HOW IT WORKS -->
@@ -323,7 +344,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">04 / 17</div>
+    <div class="slide-no">04 / 18</div>
   </section>
 
   <!-- 5. TWO PATHS -->
@@ -356,7 +377,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">05 / 17</div>
+    <div class="slide-no">05 / 18</div>
   </section>
 
   <!-- 6. SETUP CHECKLIST -->
@@ -392,7 +413,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">06 / 17</div>
+    <div class="slide-no">06 / 18</div>
   </section>
 
   <!-- 7. GRANT LIFECYCLE -->
@@ -434,7 +455,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">07 / 17</div>
+    <div class="slide-no">07 / 18</div>
   </section>
 
   <!-- 8. SECTION COVER: CONSOLE WALKTHROUGH -->
@@ -493,7 +514,7 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Settings-AWS-Marketplace-Global-2026-06-26_03_52_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Marketplace settings SLR created">
       </div>
     </div>
-    <div class="slide-no">09 / 17</div>
+    <div class="slide-no">09 / 18</div>
   </section>
 
   <!-- 10. STEP 2: CREATE GRANT -->
@@ -519,7 +540,7 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_53_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant form">
       </div>
     </div>
-    <div class="slide-no">10 / 17</div>
+    <div class="slide-no">10 / 18</div>
   </section>
 
   <!-- 11. STEP 2: GRANT TARGET OPTIONS -->
@@ -565,7 +586,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Org-wide grants are simplest for most customers — new accounts automatically get access. Use OU-level grants for segmented rollouts (e.g. production OU only).</div>
       </div>
     </div>
-    <div class="slide-no">11 / 17</div>
+    <div class="slide-no">11 / 18</div>
   </section>
 
   <!-- 12. STEP 2: FILL FORM, LINK ORGS & GRANT CREATED -->
@@ -601,7 +622,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Find your Organization ID in AWS Organizations → AWS accounts (left sidebar). The "Link Organizations" prompt only appears once — it enables cross-account grant distribution.</div>
       </div>
     </div>
-    <div class="slide-no">12 / 17</div>
+    <div class="slide-no">12 / 18</div>
   </section>
 
   <!-- 12. STEP 3: CHECK GRANT STATUS -->
@@ -627,7 +648,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Gotcha:</strong> Grants with "All Features" enabled auto-accept but land in <strong>Disabled</strong> state — they must be explicitly activated before the negotiated rate kicks in.</div>
       </div>
     </div>
-    <div class="slide-no">13 / 17</div>
+    <div class="slide-no">13 / 18</div>
   </section>
 
   <!-- 14. STEP 4: ACTIVATE THE GRANT -->
@@ -655,7 +676,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Gotcha:</strong> Until activated, the account is billed at <strong>public list pricing</strong> — not the negotiated MPPO rate. Disabled ≠ Active.</div>
       </div>
     </div>
-    <div class="slide-no">14 / 17</div>
+    <div class="slide-no">14 / 18</div>
   </section>
 
   <!-- 15. STEP 4: WORKFLOW COMPLETED -->
@@ -677,7 +698,7 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_04_02_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant workflow completed">
       </div>
     </div>
-    <div class="slide-no">15 / 17</div>
+    <div class="slide-no">15 / 18</div>
   </section>
 
   <!-- 16. STEP 5: CONFIRM DISCOUNT FLOWING -->
@@ -722,7 +743,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Billing data may take 24–48 hours to reflect. Make a test API call and check the next day's Cost Explorer for confirmation.</div>
       </div>
     </div>
-    <div class="slide-no">16 / 17</div>
+    <div class="slide-no">16 / 18</div>
   </section>
 
   <!-- 17. FAQ -->
@@ -761,7 +782,50 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">16 / 17</div>
+    <div class="slide-no">17 / 18</div>
+  </section>
+
+  <!-- 18. CALL TO ACTION -->
+  <section class="slide" data-screen-label="18 Automate it">
+    <div class="cover-gradient"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-purple-700); margin-bottom: 22px;">DON'T DO THIS BY HAND</div>
+      <h1 class="h-title" style="max-width: 1400px;">Automate the whole flow</h1>
+      <p class="body-lg" style="color: var(--aws-gray-650); margin-top: 32px; max-width: 1150px;">
+        An AWS sample that watches for new Marketplace agreements and creates <em>and activates</em> the org-wide grant for you - so the Disabled-by-default trap never costs you money.
+      </p>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 520px; display: flex; gap: 80px; align-items: start;">
+      <div class="cta-list" style="flex: 1; padding-top: 8px;">
+        <div class="cta-item">
+          <div class="cta-dot">1</div>
+          <div>
+            <div class="cta-item-title">Event-driven, hands-off</div>
+            <div class="cta-item-desc">Private offer accepted &rarr; license found &rarr; grant created and activated &rarr; email or Slack notification.</div>
+          </div>
+        </div>
+        <div class="cta-item">
+          <div class="cta-dot">2</div>
+          <div>
+            <div class="cta-item-title">Guardrails built in</div>
+            <div class="cta-item-desc">Seller allow-list in DynamoDB, opt-in auto-accept, org / OU / account grant targeting, legacy grant replacement.</div>
+          </div>
+        </div>
+        <div class="cta-item">
+          <div class="cta-dot">3</div>
+          <div>
+            <div class="cta-item-title">Cheap and quick to deploy</div>
+            <div class="cta-item-desc">Serverless, ~$0/month at rest. CDK v2 into your Organizations management account in us-east-1, with an interactive setup script.</div>
+          </div>
+        </div>
+      </div>
+      <div class="qr-panel">
+        <img src="assets/qr-github-sample.svg" alt="QR code linking to github.com/aws-samples/sample-bedrock-managed-entitlements">
+        <div class="qr-url">github.com/aws-samples/<br>sample-bedrock-managed-entitlements</div>
+      </div>
+    </div>
+    <div class="slide-no">18 / 18</div>
   </section>
 
 </deck-stage>
