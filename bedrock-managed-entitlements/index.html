@@ -192,6 +192,35 @@ document.addEventListener('fullscreenchange', () => {
   }
   .cta-item-title { font-size: 26px; font-weight: 500; margin-bottom: 4px; }
   .cta-item-desc { font-size: 21px; color: var(--aws-gray-650); line-height: 1.4; }
+
+  .perm-row { display: flex; flex-direction: column; gap: 8px; }
+  .perm-role { font-size: 26px; font-weight: 500; }
+  .perm-note { font-size: 19px; color: var(--aws-gray-650); line-height: 1.4; }
+  .perm-note code {
+    font-family: var(--aws-font-mono); font-size: 17px;
+    color: var(--aws-purple-700); background: var(--aws-purple-50);
+    padding: 1px 6px; border-radius: 4px;
+  }
+  .perm-qr {
+    margin-top: auto; padding: 18px 22px; border-radius: 14px; background: var(--aws-gray-50);
+    border: 1px solid var(--aws-gray-250);
+    display: grid; grid-template-columns: 118px 1fr; gap: 22px; align-items: center;
+  }
+  .perm-qr img { width: 118px; height: 118px; display: block; }
+  .perm-qr-url {
+    font-family: var(--aws-font-mono); font-size: 14px; letter-spacing: 0.01em;
+    color: var(--aws-gray-550); line-height: 1.4; margin-top: 10px;
+  }
+
+  .code-block {
+    font-family: var(--aws-font-mono); font-size: 14.5px; line-height: 1.45;
+    background: var(--aws-gray-850); color: var(--aws-gray-100);
+    padding: 22px 26px; border-radius: 12px; margin: 0;
+    white-space: pre; overflow: hidden;
+  }
+  .code-block .k { color: var(--aws-cyan-300); }
+  .code-block .s { color: var(--aws-lime-300); }
+  .code-block .hi { color: var(--aws-amber-300); font-weight: 700; }
 </style>
 <script type="application/json" id="speaker-notes">
 [
@@ -201,6 +230,7 @@ document.addEventListener('fullscreenchange', () => {
   "Three simple steps: subscribe to the model, a license is auto-created in License Manager, then grant it to your org or specific accounts.",
   "Two paths for distribution: org-wide is automatic and covers new accounts; individual grants give targeted control. Pick what fits your governance model.",
   "Three prerequisites before you start: all-features org, License Manager SLR, and Marketplace trusted access. Console setup takes about 5 minutes.",
+  "Permissions are where this trips up, so here's the whole picture on one slide. Two roles matter: the org/license admin - management account or a delegated member account - does the one-time enablement and then creates and activates every grant. Procurement just accepts the private offer in Marketplace, and there's a managed policy for that. Highlighted in the JSON are the two people forget. UpdateServiceSettings is what turns on org-wide distribution. CreateGrantVersion is literally the Activate button - without it you can create a grant but never activate it, so it sits Disabled and you keep paying list price. Resource is star because licenses and grants don't exist until Marketplace creates them, so scope by who you attach the role to. Don't region-lock it - everything is us-east-1. QR goes to the aws-samples repo, which ships all of this as CDK.",
   "Grant lifecycle is simple: Pending to Active (or Rejected/Deleted). Grants must be Active before anyone can invoke the model.",
   "Now let's walk through the exact console steps. Three parts: create the grant, activate it, and confirm the discount is actually flowing to your accounts.",
   "First prerequisite: in AWS Marketplace Settings, create the License Manager service-linked role. This enables cross-account license distribution via Organizations.",
@@ -268,7 +298,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">02 / 18</div>
+    <div class="slide-no">02 / 19</div>
   </section>
 
   <!-- 3. THE SOLUTION -->
@@ -302,7 +332,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">03 / 18</div>
+    <div class="slide-no">03 / 19</div>
   </section>
 
   <!-- 4. HOW IT WORKS -->
@@ -344,7 +374,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">04 / 18</div>
+    <div class="slide-no">04 / 19</div>
   </section>
 
   <!-- 5. TWO PATHS -->
@@ -377,7 +407,7 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">05 / 18</div>
+    <div class="slide-no">05 / 19</div>
   </section>
 
   <!-- 6. SETUP CHECKLIST -->
@@ -413,11 +443,78 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">06 / 18</div>
+    <div class="slide-no">06 / 19</div>
   </section>
 
-  <!-- 7. GRANT LIFECYCLE -->
-  <section class="slide" data-screen-label="07 Grant lifecycle">
+  <!-- 7. PERMISSIONS + SAMPLE IAM POLICY -->
+  <section class="slide" data-screen-label="07 Permissions">
+    <div class="accent-bar"></div>
+    <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
+    <div style="position: absolute; left: 80px; top: 176px; right: 80px;">
+      <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 18px;">PERMISSIONS</div>
+      <h1 class="h-title" style="max-width: 1600px; font-size: 64px;">Make sure you have the right permissions</h1>
+    </div>
+    <div style="position: absolute; left: 80px; right: 80px; top: 318px; bottom: 132px; display: grid; grid-template-columns: 900px 1fr; gap: 56px; align-items: stretch;">
+<pre class="code-block">{
+  <span class="k">"Version"</span>: <span class="s">"2012-10-17"</span>,
+  <span class="k">"Statement"</span>: [
+    {
+      <span class="k">"Sid"</span>: <span class="s">"LicenseAdminSetupAndGrants"</span>,
+      <span class="k">"Effect"</span>: <span class="s">"Allow"</span>, <span class="k">"Resource"</span>: <span class="s">"*"</span>,
+      <span class="k">"Action"</span>: [
+        <span class="s">"organizations:DescribeOrganization"</span>,
+        <span class="s">"organizations:EnableAWSServiceAccess"</span>,
+        <span class="s">"organizations:ListAWSServiceAccessForOrganization"</span>,
+        <span class="s">"license-manager:GetServiceSettings"</span>,
+        <span class="hi">"license-manager:UpdateServiceSettings"</span>,
+        <span class="s">"license-manager:ListReceivedLicenses"</span>,
+        <span class="s">"license-manager:ListDistributedGrants"</span>,
+        <span class="s">"license-manager:GetGrant"</span>,
+        <span class="s">"license-manager:CreateGrant"</span>,
+        <span class="hi">"license-manager:CreateGrantVersion"</span>,
+        <span class="s">"license-manager:DeleteGrant"</span>,
+        <span class="s">"iam:CreateServiceLinkedRole"</span>
+      ]
+    },
+    {
+      <span class="k">"Sid"</span>: <span class="s">"ProcurementAcceptPrivateOffer"</span>,
+      <span class="k">"Effect"</span>: <span class="s">"Allow"</span>, <span class="k">"Resource"</span>: <span class="s">"*"</span>,
+      <span class="k">"Action"</span>: [
+        <span class="s">"aws-marketplace:Subscribe"</span>,
+        <span class="s">"aws-marketplace:ViewSubscriptions"</span>,
+        <span class="s">"aws-marketplace:SearchAgreements"</span>,
+        <span class="s">"aws-marketplace:DescribeAgreement"</span>
+      ]
+    }
+  ]
+}</pre>
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div class="perm-row">
+          <div class="perm-role">Org / license administrator</div>
+          <div class="perm-note">Management account, or a member account you register as delegated admin. Runs the one-time enablement, then creates and activates every grant. <code>CreateGrantVersion</code> <em>is</em> the Activate button &mdash; without it grants stay Disabled and you keep paying list price.</div>
+        </div>
+        <div class="perm-row">
+          <div class="perm-role">Procurement</div>
+          <div class="perm-note">Accepts the private offer in Marketplace. Or just attach the managed policy <strong>AWSMarketplaceManageSubscriptions</strong>.</div>
+        </div>
+        <div class="perm-note" style="line-height: 1.45;">
+          <strong>Resource is <code>"*"</code></strong> because licenses and grants don't exist until Marketplace creates them. Scope by who you attach the role to. Delegating? The management account also needs <code>organizations:RegisterDelegatedAdministrator</code>. Everything lives in <strong>us-east-1</strong> &mdash; don't region-lock it.
+        </div>
+        <div class="perm-qr">
+          <img src="assets/qr-github-sample.svg" alt="QR code linking to github.com/aws-samples/sample-bedrock-managed-entitlements">
+          <div>
+            <div class="perm-role" style="margin-bottom: 6px;">Code sample</div>
+            <div class="perm-note">The aws-samples solution ships these policies as CDK.</div>
+            <div class="perm-qr-url">github.com/aws-samples/<br>sample-bedrock-managed-entitlements</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide-no">07 / 19</div>
+  </section>
+
+  <!-- 9. GRANT LIFECYCLE -->
+  <section class="slide" data-screen-label="08 Grant lifecycle">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -455,11 +552,11 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">07 / 18</div>
+    <div class="slide-no">08 / 19</div>
   </section>
 
   <!-- 8. SECTION COVER: CONSOLE WALKTHROUGH -->
-  <section class="slide" data-screen-label="08 Section: Console walkthrough">
+  <section class="slide" data-screen-label="09 Section: Console walkthrough">
     <div class="cover-gradient"></div>
     <div style="position: absolute; left: 80px; top: 73px; right: 80px; bottom: 73px; display: flex; flex-direction: column; justify-content: center;">
       <div class="eyebrow" style="color: var(--aws-purple-700); margin-bottom: 32px;">CONSOLE WALKTHROUGH</div>
@@ -494,7 +591,7 @@ document.addEventListener('fullscreenchange', () => {
   </section>
 
   <!-- 9. STEP 1: ENABLE MARKETPLACE SLR -->
-  <section class="slide" data-screen-label="09 Console: Marketplace SLR setup">
+  <section class="slide" data-screen-label="10 Console: Marketplace SLR setup">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -514,11 +611,11 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Settings-AWS-Marketplace-Global-2026-06-26_03_52_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Marketplace settings SLR created">
       </div>
     </div>
-    <div class="slide-no">09 / 18</div>
+    <div class="slide-no">10 / 19</div>
   </section>
 
   <!-- 10. STEP 2: CREATE GRANT -->
-  <section class="slide" data-screen-label="10 Console: Create grant">
+  <section class="slide" data-screen-label="11 Console: Create grant">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -540,11 +637,11 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Create-grant-AWS-License-Manager-us-east-1-2026-06-26_03_53_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-gray-250); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Create grant form">
       </div>
     </div>
-    <div class="slide-no">10 / 18</div>
+    <div class="slide-no">11 / 19</div>
   </section>
 
   <!-- 11. STEP 2: GRANT TARGET OPTIONS -->
-  <section class="slide" data-screen-label="11 Console: Grant target options">
+  <section class="slide" data-screen-label="12 Console: Grant target options">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -586,11 +683,11 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Org-wide grants are simplest for most customers — new accounts automatically get access. Use OU-level grants for segmented rollouts (e.g. production OU only).</div>
       </div>
     </div>
-    <div class="slide-no">11 / 18</div>
+    <div class="slide-no">12 / 19</div>
   </section>
 
   <!-- 12. STEP 2: FILL FORM, LINK ORGS & GRANT CREATED -->
-  <section class="slide" data-screen-label="11 Console: Fill form and grant created">
+  <section class="slide" data-screen-label="13 Console: Fill form and grant created">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -622,11 +719,11 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Find your Organization ID in AWS Organizations → AWS accounts (left sidebar). The "Link Organizations" prompt only appears once — it enables cross-account grant distribution.</div>
       </div>
     </div>
-    <div class="slide-no">12 / 18</div>
+    <div class="slide-no">13 / 19</div>
   </section>
 
   <!-- 12. STEP 3: CHECK GRANT STATUS -->
-  <section class="slide" data-screen-label="12 Console: Check grant status">
+  <section class="slide" data-screen-label="14 Console: Check grant status">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -648,11 +745,11 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Gotcha:</strong> Grants with "All Features" enabled auto-accept but land in <strong>Disabled</strong> state — they must be explicitly activated before the negotiated rate kicks in.</div>
       </div>
     </div>
-    <div class="slide-no">13 / 18</div>
+    <div class="slide-no">14 / 19</div>
   </section>
 
   <!-- 14. STEP 4: ACTIVATE THE GRANT -->
-  <section class="slide" data-screen-label="13 Console: Activate grant">
+  <section class="slide" data-screen-label="15 Console: Activate grant">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -676,11 +773,11 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Gotcha:</strong> Until activated, the account is billed at <strong>public list pricing</strong> — not the negotiated MPPO rate. Disabled ≠ Active.</div>
       </div>
     </div>
-    <div class="slide-no">14 / 18</div>
+    <div class="slide-no">15 / 19</div>
   </section>
 
   <!-- 15. STEP 4: WORKFLOW COMPLETED -->
-  <section class="slide" data-screen-label="14 Console: Workflow completed">
+  <section class="slide" data-screen-label="16 Console: Workflow completed">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -698,11 +795,11 @@ document.addEventListener('fullscreenchange', () => {
         <img src="assets/screenshots/Granted-license-details-AWS-License-Manager-us-east-1-2026-06-26_04_02_PM.png" style="width: 100%; border-radius: 12px; border: 2px solid var(--aws-lime-300); box-shadow: 0 4px 24px rgba(0,0,0,0.08);" alt="Grant workflow completed">
       </div>
     </div>
-    <div class="slide-no">15 / 18</div>
+    <div class="slide-no">16 / 19</div>
   </section>
 
   <!-- 16. STEP 5: CONFIRM DISCOUNT FLOWING -->
-  <section class="slide" data-screen-label="15 Console: Confirm discount">
+  <section class="slide" data-screen-label="17 Console: Confirm discount">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -743,11 +840,11 @@ document.addEventListener('fullscreenchange', () => {
         <div class="gotcha-text"><strong>Tip:</strong> Billing data may take 24–48 hours to reflect. Make a test API call and check the next day's Cost Explorer for confirmation.</div>
       </div>
     </div>
-    <div class="slide-no">16 / 18</div>
+    <div class="slide-no">17 / 19</div>
   </section>
 
   <!-- 17. FAQ -->
-  <section class="slide" data-screen-label="17 FAQ">
+  <section class="slide" data-screen-label="18 FAQ">
     <div class="accent-bar"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -782,11 +879,11 @@ document.addEventListener('fullscreenchange', () => {
         </div>
       </div>
     </div>
-    <div class="slide-no">17 / 18</div>
+    <div class="slide-no">18 / 19</div>
   </section>
 
   <!-- 18. CALL TO ACTION -->
-  <section class="slide" data-screen-label="18 Automate it">
+  <section class="slide" data-screen-label="19 Automate it">
     <div class="cover-gradient"></div>
     <img class="logo-tl" src="assets/aws-logo-gray850.svg" alt="AWS">
     <div style="position: absolute; left: 80px; top: 200px; right: 80px;">
@@ -825,7 +922,7 @@ document.addEventListener('fullscreenchange', () => {
         <div class="qr-url">github.com/aws-samples/<br>sample-bedrock-managed-entitlements</div>
       </div>
     </div>
-    <div class="slide-no">18 / 18</div>
+    <div class="slide-no">19 / 19</div>
   </section>
 
 </deck-stage>
