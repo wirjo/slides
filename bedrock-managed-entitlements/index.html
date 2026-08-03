@@ -193,6 +193,24 @@ document.addEventListener('fullscreenchange', () => {
   .cta-item-title { font-size: 26px; font-weight: 500; margin-bottom: 4px; }
   .cta-item-desc { font-size: 21px; color: var(--aws-gray-650); line-height: 1.4; }
 
+  .managed-policy-callout {
+    padding: 30px 36px; border-radius: 16px;
+    background: var(--aws-purple-50); border: 2px solid var(--aws-purple-300);
+    display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: center;
+  }
+  .managed-policy-label {
+    font-family: var(--aws-font-mono); font-size: 15px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--aws-purple-700);
+  }
+  .managed-policy-name {
+    font-family: var(--aws-font-mono); font-size: 34px; line-height: 1.18;
+    color: var(--aws-gray-850); font-weight: 700; margin-top: 8px;
+  }
+  .managed-policy-pill {
+    font-family: var(--aws-font-mono); font-size: 18px; font-weight: 700;
+    color: var(--aws-white); background: var(--aws-purple-700);
+    border-radius: 999px; padding: 14px 22px; white-space: nowrap;
+  }
   .perm-row { display: flex; flex-direction: column; gap: 8px; }
   .perm-role { font-size: 26px; font-weight: 500; }
   .perm-note { font-size: 19px; color: var(--aws-gray-650); line-height: 1.4; }
@@ -213,7 +231,7 @@ document.addEventListener('fullscreenchange', () => {
   }
 
   .code-block {
-    font-family: var(--aws-font-mono); font-size: 13.5px; line-height: 1.45;
+    font-family: var(--aws-font-mono); font-size: 12.8px; line-height: 1.43;
     background: var(--aws-gray-850); color: var(--aws-gray-100);
     padding: 24px 28px; border-radius: 12px; margin: 0;
     white-space: pre; overflow: hidden;
@@ -230,7 +248,7 @@ document.addEventListener('fullscreenchange', () => {
   "Three simple steps: subscribe to the model, a license is auto-created in License Manager, then grant it to your org or specific accounts.",
   "Two paths for distribution: org-wide is automatic and covers new accounts; individual grants give targeted control. Pick what fits your governance model.",
   "Three prerequisites before you start: all-features org, License Manager SLR, and Marketplace trusted access. Console setup takes about 5 minutes.",
-  "Permissions are where this trips up, so here's the whole picture on one slide. Two roles matter: the org/license admin - management account or a delegated member account - does the one-time enablement and then creates and activates every grant. Procurement just accepts the private offer in Marketplace, and there's a managed policy for that. Highlighted in the JSON are the two people forget. UpdateServiceSettings is what turns on org-wide distribution. CreateGrantVersion is literally the Activate button - without it you can create a grant but never activate it, so it sits Disabled and you keep paying list price. Resource is star because licenses and grants don't exist until Marketplace creates them, so scope by who you attach the role to. Don't region-lock it - everything is us-east-1. QR goes to the aws-samples repo, which ships all of this as CDK.",
+  "Permissions are where this trips up, so lead with the simple path. For procurement, attach AWSMarketplaceManageSubscriptions and let them accept the private offer in Marketplace. The granular IAM policy is secondary and mainly for the org or license administrator in the management account, or a delegated member account. Highlighted in the JSON are the two people forget. UpdateServiceSettings turns on org-wide distribution. CreateGrantVersion is literally the Activate button - without it grants stay Disabled and you keep paying list price. Resource is star because licenses and grants don't exist until Marketplace creates them, so scope by who you attach the role to. Don't region-lock it - everything is us-east-1. QR goes to the aws-samples repo, which ships all of this as CDK.",
   "Grant lifecycle is simple: Pending to Active (or Rejected/Deleted). Grants must be Active before anyone can invoke the model.",
   "Now let's walk through the exact console steps. Three parts: create the grant, activate it, and confirm the discount is actually flowing to your accounts.",
   "First prerequisite: in AWS Marketplace Settings, create the License Manager service-linked role. This enables cross-account license distribution via Organizations.",
@@ -454,7 +472,16 @@ document.addEventListener('fullscreenchange', () => {
       <div class="eyebrow" style="color: var(--aws-gray-550); margin-bottom: 18px;">PERMISSIONS</div>
       <h1 class="h-title" style="max-width: 1600px; font-size: 64px;">Make sure you have the right permissions</h1>
     </div>
-    <div style="position: absolute; left: 80px; right: 80px; top: 300px; bottom: 76px; display: grid; grid-template-columns: 900px 1fr; gap: 56px; align-items: start;">
+    <div style="position: absolute; left: 80px; right: 80px; top: 300px; bottom: 76px; display: flex; flex-direction: column; gap: 24px;">
+      <div class="managed-policy-callout">
+        <div>
+          <div class="managed-policy-label">Procurement fast path</div>
+          <div class="managed-policy-name">AWSMarketplaceManageSubscriptions</div>
+          <div class="perm-note" style="font-size: 22px; margin-top: 12px; max-width: 1120px;">Attach the AWS managed policy so procurement can accept the private offer in Marketplace. No custom JSON needed for the subscription step.</div>
+        </div>
+        <div class="managed-policy-pill">Use this first</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 720px 1fr; gap: 44px; align-items: start;">
 <pre class="code-block">{
   <span class="k">"Version"</span>: <span class="s">"2012-10-17"</span>,
   <span class="k">"Statement"</span>: [
@@ -475,30 +502,19 @@ document.addEventListener('fullscreenchange', () => {
         <span class="s">"license-manager:DeleteGrant"</span>,
         <span class="s">"iam:CreateServiceLinkedRole"</span>
       ]
-    },
-    {
-      <span class="k">"Sid"</span>: <span class="s">"ProcurementAcceptPrivateOffer"</span>,
-      <span class="k">"Effect"</span>: <span class="s">"Allow"</span>, <span class="k">"Resource"</span>: <span class="s">"*"</span>,
-      <span class="k">"Action"</span>: [
-        <span class="s">"aws-marketplace:Subscribe"</span>,
-        <span class="s">"aws-marketplace:ViewSubscriptions"</span>,
-        <span class="s">"aws-marketplace:SearchAgreements"</span>,
-        <span class="s">"aws-marketplace:DescribeAgreement"</span>
-      ]
     }
   ]
 }</pre>
       <div style="display: flex; flex-direction: column; gap: 22px;">
         <div class="perm-row">
-          <div class="perm-role">Org / license administrator</div>
-          <div class="perm-note">Management account, or a member account you register as delegated admin. Runs the one-time enablement, then creates and activates every grant. <code>CreateGrantVersion</code> <em>is</em> the Activate button &mdash; without it grants stay Disabled and you keep paying list price.</div>
-        </div>
-        <div class="perm-row">
-          <div class="perm-role">Procurement</div>
-          <div class="perm-note">Accepts the private offer in Marketplace. Or just attach the managed policy <strong>AWSMarketplaceManageSubscriptions</strong>.</div>
+          <div class="perm-role">Granular admin policy</div>
+          <div class="perm-note">Use custom IAM for the org / license administrator in the management account, or a delegated member account. This role runs the one-time enablement, then creates and activates grants.</div>
         </div>
         <div class="perm-note" style="line-height: 1.45;">
-          <strong>Resource is <code>"*"</code></strong> because licenses and grants don't exist until Marketplace creates them. Scope by who you attach the role to. Delegating? The management account also needs <code>organizations:RegisterDelegatedAdministrator</code>. Everything lives in <strong>us-east-1</strong> &mdash; don't region-lock it.
+          <strong><code>CreateGrantVersion</code> is the Activate button.</strong> Without it, grants stay Disabled and you keep paying list price.
+        </div>
+        <div class="perm-note" style="line-height: 1.45;">
+          <strong>Resource is <code>"*"</code></strong> because licenses and grants don't exist until Marketplace creates them. Scope by who you attach the role to. Delegating? The management account also needs <code>organizations:RegisterDelegatedAdministrator</code>. Everything lives in <strong>us-east-1</strong> - don't region-lock it.
         </div>
         <div class="perm-qr">
           <img src="assets/qr-github-sample.svg" alt="QR code linking to github.com/aws-samples/sample-bedrock-managed-entitlements">
@@ -508,6 +524,7 @@ document.addEventListener('fullscreenchange', () => {
             <div class="perm-qr-url">github.com/aws-samples/<br>sample-bedrock-managed-entitlements</div>
           </div>
         </div>
+      </div>
       </div>
     </div>
     <div class="slide-no">07 / 19</div>
