@@ -388,7 +388,7 @@ document.addEventListener('fullscreenchange', () => {
           <div class="flow-step-number" style="color: var(--aws-lime-700);">Done</div>
           <div style="font-size: 48px;">✓</div>
           <div class="flow-step-label">All accounts active</div>
-          <div class="flow-step-desc">Recipients accept and activate. Org grants auto-activate.</div>
+          <div class="flow-step-desc">Recipients accept and activate. Org grants auto-accept, then require activation.</div>
         </div>
       </div>
     </div>
@@ -495,6 +495,9 @@ document.addEventListener('fullscreenchange', () => {
         <span class="s">"license-manager:GetServiceSettings"</span>,
         <span class="hi">"license-manager:UpdateServiceSettings"</span>,
         <span class="s">"license-manager:ListReceivedLicenses"</span>,
+        <span class="hi">"license-manager:AcceptGrant"</span>,
+        <span class="hi">"license-manager:GetLicense"</span>,
+        <span class="hi">"license-manager:GetLicenseUsage"</span>,
         <span class="s">"license-manager:ListDistributedGrants"</span>,
         <span class="s">"license-manager:GetGrant"</span>,
         <span class="s">"license-manager:CreateGrant"</span>,
@@ -511,7 +514,7 @@ document.addEventListener('fullscreenchange', () => {
           <div class="perm-note">Use custom IAM for the org / license administrator in the management account, or a delegated member account. This role runs the one-time enablement, then creates and activates grants.</div>
         </div>
         <div class="perm-note" style="line-height: 1.45;">
-          <strong><code>CreateGrantVersion</code> is the Activate button.</strong> Without it, grants stay Disabled and you keep paying list price.
+          <strong>Activation needs both read and write access.</strong> Add <code>AcceptGrant</code>, <code>GetLicense</code>, and <code>GetLicenseUsage</code>; <code>CreateGrantVersion</code> performs the activation.
         </div>
         <div class="perm-note" style="line-height: 1.45;">
           <strong>Resource is <code>"*"</code></strong> because licenses and grants don't exist until Marketplace creates them. Scope by who you attach the role to. Delegating? The management account also needs <code>organizations:RegisterDelegatedAdministrator</code>. Everything lives in <strong>us-east-1</strong> - don't region-lock it.
@@ -556,7 +559,9 @@ document.addEventListener('fullscreenchange', () => {
           <div class="state-flow">
             <div class="state-badge state-pending">Created</div>
             <div class="state-arrow">→</div>
-            <div class="state-badge state-active">Auto-distributed + activated</div>
+            <div class="state-badge state-disabled">Disabled (auto-accepted)</div>
+            <div class="state-arrow">→</div>
+            <div class="state-badge state-active">Active (manual)</div>
           </div>
         </div>
         <div style="display: flex; align-items: center; gap: 24px;">
@@ -787,7 +792,7 @@ document.addEventListener('fullscreenchange', () => {
     <div style="position: absolute; left: 80px; right: 80px; bottom: 73px;">
       <div class="gotcha-box">
         <div class="gotcha-icon">⚠️</div>
-        <div class="gotcha-text"><strong>Gotcha:</strong> Until activated, the account is billed at <strong>public list pricing</strong> — not the negotiated MPPO rate. Disabled ≠ Active.</div>
+        <div class="gotcha-text"><strong>Gotcha:</strong> Disabled means public list pricing. If Activate fails, check CloudTrail for AccessDenied on <code>GetLicense</code> or <code>GetLicenseUsage</code>; if none appears, allow console pop-ups and retry.</div>
       </div>
     </div>
     <div class="slide-no">15 / 19</div>
